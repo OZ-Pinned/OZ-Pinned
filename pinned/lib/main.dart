@@ -7,31 +7,15 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'input name',
+      title: 'Input Name',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MyHomePage(title: String.fromCharCode(45),),
+      home: const MyHomePage(title: 'Input Name'),
     );
   }
 }
@@ -39,17 +23,34 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   final String title;
 
-  // key를 생성자에 추가
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("first"),
-      ),body: Center(
-        child:Padding(
-          padding: EdgeInsets.all(10),
-          child:TextField(),
+        title: const Text("First"),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            // 레이아웃을 세로 방향으로 정렬
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Hello",
+                style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 24),
+              ),
+              const SizedBox(height: 20), // 텍스트와 TextField 간 간격 추가
+              const TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(), // TextField의 외곽선
+                  labelText: 'Enter your name', // 힌트 텍스트
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
