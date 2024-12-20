@@ -83,7 +83,14 @@ class MyHomePage extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(7))),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const BirthPage(title: 'Input Birth'),
+                          ));
+                    },
                     child: Text(
                       '다음',
                       style: TextStyle(
@@ -94,6 +101,187 @@ class MyHomePage extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class BirthPage extends StatefulWidget {
+  final String title;
+  const BirthPage({super.key, required this.title});
+
+  @override
+  _BirthPageState createState() => _BirthPageState();
+}
+
+class _BirthPageState extends State<BirthPage> {
+  // 연도, 월, 날짜 목록
+  final _years = [
+    '2007',
+    '2006',
+    '2005',
+    '2004',
+    '2003',
+    '2002',
+    '2001',
+    '2000'
+  ];
+
+  final _months = [
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12'
+  ];
+
+  final _dates = ['1', '2', '3'];
+
+  // 선택된 연도, 월, 날짜
+  String _selectedYear = '2007';
+  String _selectedMonth = '1';
+  String _selectedDate = '1';
+
+  // 상태 초기화
+  @override
+  void initState() {
+    super.initState();
+    // 첫 번째 연도를 기본 선택값으로 설정
+    _selectedYear = _years[0];
+    _selectedMonth = _months[0];
+    _selectedDate = _dates[0];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xffFFF9F8),
+      appBar: AppBar(
+        title: const Text("Birth Input"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "생년월일을 선택해주세요",
+              style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 24),
+            ),
+            const SizedBox(height: 20),
+            // 연도 선택
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                    width: 126,
+                    height: 53,
+                    child: DropdownButton<String>(
+                      value: _selectedYear,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedYear = newValue!;
+                        });
+                      },
+                      items:
+                          _years.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                                fontFamily: 'LeeSeoYun', fontSize: 20),
+                          ),
+                        );
+                      }).toList(),
+                    )),
+                SizedBox(
+                  width: 93,
+                  height: 53,
+                  child: DropdownButton<String>(
+                    value: _selectedMonth,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedMonth = newValue!;
+                      });
+                    },
+                    items:
+                        _months.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style:
+                              TextStyle(fontFamily: 'LeeSeoYun', fontSize: 20),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                SizedBox(
+                  width: 93,
+                  height: 53,
+                  child: DropdownButton<String>(
+                    value: _selectedDate,
+                    items: _dates.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style:
+                              TextStyle(fontFamily: 'LeeSeoYun', fontSize: 20),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedDate = newValue!;
+                      });
+                    },
+                  ),
+                )
+
+                // 날짜 선택
+              ],
+            ),
+            SizedBox(
+              height: 379,
+            ),
+            SizedBox(
+              width: 320,
+              height: 52,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xffFF516A),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(7))),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const BirthPage(title: 'Input Birth'),
+                        ));
+                  },
+                  child: Text(
+                    '다음',
+                    style: TextStyle(
+                        fontFamily: 'LeeSeoYun',
+                        fontSize: 20,
+                        color: Colors.white),
+                  )),
+            ),
+          ],
         ),
       ),
     );
