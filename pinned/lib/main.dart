@@ -183,9 +183,18 @@ class _BirthPageState extends State<BirthPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                    width: 126,
-                    height: 53,
+                  width: 126,
+                  height: 53,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Color(0xffDADADA), width: 1),
+                    ),
                     child: DropdownButton<String>(
+                      padding: EdgeInsets.only(
+                          top: 16, bottom: 16, right: 26.5, left: 26.5),
+                      isExpanded: true,
                       value: _selectedYear,
                       onChanged: (newValue) {
                         setState(() {
@@ -199,87 +208,117 @@ class _BirthPageState extends State<BirthPage> {
                           child: Text(
                             value,
                             style: TextStyle(
-                                fontFamily: 'LeeSeoYun', fontSize: 20),
+                              fontFamily: 'LeeSeoYun',
+                              fontSize: 20,
+                              color: Colors.black, // 텍스트 색상 설정
+                            ),
                           ),
                         );
                       }).toList(),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                    width: 93,
+                    height: 53,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Color(0xffDADADA), width: 1),
+                      ),
+                      child: DropdownButton<String>(
+                        padding: EdgeInsets.only(
+                            top: 16, bottom: 16, right: 17, left: 17),
+                        isExpanded: true,
+                        value: _selectedMonth,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedMonth = newValue!;
+                          });
+                        },
+                        items: _months
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: TextStyle(
+                                fontFamily: 'LeeSeoYun',
+                                fontSize: 20,
+                                color: Colors.black, // 텍스트 색상 설정
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     )),
                 SizedBox(
                   width: 93,
                   height: 53,
-                  child: DropdownButton<String>(
-                    value: _selectedMonth,
-                    onChanged: (newValue) {
-                      setState(() {
-                        _selectedMonth = newValue!;
-                      });
-                    },
-                    items:
-                        _months.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style:
-                              TextStyle(fontFamily: 'LeeSeoYun', fontSize: 20),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                SizedBox(
-                  width: 93,
-                  height: 53,
-                  child: DropdownButton<String>(
-                    value: _selectedDate,
-                    items: _dates.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style:
-                              TextStyle(fontFamily: 'LeeSeoYun', fontSize: 20),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        _selectedDate = newValue!;
-                      });
-                    },
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Color(0xffDADADA), width: 1),
+                    ),
+                    child: DropdownButton<String>(
+                      padding: EdgeInsets.only(
+                          top: 16, bottom: 16, right: 17, left: 17),
+                      isExpanded: true,
+                      value: _selectedDate,
+                      items:
+                          _dates.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                              fontFamily: 'LeeSeoYun',
+                              fontSize: 20,
+                              color: Colors.black, // 텍스트 색상 설정
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedDate = newValue!;
+                        });
+                      },
+                    ),
                   ),
                 )
-
-                // 날짜 선택
               ],
             ),
-            SizedBox(
-              height: 379,
-            ),
+            SizedBox(height: 379),
             SizedBox(
               width: 320,
               height: 52,
               child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffFF516A),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(7))),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xffFF516A),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7))),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const BirthPage(title: 'Input Birth'),
+                    ),
+                  );
+                },
+                child: Text(
+                  '다음',
+                  style: TextStyle(
+                    fontFamily: 'LeeSeoYun',
+                    fontSize: 20,
+                    color: Colors.white,
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const BirthPage(title: 'Input Birth'),
-                        ));
-                  },
-                  child: Text(
-                    '다음',
-                    style: TextStyle(
-                        fontFamily: 'LeeSeoYun',
-                        fontSize: 20,
-                        color: Colors.white),
-                  )),
+                ),
+              ),
             ),
           ],
         ),
