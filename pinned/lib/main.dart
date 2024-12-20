@@ -47,7 +47,10 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text("first"),
       ),body: Center(
-        child:TextField()
+        child:Padding(
+          padding: EdgeInsets.all(10),
+          child:TextField(),
+        ),
       ),
     );
   }
