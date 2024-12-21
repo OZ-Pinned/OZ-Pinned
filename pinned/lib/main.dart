@@ -349,7 +349,7 @@ class _CharacterPageState extends State<CharacterPage> {
 
   void toggleSelect(value) {
     setState(() {
-      isSelected = [value == 0, value == 1, value == 3];
+      isSelected = [value == 0, value == 1, value == 2];
     });
   }
 
@@ -376,22 +376,50 @@ class _CharacterPageState extends State<CharacterPage> {
             ToggleButtons(
               isSelected: isSelected,
               onPressed: toggleSelect,
+              selectedColor: Colors.black,
+              borderRadius: BorderRadius.circular(7),
+              borderColor: Color(0xffDADADA),
+              selectedBorderColor: Color(0xffFB5D6F),
               children: [
-                Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Image.asset('assets/images/Kangeroo.png'),
+                Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(6),
+                      child: Image.asset('assets/images/Kangeroo.png'),
+                    ),
+                    Text(
+                      "코코",
+                      style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 25),
+                    )
+                  ],
                 ),
-                Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Image.asset('assets/images/Koala.png'),
+                Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(6),
+                      child: Image.asset('assets/images/Kangeroo.png'),
+                    ),
+                    Text(
+                      "코코",
+                      style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 25),
+                    )
+                  ],
                 ),
-                Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Image.asset('assets/images/Kangeroo.png'),
+                Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(6),
+                      child: Image.asset('assets/images/Kangeroo.png'),
+                    ),
+                    Text(
+                      "코코",
+                      style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 25),
+                    )
+                  ],
                 ),
               ],
             ),
-            SizedBox(height: 265),
+            SizedBox(height: 235),
             SizedBox(
               width: 320,
               height: 52,
