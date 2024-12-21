@@ -40,11 +40,14 @@ class MyHomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(
+                height: 81,
+              ),
               const Text(
                 "이름을 작성해주세요",
                 style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 24),
               ),
-              const SizedBox(height: 20), // 텍스트와 TextField 간 간격 추가
+              const SizedBox(height: 121), // 텍스트와 TextField 간 간격 추가
               SizedBox(
                 width: 320,
                 height: 55,
@@ -73,7 +76,7 @@ class MyHomePage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 377),
+              const SizedBox(height: 329),
               SizedBox(
                 width: 320,
                 height: 52,
@@ -173,11 +176,12 @@ class _BirthPageState extends State<BirthPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 81),
             const Text(
               "생년월일을 선택해주세요",
               style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 24),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 121),
             // 연도 선택
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -291,7 +295,72 @@ class _BirthPageState extends State<BirthPage> {
                 )
               ],
             ),
-            SizedBox(height: 379),
+            SizedBox(height: 329),
+            SizedBox(
+              width: 320,
+              height: 52,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xffFF516A),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7))),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const CharacterPage(title: 'Input Character'),
+                    ),
+                  );
+                },
+                child: Text(
+                  '다음',
+                  style: TextStyle(
+                    fontFamily: 'LeeSeoYun',
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CharacterPage extends StatefulWidget {
+  final String title;
+  const CharacterPage({super.key, required this.title});
+
+  @override
+  _CharacterPageState createState() => _CharacterPageState();
+}
+
+class _CharacterPageState extends State<CharacterPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xffFFF9F8),
+      appBar: AppBar(
+        title: const Text("Birth Input"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 81),
+            const Text(
+              "생년월일을 선택해주세요",
+              style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 24),
+            ),
+            const SizedBox(height: 121),
+            // 연도 선택
+            SizedBox(height: 329),
             SizedBox(
               width: 320,
               height: 52,
