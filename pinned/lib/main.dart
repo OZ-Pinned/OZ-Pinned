@@ -340,6 +340,19 @@ class CharacterPage extends StatefulWidget {
 }
 
 class _CharacterPageState extends State<CharacterPage> {
+  late List<bool> isSelected = [true, false, false];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void toggleSelect(value) {
+    setState(() {
+      isSelected = [value == 0, value == 1, value == 3];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -355,12 +368,30 @@ class _CharacterPageState extends State<CharacterPage> {
           children: [
             const SizedBox(height: 81),
             const Text(
-              "생년월일을 선택해주세요",
+              "캐릭터를 선택해주세요",
               style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 24),
             ),
             const SizedBox(height: 121),
-            // 연도 선택
-            SizedBox(height: 329),
+            // 캐릭터 선택
+            ToggleButtons(
+              isSelected: isSelected,
+              onPressed: toggleSelect,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(5),
+                  child: Image.asset('assets/images/Kangeroo.png'),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(5),
+                  child: Image.asset('assets/images/Koala.png'),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(5),
+                  child: Image.asset('assets/images/Kangeroo.png'),
+                ),
+              ],
+            ),
+            SizedBox(height: 265),
             SizedBox(
               width: 320,
               height: 52,
