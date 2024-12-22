@@ -15,15 +15,27 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Input Name'),
+      home: const NamePage(title: 'Input Name'),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class NamePage extends StatefulWidget {
   final String title;
+  const NamePage({super.key, required this.title});
 
-  const MyHomePage({super.key, required this.title});
+  @override
+  _NamePageState createState() => _NamePageState();
+}
+
+class _NamePageState extends State<NamePage> {
+  String inputedName = '';
+  @override
+  void initState() {
+    // TODO: implement initState
+    inputedName = "";
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +63,7 @@ class MyHomePage extends StatelessWidget {
               SizedBox(
                 width: 320,
                 height: 55,
-                child: const TextField(
+                child: TextField(
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white, // 내부 배경색 설정
@@ -74,6 +86,12 @@ class MyHomePage extends StatelessWidget {
                       ),
                     ),
                   ),
+                  onChanged: (value) {
+                    setState(() {
+                      inputedName = value;
+                      print(inputedName);
+                    });
+                  },
                 ),
               ),
               const SizedBox(height: 329),
@@ -90,8 +108,8 @@ class MyHomePage extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                const BirthPage(title: 'Input Birth'),
+                            builder: (context) => BirthPage(
+                                title: 'Input Birth', name: inputedName),
                           ));
                     },
                     child: Text(
@@ -112,7 +130,8 @@ class MyHomePage extends StatelessWidget {
 
 class BirthPage extends StatefulWidget {
   final String title;
-  const BirthPage({super.key, required this.title});
+  final String name;
+  const BirthPage({super.key, required this.title, required this.name});
 
   @override
   _BirthPageState createState() => _BirthPageState();
@@ -148,6 +167,8 @@ class _BirthPageState extends State<BirthPage> {
 
   final _dates = ['1', '2', '3'];
 
+  String date = "";
+
   // 선택된 연도, 월, 날짜
   String _selectedYear = '2007';
   String _selectedMonth = '1';
@@ -158,6 +179,7 @@ class _BirthPageState extends State<BirthPage> {
   void initState() {
     super.initState();
     // 첫 번째 연도를 기본 선택값으로 설정
+    date = "";
     _selectedYear = _years[0];
     _selectedMonth = _months[0];
     _selectedDate = _dates[0];
@@ -309,8 +331,11 @@ class _BirthPageState extends State<BirthPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          const CharacterPage(title: 'Input Character'),
+                      builder: (context) => CharacterPage(
+                        name: widget.name,
+                        birthDate:
+                            '$_selectedYear-$_selectedMonth-$_selectedDate',
+                      ),
                     ),
                   );
                 },
@@ -332,8 +357,9 @@ class _BirthPageState extends State<BirthPage> {
 }
 
 class CharacterPage extends StatefulWidget {
-  final String title;
-  const CharacterPage({super.key, required this.title});
+  final String name;
+  final String birthDate;
+  CharacterPage({super.key, required this.name, required this.birthDate});
 
   @override
   _CharacterPageState createState() => _CharacterPageState();
@@ -341,6 +367,8 @@ class CharacterPage extends StatefulWidget {
 
 class _CharacterPageState extends State<CharacterPage> {
   late List<bool> isSelected = [true, false, false];
+  // selectedChar가 null이면 0을 기본값으로 사용
+  String selectedChar = "";
 
   @override
   void initState() {
@@ -349,6 +377,7 @@ class _CharacterPageState extends State<CharacterPage> {
 
   void toggleSelect(value) {
     setState(() {
+      selectedChar = '$value';
       isSelected = [value == 0, value == 1, value == 2];
     });
   }
@@ -433,8 +462,10 @@ class _CharacterPageState extends State<CharacterPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          const BirthPage(title: 'Input Birth'),
+                      builder: (context) => FinalPage(
+                          name: widget.name,
+                          birthDate: widget.birthDate,
+                          selectedCharacter: selectedChar),
                     ),
                   );
                 },
@@ -447,6 +478,58 @@ class _CharacterPageState extends State<CharacterPage> {
                   ),
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class FinalPage extends StatelessWidget {
+  final String name;
+  final String birthDate;
+  final String selectedCharacter;
+
+  const FinalPage({
+    super.key,
+    required this.name,
+    required this.birthDate,
+    required this.selectedCharacter,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xffFFF9F8),
+      appBar: AppBar(
+        title: const Text("Final Page"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 81),
+            const Text(
+              "입력한 정보",
+              style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 24),
+            ),
+            const SizedBox(height: 40),
+            Text(
+              '이름: $name',
+              style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 20),
+            ),
+            SizedBox(height: 20),
+            Text(
+              '생년월일: $birthDate',
+              style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 20),
+            ),
+            SizedBox(height: 20),
+            Text(
+              '선택한 캐릭터: $selectedCharacter',
+              style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 20),
             ),
           ],
         ),
