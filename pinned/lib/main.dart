@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'test.dart';
 
 void main() {
   runApp(const MyApp());
@@ -359,7 +360,7 @@ class _BirthPageState extends State<BirthPage> {
 class CharacterPage extends StatefulWidget {
   final String name;
   final String birthDate;
-  CharacterPage({super.key, required this.name, required this.birthDate});
+  const CharacterPage({super.key, required this.name, required this.birthDate});
 
   @override
   _CharacterPageState createState() => _CharacterPageState();
@@ -369,6 +370,11 @@ class _CharacterPageState extends State<CharacterPage> {
   late List<bool> isSelected = [true, false, false];
   // selectedChar가 null이면 0을 기본값으로 사용
   String selectedChar = "";
+  int testNum = 0;
+
+  void answerPressed() {
+    testNum++;
+  }
 
   @override
   void initState() {
@@ -460,14 +466,10 @@ class _CharacterPageState extends State<CharacterPage> {
                 ),
                 onPressed: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FinalPage(
-                          name: widget.name,
-                          birthDate: widget.birthDate,
-                          selectedCharacter: selectedChar),
-                    ),
-                  );
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TestPage(),
+                      ));
                 },
                 child: Text(
                   '다음',
