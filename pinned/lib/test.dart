@@ -13,6 +13,8 @@ class MyApp extends StatelessWidget {
 }
 
 class TestPage extends StatefulWidget {
+  TestPage({Key? key}) : super(key: key); // 기본 생성자 추가
+
   @override
   State<TestPage> createState() => _TestPageState();
 }
@@ -20,17 +22,16 @@ class TestPage extends StatefulWidget {
 class _TestPageState extends State<TestPage> {
   int testNum = 0;
   int totalScore = 0;
-  List<Map<String, dynamic>> selectedAnswers = []; // 선택한 답변 저장
+  List<Map<String, dynamic>> selectedAnswers = [];
 
   void answerPressed(Map<String, dynamic> answer) {
     setState(() {
-      totalScore += int.parse(answer['score']); // 점수 누적
-      selectedAnswers.add(answer); // 선택한 답변 저장
+      totalScore += int.parse(answer['score']);
+      selectedAnswers.add(answer);
 
       if (testNum < testList.length - 1) {
-        testNum++; // 다음 질문으로 이동
+        testNum++;
       } else {
-        // 결과 페이지로 이동
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -50,25 +51,21 @@ class _TestPageState extends State<TestPage> {
       appBar: AppBar(
         title: Text('테스트'),
       ),
-      body: testNum < testList.length
-          ? Column(
-              children: [
-                Text(
-                  testList[testNum]['questionText'],
-                  style: TextStyle(fontSize: 18),
-                ),
-                ...(testList[testNum]['answers'] as List<Map<String, dynamic>>)
-                    .map((answer) {
-                  return ElevatedButton(
-                    onPressed: () => answerPressed(answer),
-                    child: Text(answer['text']),
-                  );
-                }).toList(),
-              ],
-            )
-          : Center(
-              child: Text('모든 질문에 답변했습니다!'),
-            ),
+      body: Column(
+        children: [
+          Text(
+            testList[testNum]['questionText'],
+            style: TextStyle(fontSize: 18),
+          ),
+          ...(testList[testNum]['answers'] as List<Map<String, dynamic>>)
+              .map((answer) {
+            return ElevatedButton(
+              onPressed: () => answerPressed(answer),
+              child: Text(answer['text']),
+            );
+          }).toList(),
+        ],
+      ),
     );
   }
 }
