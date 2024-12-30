@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'test_list.dart';
+import 'package:intl/intl.dart';
 
 void main() => runApp(MyApp());
 
@@ -42,6 +43,7 @@ class _TestPageState extends State<TestPage> {
         selectedAnswers.add(selectedAnswer!);
         totalScore += int.parse(selectedAnswer!['score']);
         selectedAnswer = null;
+        print(totalScore);
 
         // 다음 질문으로 이동
         if (testNum < testList.length - 1) {
@@ -57,7 +59,6 @@ class _TestPageState extends State<TestPage> {
               ),
             ),
           );
-          selectedAnswers.clear();
         }
       });
     }
@@ -72,6 +73,7 @@ class _TestPageState extends State<TestPage> {
         if (selectedAnswers.isNotEmpty) {
           totalScore -= int.parse(selectedAnswers.removeLast()['score']);
         }
+        print(totalScore);
         selectedAnswer = null; // 선택 초기화
       });
     }
@@ -86,14 +88,16 @@ class _TestPageState extends State<TestPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 317,
-            height: 9,
-            child: LinearProgressIndicator(
-              value: (testNum + 1) / testList.length,
-              color: Color(0xffFF516A),
-              backgroundColor: Color(0xffF2F2F2),
-              borderRadius: BorderRadius.circular(4.5),
+          Center(
+            child: SizedBox(
+              width: 350,
+              height: 9,
+              child: LinearProgressIndicator(
+                value: (testNum + 1) / testList.length,
+                color: Color(0xffFF516A),
+                backgroundColor: Color(0xffF2F2F2),
+                borderRadius: BorderRadius.circular(4.5),
+              ),
             ),
           ),
           Padding(
@@ -104,12 +108,14 @@ class _TestPageState extends State<TestPage> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 20, right: 20, bottom: 48),
-            child: Text(
-              testList[testNum]['questionText'],
-              style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 22),
-            ),
-          ),
+              padding: EdgeInsets.only(left: 20, right: 20, bottom: 48),
+              child: SizedBox(
+                height: 60,
+                child: Text(
+                  testList[testNum]['questionText'],
+                  style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 22),
+                ),
+              )),
           ...(testList[testNum]['answers'] as List<Map<String, dynamic>>)
               .map((answer) {
             return Container(
@@ -183,7 +189,7 @@ class _TestPageState extends State<TestPage> {
                       width: 1.0,
                       color: Color(0xffFF516A),
                     ),
-                    fixedSize: Size(155, 50),
+                    fixedSize: Size(170, 50),
                     backgroundColor: testNum > 0 ? Colors.white : Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -201,7 +207,7 @@ class _TestPageState extends State<TestPage> {
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
-                    fixedSize: Size(155, 50),
+                    fixedSize: Size(170, 50),
                     backgroundColor: selectedAnswer != null
                         ? Color(0xffFF516A)
                         : Color(0xffFFB3B3),
@@ -219,15 +225,27 @@ class _TestPageState extends State<TestPage> {
   }
 }
 
-class ResultPage extends StatelessWidget {
+class ResultPage extends StatefulWidget {
   final int totalScore;
-  final List<Map<String, dynamic>> selectedAnswers;
+  final List selectedAnswers;
+  const ResultPage(
+      {super.key, required this.totalScore, required this.selectedAnswers});
 
-  const ResultPage({
-    super.key,
-    required this.totalScore,
-    required this.selectedAnswers,
-  });
+  @override
+  _ResultPageState createState() => _ResultPageState();
+}
+
+class _ResultPageState extends State<ResultPage> {
+  String today = "";
+
+  @override
+  String getToday() {
+    DateTime now = DateTime.now();
+    DateFormat formatter = DateFormat('yyyy-MM-dd');
+    String strToday = formatter.format(now);
+    print(strToday);
+    return strToday;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +273,7 @@ class ResultPage extends StatelessWidget {
                 style: TextStyle(fontSize: 16),
               );
             }),
-            Spacer(),
+            ElevatedButton(onPressed: () => getToday(), child: Text("날짜구하기"))
           ],
         ),
       ),
