@@ -89,6 +89,8 @@ flutter:
     - assets/images/happyEmotion.png
     - assets/images/sadEmotion.png
     - assets/images/noneEmotion.png
+    - assets/images/meditationButton.jpg
+    - assets/images/chatbotButton.jpg
 
   #
   # For details regarding fonts from package dependencies,
