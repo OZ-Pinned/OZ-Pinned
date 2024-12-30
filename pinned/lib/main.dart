@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'test.dart';
+import 'meditation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: const NamePage(title: 'Input Name'),
-      home: TestPage(),
+      home: MeditationVideoApp(),
     );
   }
 }

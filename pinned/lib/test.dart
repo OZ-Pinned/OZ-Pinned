@@ -42,8 +42,6 @@ class _TestPageState extends State<TestPage> {
         // 선택된 답변을 저장하고 점수 합산
         selectedAnswers.add(selectedAnswer!);
         totalScore += int.parse(selectedAnswer!['score']);
-        selectedAnswer = null;
-        print(totalScore);
 
         // 다음 질문으로 이동
         if (testNum < testList.length - 1) {
@@ -73,7 +71,6 @@ class _TestPageState extends State<TestPage> {
         if (selectedAnswers.isNotEmpty) {
           totalScore -= int.parse(selectedAnswers.removeLast()['score']);
         }
-        print(totalScore);
         selectedAnswer = null; // 선택 초기화
       });
     }
@@ -268,7 +265,6 @@ class _ResultPageState extends State<ResultPage> {
   @override
   Widget build(BuildContext context) {
     int totalScore = widget.totalScore;
-    List selectedAnswers = widget.selectedAnswers;
 
     return Scaffold(
       appBar: AppBar(
