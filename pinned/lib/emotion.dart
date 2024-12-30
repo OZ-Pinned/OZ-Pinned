@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,7 +16,7 @@ class MyApp extends StatelessWidget {
 }
 
 class EmotionPage extends StatefulWidget {
-  EmotionPage({Key? key}) : super(key: key); // 기본 생성자 추가
+  const EmotionPage({super.key}); // 기본 생성자 추가
 
   @override
   State<EmotionPage> createState() => _EmotionPageState();

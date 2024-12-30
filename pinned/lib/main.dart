@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: const NamePage(title: 'Input Name'),
-      home: EmotionPage(),
+      home: TestPage(),
     );
   }
 }
