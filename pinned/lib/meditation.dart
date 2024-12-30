@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-class MeditationVideoApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MeditationVideoList(),
-    );
-  }
-}
-
 class MeditationVideoList extends StatelessWidget {
   final List<Map<String, String>> videoList = [
     {'title': '명상 영상 1', 'id': 'dZewQEbQQM0'},
@@ -60,13 +50,10 @@ class _MeditationVideoPlayerState extends State<MeditationVideoPlayer> {
   @override
   void initState() {
     super.initState();
-    _controller = YoutubePlayerController(
-      initialVideoId: widget.videoId,
-      params: YoutubePlayerParams(
-        startAt: const Duration(seconds: 10), // 10초 후 시작
-        showControls: false, // 기본 컨트롤 숨기기
-        showFullscreenButton: false,
-      ),
+    _controller = YoutubePlayerController.fromVideoId(
+      videoId: widget.videoId,
+      autoPlay: false,
+      params: const YoutubePlayerParams(showFullscreenButton: true),
     );
   }
 
@@ -97,8 +84,9 @@ class _MeditationVideoPlayerState extends State<MeditationVideoPlayer> {
               ElevatedButton(
                 onPressed: () async {
                   // 현재 시간에서 10초 뒤로
-                  final currentTime = await _controller.currentTime;
-                  _controller.seekTo(currentTime - 10);
+                  final currentPosition = await _controller.currentTime;
+                  _controller.seekTo(
+                      seconds: (currentPosition - 10).toDouble());
                 },
                 child: Row(
                   children: [
@@ -110,10 +98,12 @@ class _MeditationVideoPlayerState extends State<MeditationVideoPlayer> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  final isPlaying = await _controller.isPlaying();
+                  bool isPlaying = true;
                   if (isPlaying) {
+                    isPlaying = false;
                     _controller.pauseVideo();
                   } else {
+                    isPlaying = true;
                     _controller.playVideo();
                   }
                 },
@@ -128,8 +118,9 @@ class _MeditationVideoPlayerState extends State<MeditationVideoPlayer> {
               ElevatedButton(
                 onPressed: () async {
                   // 현재 시간에서 10초 앞으로
-                  final currentTime = await _controller.currentTime;
-                  _controller.seekTo(currentTime + 10);
+                  final currentPosition = await _controller.currentTime;
+                  _controller.seekTo(
+                      seconds: (currentPosition + 10).toDouble());
                 },
                 child: Row(
                   children: [
@@ -144,7 +135,7 @@ class _MeditationVideoPlayerState extends State<MeditationVideoPlayer> {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              _controller.enterFullscreen();
+              _controller.enterFullScreen();
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
