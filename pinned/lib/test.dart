@@ -249,6 +249,8 @@ class _ResultPageState extends State<ResultPage> {
 
   @override
   Widget build(BuildContext context) {
+    int totalScore = widget.totalScore;
+    List selectedAnswers = widget.selectedAnswers;
     return Scaffold(
       appBar: AppBar(
         title: Text('결과'),
