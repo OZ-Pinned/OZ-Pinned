@@ -171,7 +171,7 @@ class _TestPageState extends State<TestPage> {
                 ),
               ),
             );
-          }).toList(),
+          }),
           SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween, // 버튼 간격
@@ -179,11 +179,7 @@ class _TestPageState extends State<TestPage> {
               Padding(
                 padding: EdgeInsets.only(left: 20),
                 child: ElevatedButton(
-                  onPressed: testNum > 0 ? prevQuestion : null, // 이전 버튼
-                  child: Text(
-                    '이전',
-                    style: TextStyle(fontSize: 18, color: Color(0xffFF516A)),
-                  ),
+                  onPressed: testNum > 0 ? prevQuestion : null,
                   style: ElevatedButton.styleFrom(
                     side: BorderSide(
                       width: 1.0,
@@ -194,18 +190,17 @@ class _TestPageState extends State<TestPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
+                  ), // 이전 버튼
+                  child: Text(
+                    '이전',
+                    style: TextStyle(fontSize: 18, color: Color(0xffFF516A)),
                   ),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(right: 20),
                 child: ElevatedButton(
-                  onPressed:
-                      selectedAnswer != null ? nextQuestion : null, // 다음 버튼
-                  child: Text(
-                    testNum < testList.length - 1 ? '다음' : '결과 보기',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
+                  onPressed: selectedAnswer != null ? nextQuestion : null,
                   style: ElevatedButton.styleFrom(
                     fixedSize: Size(170, 50),
                     backgroundColor: selectedAnswer != null
@@ -214,6 +209,10 @@ class _TestPageState extends State<TestPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
+                  ), // 다음 버튼
+                  child: Text(
+                    testNum < testList.length - 1 ? '다음' : '결과 보기',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
               )
@@ -239,46 +238,311 @@ class _ResultPageState extends State<ResultPage> {
   String today = "";
 
   @override
-  String getToday() {
+  void initState() {
+    super.initState();
+    getToday(); // 화면 초기화 시 날짜 설정
+  }
+
+  void getToday() {
     DateTime now = DateTime.now();
     DateFormat formatter = DateFormat('yyyy-MM-dd');
     String strToday = formatter.format(now);
-    print(strToday);
-    return strToday;
+    setState(() {
+      today = strToday; // 날짜를 상태에 저장
+    });
+  }
+
+  String getReseult(int totalScore) {
+    if (totalScore >= 20) {
+      return "매우 심함";
+    } else if (totalScore >= 15) {
+      return "약간 심함";
+    } else if (totalScore >= 10) {
+      return "중간";
+    } else if (totalScore >= 5) {
+      return "경미";
+    } else
+      return "정상";
   }
 
   @override
   Widget build(BuildContext context) {
     int totalScore = widget.totalScore;
     List selectedAnswers = widget.selectedAnswers;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('결과'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: Container(
+        padding: EdgeInsets.only(top: 73),
+        color: Color(0xffFF516A), // 핑크색 배경
+        child: Stack(
           children: [
-            Text(
-              '총 점수: $totalScore',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Positioned(
+              left: 20, // 왼쪽 여백
+              top: 20, // 상단 여백
+              child: Text(
+                today,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
             ),
-            SizedBox(height: 20),
-            Text(
-              '선택한 답변:',
-              style: TextStyle(fontSize: 18),
+            Container(
+              padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20)),
+                color: Colors.white,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  // 기존 내용 유지
+                  Expanded(
+                    child: Column(
+                      children: [
+                        PieChartView(
+                          totalScore: totalScore,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 19),
+                  Align(
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 123,
+                      height: 34,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Color(0xffFFEEF0)),
+                      child: Text(
+                        getReseult(totalScore),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xffFF516A),
+                            backgroundColor: Color(0xffFFEEF0)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 42),
+                  Align(
+                    child: Container(
+                      padding: EdgeInsets.all(26),
+                      width: 320,
+                      height: 146,
+                      decoration: BoxDecoration(
+                          color: Color(0xffF4F4F4),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Text('중간수준 어찌구.. 저찌구...',
+                          style:
+                              TextStyle(fontFamily: 'LeeSeoYun', fontSize: 17)),
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 120,
+                        width: 153,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.asset(
+                              'assets/images/meditationButton.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 6.5),
+                      SizedBox(
+                        height: 120,
+                        width: 153,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.asset(
+                              'assets/images/chatbotButton.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 50),
+                ],
+              ),
             ),
-            ...selectedAnswers.map((answer) {
-              return Text(
-                '- ${answer['text']} (점수: ${answer['score']})',
-                style: TextStyle(fontSize: 16),
-              );
-            }),
-            ElevatedButton(onPressed: () => getToday(), child: Text("날짜구하기"))
           ],
         ),
       ),
     );
+  }
+}
+
+class PieChartView extends StatefulWidget {
+  final int totalScore;
+  const PieChartView({super.key, required this.totalScore});
+
+  @override
+  _PieChartViewState createState() => _PieChartViewState();
+}
+
+class _PieChartViewState extends State<PieChartView>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+
+    double maxTotal = 30;
+    double fillRatio = widget.totalScore / maxTotal;
+
+    _animation = Tween<double>(begin: 0, end: fillRatio).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: 4,
+      child: AnimatedBuilder(
+        animation: _animation,
+        builder: (context, child) {
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              double size = 172;
+              double innerCircleSize = 110;
+
+              return Center(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: size,
+                      height: size,
+                      decoration: const BoxDecoration(
+                        color: Color(0xffF4F4F4),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            spreadRadius: 10,
+                            blurRadius: 17,
+                            offset: Offset(-5, -5),
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                      child: CustomPaint(
+                        painter: PieChartPainter(_animation.value),
+                      ),
+                    ),
+                    Container(
+                      width: innerCircleSize,
+                      height: innerCircleSize,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              spreadRadius: 10,
+                              blurRadius: 17,
+                              offset: Offset(1, 2),
+                              color: Color(0x21000000),
+                            ),
+                          ]),
+                      child: Center(
+                        child: Text(
+                          '${widget.totalScore}점',
+                          style: const TextStyle(
+                            fontSize: 37,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class PieChartPainter extends CustomPainter {
+  final double fillRatio;
+
+  PieChartPainter(this.fillRatio);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()
+      ..color = Color(0xffFF516A)
+      ..style = PaintingStyle.fill;
+
+    // 원의 중심과 반지름을 계산
+    Offset center = Offset(size.width / 2, size.height / 2);
+    double radius = size.width / 2;
+
+    // 채워질 부분의 각도 계산 (360도 * 채워질 비율)
+    double sweepAngle = 2 * 3.14159 * fillRatio;
+
+    // 원 그리기
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      -3.14159 / 2, // 시작 각도 (위쪽부터 시작)
+      sweepAngle, // 채워지는 각도
+      true,
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
   }
 }

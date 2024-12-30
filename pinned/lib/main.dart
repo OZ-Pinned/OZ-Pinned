@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'test.dart';
-import 'emotion.dart';
 
 void main() {
   runApp(const MyApp());
