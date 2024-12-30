@@ -34,48 +34,47 @@ class _TestPageState extends State<TestPage> {
     });
   }
 
-  // 다음 질문으로 이동
+  // 다음 질문 또는 결과 페이지로 이동
   void nextQuestion() {
-    setState(() {
-      if (selectedAnswer != null) {
+    if (selectedAnswer != null) {
+      setState(() {
         // 선택된 답변을 저장하고 점수 합산
         selectedAnswers.add(selectedAnswer!);
         totalScore += int.parse(selectedAnswer!['score']);
-      }
+        selectedAnswer = null;
 
-      if (testNum < testList.length - 1) {
         // 다음 질문으로 이동
-        testNum++;
-        selectedAnswer = null; // 선택 초기화
-      } else {
-        // 결과 페이지로 이동
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ResultPage(
-              totalScore: totalScore,
-              selectedAnswers: selectedAnswers,
+        if (testNum < testList.length - 1) {
+          testNum++;
+        } else {
+          // 결과 페이지로 이동
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ResultPage(
+                totalScore: totalScore,
+                selectedAnswers: selectedAnswers,
+              ),
             ),
-          ),
-        );
-      }
-    });
+          );
+          selectedAnswers.clear();
+        }
+      });
+    }
   }
 
+  // 이전 질문으로 이동
   void prevQuestion() {
-    setState(() {
-      if (selectedAnswer != null) {
-        // 선택된 답변을 저장하고 점수 합산
-        selectedAnswers.removeAt(selectedAnswers.length - 1);
-        totalScore -= int.parse(selectedAnswer!['score']);
-      }
-
-      if (testNum > -1) {
-        // 다음 질문으로 이동
-        testNum--;
+    if (testNum > 0) {
+      setState(() {
+        testNum--; // 질문 번호 감소
+        // 이전 질문의 선택 답변 정보 제거
+        if (selectedAnswers.isNotEmpty) {
+          totalScore -= int.parse(selectedAnswers.removeLast()['score']);
+        }
         selectedAnswer = null; // 선택 초기화
-      }
-    });
+      });
+    }
   }
 
   @override
@@ -87,7 +86,16 @@ class _TestPageState extends State<TestPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          LinearProgressIndicator(),
+          SizedBox(
+            width: 317,
+            height: 9,
+            child: LinearProgressIndicator(
+              value: (testNum + 1) / testList.length,
+              color: Color(0xffFF516A),
+              backgroundColor: Color(0xffF2F2F2),
+              borderRadius: BorderRadius.circular(4.5),
+            ),
+          ),
           Padding(
             padding: EdgeInsets.only(left: 20, right: 20, top: 47),
             child: Text(
@@ -189,14 +197,14 @@ class _TestPageState extends State<TestPage> {
                   onPressed:
                       selectedAnswer != null ? nextQuestion : null, // 다음 버튼
                   child: Text(
-                    '다음',
+                    testNum < testList.length - 1 ? '다음' : '결과 보기',
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
                     fixedSize: Size(155, 50),
                     backgroundColor: selectedAnswer != null
                         ? Color(0xffFF516A)
-                        : Color(0xffFF516A),
+                        : Color(0xffFFB3B3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -248,10 +256,6 @@ class ResultPage extends StatelessWidget {
               );
             }),
             Spacer(),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('처음으로 돌아가기'),
-            ),
           ],
         ),
       ),
