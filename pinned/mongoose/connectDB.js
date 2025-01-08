@@ -22,8 +22,8 @@ const connectDB = async () => {
 
     // 새로운 사용자 데이터
     const newUser = {
-      id: 3,
-      email: "user1@example.com",
+      id: 4,
+      email: "user2@example.com",
       name: "홍길동",
       character: 0
     };
