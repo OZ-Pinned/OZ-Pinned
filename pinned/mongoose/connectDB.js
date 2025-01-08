@@ -22,8 +22,8 @@ const connectDB = async () => {
 
     // 새로운 사용자 데이터
     const newUser = {
-      id: 2,
-      email: "user@example.com",
+      id: 3,
+      email: "user1@example.com",
       name: "홍길동",
       character: 0
     };
@@ -42,3 +42,5 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
+
+connectDB().catch(console.error)
