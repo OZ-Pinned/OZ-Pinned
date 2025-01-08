@@ -35,10 +35,11 @@ const connectDB = async () => {
     console.log("MongoDB 연결 성공!");
   } catch (err) {
     console.error("MongoDB 연결 실패:", err);
-  } finally {
-    // 필요할 경우 연결 종료
+  } finally { 
     await client.close();
   }
 };
 
 module.exports = connectDB;
+
+connectDB().catch(console.error);
