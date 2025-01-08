@@ -20,18 +20,7 @@ const connectDB = async () => {
     const database = client.db("pinned");  // 데이터베이스 선택, 없으면 자동 생성
     const users = database.collection("userDB");  // 컬렉션 선택, 없으면 자동 생성
 
-    // 새로운 사용자 데이터
-    const newUser = {
-      id: 4,
-      email: "user2@example.com",
-      name: "홍길동",
-      character: 0
-    };
-
-    // 데이터 추가
-    const result = await users.insertOne(newUser);
-    console.log(`New user added with the following id: ${result.insertedId}`);
-
+    // 새로운 사용자 데이터ㄴ
     console.log("MongoDB 연결 성공!");
   } catch (err) {
     console.error("MongoDB 연결 실패:", err);
