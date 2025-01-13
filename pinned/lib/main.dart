@@ -296,7 +296,7 @@ class _CertificationPageState extends State<CertificationPage> {
         body: json.encode({'email': email}),
       );
 
-      final data = json.decode(response.body);
+      final data = await json.decode(response.body);
 
       print("Response data: $data");
 
@@ -304,6 +304,7 @@ class _CertificationPageState extends State<CertificationPage> {
         print("Login successful : $data");
         userName = data['user']['name'];
         userCharacter = data['user']['character'];
+        print('$userName $userCharacter');
         await storeEmail(email);
       } else {
         print("Login failed : ${data['errorMessage']}");
