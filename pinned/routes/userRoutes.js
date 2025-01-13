@@ -10,7 +10,7 @@ router.use(bodyParser.json());
 
 // 사용자 회원가입 라우트
 router.post('/signup', async (req, res) => {
-  const { _id, email, name, character } = req.body;
+  const { email, name, character } = req.body;
 
   try {
     // 기존 사용자 이메일 중복 확인
@@ -23,12 +23,12 @@ router.post('/signup', async (req, res) => {
 
     // 사용자 생성
     const createdUser = await UserDB.create({
-      _id,
       email,
       name,
       character,
     });
 
+    // 응답: 생성된 사용자 정보 (id 포함)
     return res
       .status(201)
       .json({ success: true, message: 'Signup successful', user: createdUser });
@@ -55,7 +55,7 @@ router.post('/login', async (req, res) => {
         success: true,
         message: 'Login successful',
         user: {
-          id: user._id,
+          id: user._id, // MongoDB의 _id는 자동 생성됨
           email: user.email,
           name: user.name,
           character: user.character,
