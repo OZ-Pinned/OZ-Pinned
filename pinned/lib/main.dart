@@ -263,6 +263,9 @@ class CertificationPage extends StatefulWidget {
 }
 
 class _CertificationPageState extends State<CertificationPage> {
+  String userName = "";
+  int userCharacter = 0;
+
   final List<TextEditingController> _controllers =
       List.generate(6, (_) => TextEditingController());
 
@@ -274,6 +277,40 @@ class _CertificationPageState extends State<CertificationPage> {
     } else if (value.isEmpty && index > 0) {
       // 입력값이 없으면 이전 TextField로 포커스를 이동
       FocusScope.of(context).previousFocus();
+    }
+  }
+
+  Future<void> storeEmail(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email); // 'email' 키에 이메일 저장
+  }
+
+  Future<void> login(String email) async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:3000/user/login'), // Node.js 서버의 IP 주소 사용
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: json.encode({'email': email}),
+      );
+
+      final data = await json.decode(response.body);
+
+      print("Response data: $data");
+
+      if (data['success']) {
+        print("Login successful : $data");
+        userName = data['user']['name'];
+        userCharacter = data['user']['character'];
+        print('$userName $userCharacter');
+        await storeEmail(email);
+      } else {
+        print("Login failed : ${data['errorMessage']}");
+      }
+    } catch (error) {
+      print(error);
     }
   }
 
@@ -346,21 +383,29 @@ class _CertificationPageState extends State<CertificationPage> {
                 width: 350,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    // login()과 storeEmail()이 완료될 때까지 기다림
+                    await login(widget.email); // 로그인 처리 후
+                    await storeEmail(widget.email); // 이메일 저장 후
+
+                    // 로그인 성공 후 조건에 따라 화면 전환
                     if (widget.logined == true) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HomePage(),
+                          builder: (context) => HomePage(
+                            email: widget.email,
+                            character: userCharacter,
+                            name: userName,
+                          ),
                         ),
                       );
                     } else {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => NamePage(
+                          builder: (context) => CharacterPage(
                             email: widget.email,
-                            logined: widget.logined,
                           ),
                         ),
                       );
@@ -381,7 +426,7 @@ class _CertificationPageState extends State<CertificationPage> {
                     ),
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),
@@ -390,31 +435,314 @@ class _CertificationPageState extends State<CertificationPage> {
   }
 }
 
-class NamePage extends StatefulWidget {
-  final bool logined;
+class CharacterPage extends StatefulWidget {
   final String email;
-  const NamePage({super.key, required this.logined, required this.email});
+
+  const CharacterPage({super.key, required this.email});
+
+  @override
+  _CharacterPageState createState() => _CharacterPageState();
+}
+
+class _CharacterPageState extends State<CharacterPage> {
+  int selectedChar = 0;
+
+  SvgPicture getImage(int value) {
+    if (value == 0) {
+      return SvgPicture.asset(
+        'assets/images/Koala.svg',
+        height: 80,
+        width: 320,
+      );
+    } else if (value == 1) {
+      return SvgPicture.asset(
+        'assets/images/Kangeroo.svg',
+        height: 80,
+        width: 320,
+      );
+    } else {
+      return SvgPicture.asset(
+        'assets/images/Quoka.svg',
+        height: 80,
+        width: 320,
+      );
+    }
+  }
+
+  String getName(int value) {
+    if (value == 0) {
+      return "코코";
+    } else if (value == 1) {
+      return "루루";
+    } else {
+      return "키키";
+    }
+  }
+
+  void toggleSelect(int value) {
+    setState(() {
+      selectedChar = value; // 선택된 캐릭터의 인덱스 업데이트
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xffFFFFFF),
+      appBar: AppBar(
+        title: const Text("Birth Input"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            const Text(
+              "캐릭터를 선택해주세요!",
+              style: TextStyle(
+                fontFamily: 'LeeSeoYun',
+                fontSize: 24,
+              ),
+            ),
+            const Text(
+              "이후에 캐릭터를 바꿀 수 있습니다.",
+              style: TextStyle(
+                  fontFamily: 'LeeSeoYun',
+                  fontSize: 14,
+                  color: Color(0xff888888)),
+            ),
+            const SizedBox(height: 35),
+            // 캐릭터 선택 버튼
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for (int i = 0; i < 3; i++) ...[
+                  Column(
+                    children: [
+                      SizedBox(
+                        width: 110,
+                        height: 158,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xffFFFFFF),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7),
+                            ),
+                            side: BorderSide(
+                              color: selectedChar == i
+                                  ? const Color(0xffFB5D6F)
+                                  : const Color(0xffDADADA),
+                              width: 2.0,
+                            ),
+                            padding: const EdgeInsets.all(6),
+                          ),
+                          onPressed: () => toggleSelect(i),
+                          child: getImage(i),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 17,
+                      ),
+                      Text(
+                        getName(i),
+                        style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 25),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                  if (i < 2) const SizedBox(width: 6), // 버튼 간 간격
+                ],
+              ],
+            ),
+            SizedBox(height: 270),
+            // 다음 버튼
+            SizedBox(
+              width: 350,
+              height: 52,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xffFF516A),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HelloPage(
+                        email: widget.email,
+                        character: selectedChar,
+                      ),
+                    ),
+                  );
+                },
+                child: const Text(
+                  '확인',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class HelloPage extends StatefulWidget {
+  final String email;
+  final int character;
+
+  const HelloPage({super.key, required this.email, required this.character});
+
+  @override
+  _HelloPageState createState() => _HelloPageState();
+}
+
+class _HelloPageState extends State<HelloPage> {
+  String getName(int value) {
+    if (value == 0) {
+      return "코코";
+    } else if (value == 1) {
+      return "루루";
+    } else {
+      return "키키";
+    }
+  }
+
+  SvgPicture getImage(int value) {
+    if (value == 0) {
+      return SvgPicture.asset(
+        'assets/images/Koala.svg',
+        height: 247,
+        width: 168,
+      );
+    } else if (value == 1) {
+      return SvgPicture.asset(
+        'assets/images/Kangeroo.svg',
+        height: 247,
+        width: 168,
+      );
+    } else {
+      return SvgPicture.asset(
+        'assets/images/Quoka.svg',
+        height: 247,
+        width: 168,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xffFFFFFF),
+      appBar: AppBar(),
+      body: Center(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 40,
+            ),
+            Container(
+              padding: EdgeInsets.only(
+                top: 9,
+                bottom: 9,
+                right: 44,
+                left: 44,
+              ),
+              decoration: BoxDecoration(
+                color: Color(0xffEDEDED),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(19.5),
+                  topRight: Radius.circular(19.5),
+                  bottomRight: Radius.circular(19.5),
+                ),
+              ),
+              child: Text(
+                '안녕! 난 ${getName(widget.character)}야\n앞으로 잘 부탁해!',
+                style: TextStyle(
+                  fontFamily: 'LeeSeoYun',
+                  fontSize: 27,
+                  height: 1.1111111,
+                ),
+              ),
+            ),
+            Container(
+              width: 300,
+              height: 300,
+              decoration: BoxDecoration(
+                color: Color(0xffF5F5F5),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(300),
+                ),
+              ),
+              child: getImage(
+                widget.character,
+              ),
+            ),
+            SizedBox(
+              height: 200,
+            ),
+            SizedBox(
+              width: 320,
+              height: 52,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xffFF516A),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(7))),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NamePage(
+                          email: widget.email,
+                          character: widget.character,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    '확인',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NamePage extends StatefulWidget {
+  final String email;
+  final int character;
+  const NamePage({super.key, required this.email, required this.character});
 
   @override
   _NamePageState createState() => _NamePageState();
 }
 
 class _NamePageState extends State<NamePage> {
-  String inputedName = '';
-  @override
-  void initState() {
-    // TODO: implement initState
-    inputedName = "";
-    super.initState();
-  }
-
   Future<void> storeEmail(String email) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('email', email); // 'email' 키에 이메일 저장
   }
 
 // 회원가입 함수
-  Future<void> signup(int id, String email, String name, int character) async {
+  Future<void> signup(String email, int character, String name) async {
     try {
       final response = await http.post(
         Uri.parse('http://localhost:3000/user/signup'), // Node.js 서버의 IP 주소 사용
@@ -442,507 +770,114 @@ class _NamePageState extends State<NamePage> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xffFFF9F8),
-      appBar: AppBar(
-        title: const Text("First"),
-      ),
-      body: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            // 레이아웃을 세로 방향으로 정렬
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 81,
-              ),
-              const Text(
-                "이름을 작성해주세요",
-                style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 24),
-              ),
-              const SizedBox(height: 121), // 텍스트와 TextField 간 간격 추가
-              SizedBox(
-                width: 320,
-                height: 55,
-                child: TextField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white, // 내부 배경색 설정
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xffDADADA), // 외부 테두리 색상
-                        width: 1.0, // 외부 테두리 두께
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
-                        width: 1.0, // 외부 테두리 두께
-                      ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.transparent, // 기본 테두리 투명
-                        width: 0, // 두께 0
-                      ),
-                    ),
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      inputedName = value;
-                      print(inputedName);
-                    });
-                  },
-                ),
-              ),
-              const SizedBox(height: 329),
-              SizedBox(
-                width: 320,
-                height: 52,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xffFF516A),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(7))),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BirthPage(
-                              title: 'Input Birth', name: inputedName),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      '다음',
-                      style: TextStyle(
-                          fontFamily: 'LeeSeoYun',
-                          fontSize: 20,
-                          color: Colors.white),
-                    )),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class BirthPage extends StatefulWidget {
-  final String title;
-  final String name;
-  const BirthPage({super.key, required this.title, required this.name});
-
-  @override
-  _BirthPageState createState() => _BirthPageState();
-}
-
-class _BirthPageState extends State<BirthPage> {
-  // 연도, 월, 날짜 목록
-  final years = [
-    '2007',
-    '2006',
-    '2005',
-    '2004',
-    '2003',
-    '2002',
-    '2001',
-    '2000'
-  ];
-
-  final months = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '10',
-    '11',
-    '12'
-  ];
-
-  final dates = ['1', '2', '3'];
-
-  String date = "";
-
-  // 선택된 연도, 월, 날짜
-  String selectedYear = '2007';
-  String selectedMonth = '1';
-  String selectedDate = '1';
-
-  // 상태 초기화
-  @override
-  void initState() {
-    super.initState();
-    // 첫 번째 연도를 기본 선택값으로 설정
-    date = "";
-    selectedYear = years[0];
-    selectedMonth = months[0];
-    selectedDate = dates[0];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xffFFF9F8),
-      appBar: AppBar(
-        title: const Text("Birth Input"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 81),
-            const Text(
-              "생년월일을 선택해주세요",
-              style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 24),
-            ),
-            const SizedBox(height: 121),
-            // 연도 선택
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: 126,
-                  height: 53,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Color(0xffDADADA), width: 1),
-                    ),
-                    child: DropdownButton<String>(
-                      padding: EdgeInsets.only(
-                          top: 16, bottom: 16, right: 26.5, left: 26.5),
-                      isExpanded: true,
-                      value: selectedYear,
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedYear = newValue!;
-                        });
-                      },
-                      items:
-                          years.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: TextStyle(
-                              fontFamily: 'LeeSeoYun',
-                              fontSize: 20,
-                              color: Colors.black, // 텍스트 색상 설정
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                    width: 93,
-                    height: 53,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Color(0xffDADADA), width: 1),
-                      ),
-                      child: DropdownButton<String>(
-                        padding: EdgeInsets.only(
-                            top: 16, bottom: 16, right: 17, left: 17),
-                        isExpanded: true,
-                        value: selectedMonth,
-                        onChanged: (newValue) {
-                          setState(() {
-                            selectedMonth = newValue!;
-                          });
-                        },
-                        items: months
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: TextStyle(
-                                fontFamily: 'LeeSeoYun',
-                                fontSize: 20,
-                                color: Colors.black, // 텍스트 색상 설정
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    )),
-                SizedBox(
-                  width: 93,
-                  height: 53,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Color(0xffDADADA), width: 1),
-                    ),
-                    child: DropdownButton<String>(
-                      padding: EdgeInsets.only(
-                          top: 16, bottom: 16, right: 17, left: 17),
-                      isExpanded: true,
-                      value: selectedDate,
-                      items:
-                          dates.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: TextStyle(
-                              fontFamily: 'LeeSeoYun',
-                              fontSize: 20,
-                              color: Colors.black, // 텍스트 색상 설정
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedDate = newValue!;
-                        });
-                      },
-                    ),
-                  ),
-                )
-              ],
-            ),
-            SizedBox(height: 329),
-            SizedBox(
-              width: 320,
-              height: 52,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xffFF516A),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(7))),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CharacterPage(
-                        name: widget.name,
-                        birthDate: '$selectedYear-$selectedMonth-$selectedDate',
-                      ),
-                    ),
-                  );
-                },
-                child: Text(
-                  '다음',
-                  style: TextStyle(
-                    fontFamily: 'LeeSeoYun',
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CharacterPage extends StatefulWidget {
-  final String name;
-  final String birthDate;
-  const CharacterPage({super.key, required this.name, required this.birthDate});
-
-  @override
-  _CharacterPageState createState() => _CharacterPageState();
-}
-
-class _CharacterPageState extends State<CharacterPage> {
-  late List<bool> isSelected = [true, false, false];
-  // selectedChar가 null이면 0을 기본값으로 사용
-  String selectedChar = "";
-  int testNum = 0;
-
-  void answerPressed() {
-    testNum++;
-  }
+  String inputedName = "";
 
   @override
   void initState() {
+    // TODO: implement initState
+    inputedName = "";
     super.initState();
   }
 
-  void toggleSelect(value) {
+  @override
+  void inputName(value) {
     setState(() {
-      selectedChar = '$value';
-      isSelected = [value == 0, value == 1, value == 2];
+      inputedName = value;
+      print(inputedName);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffFFF9F8),
-      appBar: AppBar(
-        title: const Text("Birth Input"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 81),
-            const Text(
-              "캐릭터를 선택해주세요",
-              style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 24),
-            ),
-            const SizedBox(height: 121),
-            // 캐릭터 선택
-            ToggleButtons(
-              isSelected: isSelected,
-              onPressed: toggleSelect,
-              selectedColor: Colors.black,
-              borderRadius: BorderRadius.circular(7),
-              borderColor: Color(0xffDADADA),
-              selectedBorderColor: Color(0xffFB5D6F),
-              children: [
-                Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(6),
-                      child: Image.asset('assets/images/Kangeroo.png'),
+      backgroundColor: Color(0xffFFFFFF),
+      appBar: AppBar(),
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 20.0,
+            right: 20.0,
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 40,
+              ),
+              SvgPicture.asset(
+                'assets/images/usernameChar.svg',
+                height: 80,
+                width: 320,
+              ),
+              SizedBox(
+                height: 17,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white, // 내부 배경색 설정
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(7),
+                    borderSide: BorderSide(
+                      color: Color(0xffDADADA), // 외부 테두리 색상
+                      width: 1.0, // 외부 테두리 두께
                     ),
-                    Text(
-                      "코코",
-                      style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 25),
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(6),
-                      child: Image.asset('assets/images/Kangeroo.png'),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
+                      width: 1.0, // 외부 테두리 두께
                     ),
-                    Text(
-                      "코코",
-                      style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 25),
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(6),
-                      child: Image.asset('assets/images/Kangeroo.png'),
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.transparent, // 기본 테두리 투명
+                      width: 0, // 두께 0
                     ),
-                    Text(
-                      "코코",
-                      style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 25),
-                    )
-                  ],
+                  ),
                 ),
-              ],
-            ),
-            SizedBox(height: 235),
-            SizedBox(
-              width: 320,
-              height: 52,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xffFF516A),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(7))),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FinalPage(
-                        name: widget.name,
-                        birthDate: widget.birthDate,
-                        selectedCharacter: selectedChar,
-                      ),
-                    ),
-                  );
+                onChanged: (value) {
+                  inputName(value);
                 },
-                child: Text(
-                  '다음',
-                  style: TextStyle(
-                    fontFamily: 'LeeSeoYun',
-                    fontSize: 20,
-                    color: Colors.white,
+              ),
+              SizedBox(
+                height: 420,
+              ),
+              SizedBox(
+                width: 350,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    storeEmail(widget.email);
+                    signup(widget.email, widget.character, inputedName);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(
+                          email: widget.email,
+                          character: widget.character,
+                          name: inputedName,
+                        ),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xffFF516A),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                    ),
+                  ),
+                  child: Text(
+                    "확인",
+                    style: TextStyle(
+                      color: Color(0xffFFFFFF),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class FinalPage extends StatelessWidget {
-  final String name;
-  final String birthDate;
-  final String selectedCharacter;
-
-  const FinalPage({
-    super.key,
-    required this.name,
-    required this.birthDate,
-    required this.selectedCharacter,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xffFFF9F8),
-      appBar: AppBar(
-        title: const Text("Final Page"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 81),
-            const Text(
-              "입력한 정보",
-              style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 24),
-            ),
-            const SizedBox(height: 40),
-            Text(
-              '이름: $name',
-              style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 20),
-            ),
-            SizedBox(height: 20),
-            Text(
-              '생년월일: $birthDate',
-              style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 20),
-            ),
-            SizedBox(height: 20),
-            Text(
-              '선택한 캐릭터: $selectedCharacter',
-              style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 20),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

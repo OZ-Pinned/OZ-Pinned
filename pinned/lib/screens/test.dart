@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'test_list.dart';
+import 'KoreanList.dart';
+import 'EnglishList.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 void main() => runApp(MyApp());
 
@@ -10,23 +14,45 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: TestPage(),
+      home: TestPage(lang: true),
     );
   }
 }
 
 class TestPage extends StatefulWidget {
-  const TestPage({super.key});
+  final bool lang;
+  const TestPage({super.key, required this.lang});
 
   @override
   State<TestPage> createState() => _TestPageState();
 }
 
 class _TestPageState extends State<TestPage> {
+  late List<Map<String, dynamic>> testList;
+
   int testNum = 0; // 현재 질문 번호
   int totalScore = 0; // 총 점수
   Map<String, dynamic>? selectedAnswer; // 현재 선택된 답변
   List<Map<String, dynamic>> selectedAnswers = []; // 선택된 답변 리스트 추가
+
+  @override
+  void initState() {
+    super.initState();
+    // 초기화: testList에 초기값 설정
+    testList = widget.lang ? EnglishList : KoreanList;
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    super.setState(fn); // 부모의 setState 호출
+
+    // 조건에 따라 testList 초기화 (setState 내부에서 초기화하는 것이 아닌, 이미 초기화된 상태에서 업데이트 필요)
+    if (widget.lang == true) {
+      testList = EnglishList;
+    } else {
+      testList = KoreanList;
+    }
+  }
 
   // 답변 버튼 클릭 시 호출
   void answerPressed(Map<String, dynamic> answer) {
@@ -240,6 +266,7 @@ class _ResultPageState extends State<ResultPage> {
     getToday(); // 화면 초기화 시 날짜 설정
   }
 
+  // 날짜를 가져오는 함수
   void getToday() {
     DateTime now = DateTime.now();
     DateFormat formatter = DateFormat('yyyy-MM-dd');
@@ -249,7 +276,15 @@ class _ResultPageState extends State<ResultPage> {
     });
   }
 
+  // 이메일을 비동기적으로 가져오는 함수
+  Future<String?> getEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('email'); // 'email' 키에 저장된 값 반환
+  }
+
+  // 점수에 따른 결과 반환하는 함수
   String getReseult(int totalScore) {
+    save(totalScore); // 이메일을 받아오고 점수를 저장
     if (totalScore >= 20) {
       return "매우 심함";
     } else if (totalScore >= 15) {
@@ -260,6 +295,38 @@ class _ResultPageState extends State<ResultPage> {
       return "경미";
     } else
       return "정상";
+  }
+
+  // 점수와 이메일을 서버에 저장하는 함수
+  Future<void> save(int score) async {
+    try {
+      String? email = await getEmail(); // 이메일을 가져옴
+      if (email != null) {
+        final response = await http.post(
+          Uri.parse('http://localhost:3000/test/save'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: json.encode({
+            'email': email,
+            'score': score,
+          }),
+        );
+
+        final data = json.decode(response.body);
+
+        if (data['success']) {
+          print('Test Score Save successful : $data');
+        } else {
+          print('Test Score Save failed : ${data['errorMessage']}');
+        }
+      } else {
+        print("이메일을 찾을 수 없습니다.");
+      }
+    } catch (error) {
+      print('Error during save: $error');
+    }
   }
 
   @override
@@ -291,14 +358,14 @@ class _ResultPageState extends State<ResultPage> {
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20)),
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
                 color: Colors.white,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  // 기존 내용 유지
                   Expanded(
                     child: Column(
                       children: [
@@ -462,9 +529,9 @@ class _PieChartViewState extends State<PieChartView>
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            spreadRadius: 10,
-                            blurRadius: 17,
-                            offset: Offset(-5, -5),
+                            spreadRadius: 0,
+                            blurRadius: 6,
+                            offset: Offset(0, 0),
                             color: Colors.white,
                           ),
                         ],
