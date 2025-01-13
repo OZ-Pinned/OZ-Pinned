@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pinned/screens/home.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(const MyApp());
@@ -137,13 +138,102 @@ class EmailPage extends StatefulWidget {
 }
 
 class _EmailPageState extends State<EmailPage> {
+  String inputedEmail = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    inputedEmail = "";
+    super.initState();
+  }
+
+  @override
+  void inputEmail(value) {
+    setState(() {
+      inputedEmail = value;
+      print(inputedEmail);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(),
-      body: Column(
-        children: [],
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 20.0,
+            right: 20.0,
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 40,
+              ),
+              SvgPicture.asset(
+                'assets/images/emailChar.svg',
+                height: 80,
+                width: 320,
+              ),
+              SizedBox(
+                height: 17,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white, // 내부 배경색 설정
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(7),
+                    borderSide: BorderSide(
+                      color: Color(0xffDADADA), // 외부 테두리 색상
+                      width: 1.0, // 외부 테두리 두께
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
+                      width: 1.0, // 외부 테두리 두께
+                    ),
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.transparent, // 기본 테두리 투명
+                      width: 0, // 두께 0
+                    ),
+                  ),
+                ),
+                onChanged: (value) {
+                  inputEmail(value);
+                },
+              ),
+              SizedBox(
+                height: 420,
+              ),
+              SizedBox(
+                width: 350,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xffFF516A),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                    ),
+                  ),
+                  child: Text(
+                    "인증번호 받기",
+                    style: TextStyle(
+                      color: Color(0xffFFFFFF),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
