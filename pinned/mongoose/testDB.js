@@ -10,7 +10,6 @@ const connectDB = require("./connectDB.js"); // 경로를 connectDB.js로 수정
     } else {
         console.log("MongoDB 연결 상태: 연결되지 않음");
     }
-
     // 연결 종료
     mongoose.connection.close();
 })();

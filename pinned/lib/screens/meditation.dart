@@ -88,6 +88,7 @@ class _MeditationVideoPlayerState extends State<MeditationVideoPlayer> {
           YoutubePlayerControllerProvider(
             controller: _controller,
             child: YoutubePlayer(
+              controller: _controller,
               aspectRatio: 16 / 9,
             ),
           ),
