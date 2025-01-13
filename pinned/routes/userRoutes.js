@@ -49,6 +49,8 @@ router.post('/login', async (req, res) => {
     // 데이터베이스에서 이메일로 사용자 찾기
     const user = await UserDB.findOne({ email }).exec();
 
+    console.log(user)
+
     if (user) {
       // 로그인 성공
       return res.status(200).json({
