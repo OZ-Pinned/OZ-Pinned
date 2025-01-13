@@ -1,12 +1,19 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const secretKey = process.env.JWT_SECRET_KEY;
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const UserDB = require('../lib/models/user_model'); // UserDB 모델 가져오기
 
-router.post('/user/signup', async (req, res) => {
-  const { _id, email, name, character } = req.body;
+router.use(cors());
+router.use(bodyParser.json());
+
+// 사용자 회원가입 라우트
+router.post('/signup', async (req, res) => {
+  const { email, name, character } = req.body;
 
   try {
+    // 기존 사용자 이메일 중복 확인
     const existingUser = await UserDB.findOne({ email }).exec();
     if (existingUser) {
       return res
@@ -14,26 +21,60 @@ router.post('/user/signup', async (req, res) => {
         .json({ success: false, errorMessage: 'Email already exists' });
     }
 
+    // 사용자 생성
     const createdUser = await UserDB.create({
-      _id,
       email,
       name,
       character,
     });
 
-    // JWT 토큰 생성
-    const payload = { email, role: 'EMAIL' };
-    const token = jwt.sign(payload, secretKey, { expiresIn: '1h' }); // 토큰 유효 시간 1시간
-
-    return res.status(201).json({ success: true, token, user: createdUser });
+    // 응답: 생성된 사용자 정보 (id 포함)
+    return res
+      .status(201)
+      .json({ success: true, message: 'Signup successful', user: createdUser });
   } catch (error) {
-    return res.status(500).json({ success: false, errorMessage: 'Signup failed' });
+    console.error('Signup error:', error);
+    return res.status(500).json({
+      success: false,
+      errorMessage: 'Signup failed. Please try again.',
+    });
   }
 });
 
 // 사용자 로그인 라우트
 router.post('/login', async (req, res) => {
-  // 로그인 로직 구현
+  const { email } = req.body;
+
+  try {
+    // 데이터베이스에서 이메일로 사용자 찾기
+    const user = await UserDB.findOne({ email }).exec();
+
+    if (user) {
+      // 로그인 성공
+      return res.status(200).json({
+        success: true,
+        message: 'Login successful',
+        user: {
+          id: user._id, // MongoDB의 _id는 자동 생성됨
+          email: user.email,
+          name: user.name,
+          character: user.character,
+        },
+      });
+    } else {
+      // 사용자 계정이 없을 경우
+      return res.status(404).json({
+        success: false,
+        message: 'There is no account with this email',
+      });
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error during login',
+    });
+  }
 });
 
 module.exports = router;
