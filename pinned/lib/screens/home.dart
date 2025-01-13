@@ -3,29 +3,16 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Input Name',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      // home: const NamePage(title: 'Input Name'),
-      home: HomePage(),
-    );
-  }
-}
-
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String email;
+  final int character;
+  final String name;
+  const HomePage({
+    super.key,
+    required this.email,
+    required this.character,
+    required this.name,
+  });
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -34,6 +21,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      backgroundColor: Color(0xffFFFFFF),
+      appBar: AppBar(),
+      body: Column(
+        children: [
+          Text(widget.email),
+          Text(widget.name),
+          Text('${widget.character}'),
+        ],
+      ),
+    );
   }
 }

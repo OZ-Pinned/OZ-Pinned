@@ -99,6 +99,10 @@ flutter:
     - assets/images/logo.png
     - assets/images/emailChar.svg
     - assets/images/certificationChar.svg
+    - assets/images/Koala.svg
+    - assets/images/Kangeroo.svg
+    - assets/images/Quoka.svg
+    - assets/images/usernameChar.svg
 
   #
   # For details regarding fonts from package dependencies,
