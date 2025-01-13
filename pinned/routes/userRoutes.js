@@ -1,16 +1,19 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const UserDB = require('./models/user_model'); // 예시, 실제 경로로 수정 필요
+const UserDB = require('../lib/models/user_model'); // UserDB 모델 가져오기
 
 router.use(cors());
 router.use(bodyParser.json());
 
+// 사용자 회원가입 라우트
 router.post('/signup', async (req, res) => {
   const { _id, email, name, character } = req.body;
 
   try {
+    // 기존 사용자 이메일 중복 확인
     const existingUser = await UserDB.findOne({ email }).exec();
     if (existingUser) {
       return res
@@ -18,6 +21,7 @@ router.post('/signup', async (req, res) => {
         .json({ success: false, errorMessage: 'Email already exists' });
     }
 
+    // 사용자 생성
     const createdUser = await UserDB.create({
       _id,
       email,
@@ -25,9 +29,15 @@ router.post('/signup', async (req, res) => {
       character,
     });
 
-    return res.status(201).json({ success: true, token, user: createdUser });
+    return res
+      .status(201)
+      .json({ success: true, message: 'Signup successful', user: createdUser });
   } catch (error) {
-    return res.status(500).json({ success: false, errorMessage: 'Signup failed' });
+    console.error('Signup error:', error);
+    return res.status(500).json({
+      success: false,
+      errorMessage: 'Signup failed. Please try again.',
+    });
   }
 });
 
@@ -40,6 +50,7 @@ router.post('/login', async (req, res) => {
     const user = await UserDB.findOne({ email }).exec();
 
     if (user) {
+      // 로그인 성공
       return res.status(200).json({
         success: true,
         message: 'Login successful',
@@ -47,7 +58,7 @@ router.post('/login', async (req, res) => {
           id: user._id,
           email: user.email,
           name: user.name,
-          character : user.character
+          character: user.character,
         },
       });
     } else {

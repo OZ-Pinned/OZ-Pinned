@@ -1,16 +1,28 @@
 const express = require('express');
-const userRoutes = require('./routes/userRoutes'); // 라우트 파일 불러오기
-const emotionRoutes = require('./routes/testRoutes');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const userRoutes = require('./routes/userRoutes');  // userRoutes.js 파일을 불러옵니다
 
+
+// Express 앱 초기화
 const app = express();
-const port = 27017;
+app.use(cors());
+app.use(bodyParser.json());
 
-app.use(express.json()); // JSON 요청 본문 파싱
+// MongoDB 연결 설정
+const mongoURI = 'mongodb://pinnedUser:pinnedPassword@localhost:27017/Pinned'; // 새로운 사용자와 비밀번호로 연결
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB 연결 성공'))
+  .catch((error) => console.error('MongoDB 연결 실패:', error));
 
-// '/user' 경로로 들어오는 요청을 userRoutes 라우터로 처리
-app.use('/user', userRoutes);
-app.use('/test', testRoutes);
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+// 라우트 설정
+app.use('/user', userRoutes);  // user 관련 API 라우트 연결
+
+// 서버 포트 설정
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`서버가 http://localhost:${PORT}에서 실행 중입니다.`);
 });
+

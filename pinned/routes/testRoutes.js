@@ -1,8 +1,9 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const TestDB = require('./models/test_score_model');
+const UserDB = require('../lib/models/test_score_model'); // UserDB 모델 가져오기
 
 router.use(cors());
 router.use(bodyParser.json());
@@ -23,3 +24,5 @@ router.post('/save', async (req, res) => {
     return res.status(401).json({ success: false, errorMessage: 'Invalid or expired token' });
   }
 })
+
+module.exports = router;
