@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
+import 'package:pinned/screens/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -56,7 +57,14 @@ class _HomePageState extends State<HomePage> {
                       icon: Icon(Icons.person_3_outlined),
                       padding: EdgeInsets.all(0),
                       color: Color(0xffFFFFFF),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TestPage(),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

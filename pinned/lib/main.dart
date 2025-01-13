@@ -383,9 +383,12 @@ class _CertificationPageState extends State<CertificationPage> {
                 width: 350,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    login(widget.email);
-                    storeEmail(widget.email);
+                  onPressed: () async {
+                    // login()과 storeEmail()이 완료될 때까지 기다림
+                    await login(widget.email); // 로그인 처리 후
+                    await storeEmail(widget.email); // 이메일 저장 후
+
+                    // 로그인 성공 후 조건에 따라 화면 전환
                     if (widget.logined == true) {
                       Navigator.push(
                         context,
@@ -423,7 +426,7 @@ class _CertificationPageState extends State<CertificationPage> {
                     ),
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),
