@@ -347,15 +347,24 @@ class _CertificationPageState extends State<CertificationPage> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CertificationPage(
-                          logined: widget.logined,
-                          email: widget.email,
+                    if (widget.logined == true) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomePage(),
                         ),
-                      ),
-                    );
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NamePage(
+                            email: widget.email,
+                            logined: widget.logined,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xffFF516A),
@@ -364,7 +373,7 @@ class _CertificationPageState extends State<CertificationPage> {
                     ),
                   ),
                   child: Text(
-                    "인증번호 받기",
+                    "확인",
                     style: TextStyle(
                       color: Color(0xffFFFFFF),
                       fontSize: 18,
