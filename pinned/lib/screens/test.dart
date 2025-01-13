@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'test_list.dart';
+import 'KoreanList.dart';
+import 'EnglishList.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -13,23 +14,45 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: TestPage(),
+      home: TestPage(lang: true),
     );
   }
 }
 
 class TestPage extends StatefulWidget {
-  const TestPage({super.key});
+  final bool lang;
+  const TestPage({super.key, required this.lang});
 
   @override
   State<TestPage> createState() => _TestPageState();
 }
 
 class _TestPageState extends State<TestPage> {
+  late List<Map<String, dynamic>> testList;
+
   int testNum = 0; // 현재 질문 번호
   int totalScore = 0; // 총 점수
   Map<String, dynamic>? selectedAnswer; // 현재 선택된 답변
   List<Map<String, dynamic>> selectedAnswers = []; // 선택된 답변 리스트 추가
+
+  @override
+  void initState() {
+    super.initState();
+    // 초기화: testList에 초기값 설정
+    testList = widget.lang ? EnglishList : KoreanList;
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    super.setState(fn); // 부모의 setState 호출
+
+    // 조건에 따라 testList 초기화 (setState 내부에서 초기화하는 것이 아닌, 이미 초기화된 상태에서 업데이트 필요)
+    if (widget.lang == true) {
+      testList = EnglishList;
+    } else {
+      testList = KoreanList;
+    }
+  }
 
   // 답변 버튼 클릭 시 호출
   void answerPressed(Map<String, dynamic> answer) {
@@ -335,8 +358,9 @@ class _ResultPageState extends State<ResultPage> {
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20)),
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
                 color: Colors.white,
               ),
               child: Column(
@@ -505,9 +529,9 @@ class _PieChartViewState extends State<PieChartView>
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            spreadRadius: 10,
-                            blurRadius: 17,
-                            offset: Offset(-5, -5),
+                            spreadRadius: 0,
+                            blurRadius: 6,
+                            offset: Offset(0, 0),
                             color: Colors.white,
                           ),
                         ],
