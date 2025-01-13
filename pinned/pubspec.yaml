@@ -103,6 +103,13 @@ flutter:
     - assets/images/Kangeroo.svg
     - assets/images/Quoka.svg
     - assets/images/usernameChar.svg
+    - assets/images/smallAngryEmotion.svg
+    - assets/images/smallSadEmotion.svg
+    - assets/images/smallNoneEmotion.svg
+    - assets/images/smallHappyEmotion.svg
+    - assets/images/smallLogo.svg
+    - assets/images/homeBackground.svg
+    - assets/images/emotionBackground.svg
 
   #
   # For details regarding fonts from package dependencies,

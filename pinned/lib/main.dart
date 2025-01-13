@@ -263,6 +263,9 @@ class CertificationPage extends StatefulWidget {
 }
 
 class _CertificationPageState extends State<CertificationPage> {
+  String userName = "";
+  int userCharacter = 0;
+
   final List<TextEditingController> _controllers =
       List.generate(6, (_) => TextEditingController());
 
@@ -274,6 +277,39 @@ class _CertificationPageState extends State<CertificationPage> {
     } else if (value.isEmpty && index > 0) {
       // 입력값이 없으면 이전 TextField로 포커스를 이동
       FocusScope.of(context).previousFocus();
+    }
+  }
+
+  Future<void> storeEmail(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email); // 'email' 키에 이메일 저장
+  }
+
+  Future<void> login(String email) async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:3000/user/login'), // Node.js 서버의 IP 주소 사용
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: json.encode({'email': email}),
+      );
+
+      final data = json.decode(response.body);
+
+      print("Response data: $data");
+
+      if (data['success']) {
+        print("Login successful : $data");
+        userName = data['user']['name'];
+        userCharacter = data['user']['character'];
+        await storeEmail(email);
+      } else {
+        print("Login failed : ${data['errorMessage']}");
+      }
+    } catch (error) {
+      print(error);
     }
   }
 
@@ -347,14 +383,16 @@ class _CertificationPageState extends State<CertificationPage> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
+                    login(widget.email);
+                    storeEmail(widget.email);
                     if (widget.logined == true) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => HomePage(
                             email: widget.email,
-                            character: 2,
-                            name: 'test',
+                            character: userCharacter,
+                            name: userName,
                           ),
                         ),
                       );
@@ -805,6 +843,7 @@ class _NamePageState extends State<NamePage> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
+                    storeEmail(widget.email);
                     signup(widget.email, widget.character, inputedName);
                     Navigator.push(
                       context,
