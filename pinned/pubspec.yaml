@@ -31,8 +31,10 @@ dependencies:
   percent_indicator: ^4.0.1
   flutter:
     sdk: flutter
-  shared_preferences: ^2.0.15
+  shared_preferences: ^2.3.5
   http: ^1.2.2
+  shelf: ^1.0.0
+  flutter_svg: ^2.0.5
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -40,7 +42,6 @@ dependencies:
   intl: ^0.20.1
   youtube_player_iframe: ^3.1.0
   flutter_inappwebview: ^6.0.0
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -95,6 +96,9 @@ flutter:
     - assets/images/noneEmotion.png
     - assets/images/meditationButton.jpg
     - assets/images/chatbotButton.jpg
+    - assets/images/logo.png
+    - assets/images/emailChar.svg
+    - assets/images/certificationChar.svg
 
   #
   # For details regarding fonts from package dependencies,
