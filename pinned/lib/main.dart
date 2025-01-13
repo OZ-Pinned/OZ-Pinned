@@ -214,7 +214,149 @@ class _EmailPageState extends State<EmailPage> {
                 width: 350,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CertificationPage(
+                          logined: widget.logined,
+                          email: inputedEmail,
+                        ),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xffFF516A),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                    ),
+                  ),
+                  child: Text(
+                    "인증번호 받기",
+                    style: TextStyle(
+                      color: Color(0xffFFFFFF),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CertificationPage extends StatefulWidget {
+  final bool logined;
+  final String email;
+  const CertificationPage({
+    super.key,
+    required this.logined,
+    required this.email,
+  });
+
+  @override
+  _CertificationPageState createState() => _CertificationPageState();
+}
+
+class _CertificationPageState extends State<CertificationPage> {
+  final List<TextEditingController> _controllers =
+      List.generate(6, (_) => TextEditingController());
+
+  // 각 TextField에 포커스를 이동하는 함수
+  void _onFieldChanged(String value, int index) {
+    if (value.length == 1 && index < 5) {
+      // 현재 입력이 1자일 때, 다음 TextField로 포커스를 이동
+      FocusScope.of(context).nextFocus();
+    } else if (value.isEmpty && index > 0) {
+      // 입력값이 없으면 이전 TextField로 포커스를 이동
+      FocusScope.of(context).previousFocus();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xffffffff),
+      appBar: AppBar(),
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.only(left: 20, right: 20),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 40,
+              ),
+              SvgPicture.asset(
+                'assets/images/certificationChar.svg',
+                height: 80,
+                width: 320,
+              ),
+              SizedBox(
+                height: 17,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(6, (index) {
+                  return SizedBox(
+                    width: 50,
+                    child: TextField(
+                      controller: _controllers[index],
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      maxLength: 1,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white, // 내부 배경색 설정
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(7),
+                          borderSide: BorderSide(
+                            color: Color(0xffDADADA), // 외부 테두리 색상
+                            width: 1.0, // 외부 테두리 두께
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
+                            width: 1.0, // 외부 테두리 두께
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.transparent, // 기본 테두리 투명
+                            width: 0, // 두께 0
+                          ),
+                        ),
+                        counterText: "", // 글자 수 카운트 텍스트를 숨김
+                      ),
+                      onChanged: (value) {
+                        _onFieldChanged(value, index); // 값 변경 시 다음으로 포커스를 이동
+                      },
+                    ),
+                  );
+                }),
+              ),
+              SizedBox(
+                height: 420,
+              ),
+              SizedBox(
+                width: 350,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CertificationPage(
+                          logined: widget.logined,
+                          email: widget.email,
+                        ),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xffFF516A),
                     shape: RoundedRectangleBorder(
@@ -240,7 +382,9 @@ class _EmailPageState extends State<EmailPage> {
 }
 
 class NamePage extends StatefulWidget {
-  const NamePage({super.key});
+  final bool logined;
+  final String email;
+  const NamePage({super.key, required this.logined, required this.email});
 
   @override
   _NamePageState createState() => _NamePageState();
@@ -358,11 +502,12 @@ class _NamePageState extends State<NamePage> {
                     ),
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BirthPage(
-                                title: 'Input Birth', name: inputedName),
-                          ));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BirthPage(
+                              title: 'Input Birth', name: inputedName),
+                        ),
+                      );
                     },
                     child: Text(
                       '다음',
