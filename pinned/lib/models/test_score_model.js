@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
-  id : {type: Number , required: true, unique: true},
+const testScoreSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
-  name: { type: Number, required: true },
-  createdAt: { type: Date, required: true },
+  scores: [{ score: Number, createdAt: String }]  // 점수를 배열로 저장
 });
 
-module.exports = mongoose.model('TestDB', UserSchema);
+const TestDB = mongoose.model('Test', testScoreSchema);
+
+module.exports = TestDB;
