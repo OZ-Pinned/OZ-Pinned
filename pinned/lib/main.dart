@@ -1,6 +1,8 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'screens/test.dart';
-import 'screens/emotion.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pinned/screens/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,20 +14,143 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Input Name',
+      title: 'Login',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       // home: const NamePage(title: 'Input Name'),
-      home: TestPage(),
+      home: SelectPage(),
+    );
+  }
+}
+
+class SelectPage extends StatefulWidget {
+  const SelectPage({super.key});
+
+  @override
+  _SelectPageState createState() => _SelectPageState();
+}
+
+class _SelectPageState extends State<SelectPage> {
+  // selectedChar가 null이면 0을 기본값으로 사용
+  bool logined = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void toggleSelect(value) {
+    setState(() {
+      logined = value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xffffffff),
+      appBar: AppBar(),
+      body: Center(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 200,
+            ),
+            Image.asset('assets/images/logo.png'),
+            SizedBox(
+              height: 288,
+            ),
+            SizedBox(
+              width: 320,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  toggleSelect(false);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EmailPage(
+                        logined: logined,
+                      ),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xffFFFFFF),
+                  side: BorderSide(
+                    color: Color(0xffFF516A),
+                    width: 1.0,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                  ),
+                ),
+                child: Text(
+                  "처음이에요",
+                  style: TextStyle(color: Color(0xffFF516A), fontSize: 18),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 11,
+            ),
+            SizedBox(
+              width: 320,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  toggleSelect(true);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EmailPage(logined: logined),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xffFF516A),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                  ),
+                ),
+                child: Text(
+                  "사용해봤어요",
+                  style: TextStyle(color: Color(0xffFFFFFF), fontSize: 18),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class EmailPage extends StatefulWidget {
+  final bool logined;
+  const EmailPage({super.key, required this.logined});
+
+  @override
+  _EmailPageState createState() => _EmailPageState();
+}
+
+class _EmailPageState extends State<EmailPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xffFFFFFF),
+      appBar: AppBar(),
+      body: Column(
+        children: [],
+      ),
     );
   }
 }
 
 class NamePage extends StatefulWidget {
-  final String title;
-  const NamePage({super.key, required this.title});
+  const NamePage({super.key});
 
   @override
   _NamePageState createState() => _NamePageState();
@@ -38,6 +163,40 @@ class _NamePageState extends State<NamePage> {
     // TODO: implement initState
     inputedName = "";
     super.initState();
+  }
+
+  Future<void> storeEmail(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email); // 'email' 키에 이메일 저장
+  }
+
+// 회원가입 함수
+  Future<void> signup(int id, String email, String name, int character) async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:3000/user/signup'), // Node.js 서버의 IP 주소 사용
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: json.encode({
+          'email': email,
+          'name': name,
+          'character': character,
+        }),
+      );
+
+      final data = json.decode(response.body);
+
+      if (response.statusCode == 201 && data['success']) {
+        print('Signup successful: $data');
+        await storeEmail(email); // 이메일 저장
+      } else {
+        print('Signup failed: ${data['errorMessage']}');
+      }
+    } catch (error) {
+      print('Error during signup: $error');
+    }
   }
 
   @override
@@ -142,7 +301,7 @@ class BirthPage extends StatefulWidget {
 
 class _BirthPageState extends State<BirthPage> {
   // 연도, 월, 날짜 목록
-  final _years = [
+  final years = [
     '2007',
     '2006',
     '2005',
@@ -153,7 +312,7 @@ class _BirthPageState extends State<BirthPage> {
     '2000'
   ];
 
-  final _months = [
+  final months = [
     '1',
     '2',
     '3',
@@ -168,14 +327,14 @@ class _BirthPageState extends State<BirthPage> {
     '12'
   ];
 
-  final _dates = ['1', '2', '3'];
+  final dates = ['1', '2', '3'];
 
   String date = "";
 
   // 선택된 연도, 월, 날짜
-  String _selectedYear = '2007';
-  String _selectedMonth = '1';
-  String _selectedDate = '1';
+  String selectedYear = '2007';
+  String selectedMonth = '1';
+  String selectedDate = '1';
 
   // 상태 초기화
   @override
@@ -183,9 +342,9 @@ class _BirthPageState extends State<BirthPage> {
     super.initState();
     // 첫 번째 연도를 기본 선택값으로 설정
     date = "";
-    _selectedYear = _years[0];
-    _selectedMonth = _months[0];
-    _selectedDate = _dates[0];
+    selectedYear = years[0];
+    selectedMonth = months[0];
+    selectedDate = dates[0];
   }
 
   @override
@@ -224,14 +383,14 @@ class _BirthPageState extends State<BirthPage> {
                       padding: EdgeInsets.only(
                           top: 16, bottom: 16, right: 26.5, left: 26.5),
                       isExpanded: true,
-                      value: _selectedYear,
+                      value: selectedYear,
                       onChanged: (newValue) {
                         setState(() {
-                          _selectedYear = newValue!;
+                          selectedYear = newValue!;
                         });
                       },
                       items:
-                          _years.map<DropdownMenuItem<String>>((String value) {
+                          years.map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(
@@ -260,13 +419,13 @@ class _BirthPageState extends State<BirthPage> {
                         padding: EdgeInsets.only(
                             top: 16, bottom: 16, right: 17, left: 17),
                         isExpanded: true,
-                        value: _selectedMonth,
+                        value: selectedMonth,
                         onChanged: (newValue) {
                           setState(() {
-                            _selectedMonth = newValue!;
+                            selectedMonth = newValue!;
                           });
                         },
-                        items: _months
+                        items: months
                             .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
@@ -295,9 +454,9 @@ class _BirthPageState extends State<BirthPage> {
                       padding: EdgeInsets.only(
                           top: 16, bottom: 16, right: 17, left: 17),
                       isExpanded: true,
-                      value: _selectedDate,
+                      value: selectedDate,
                       items:
-                          _dates.map<DropdownMenuItem<String>>((String value) {
+                          dates.map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(
@@ -312,7 +471,7 @@ class _BirthPageState extends State<BirthPage> {
                       }).toList(),
                       onChanged: (newValue) {
                         setState(() {
-                          _selectedDate = newValue!;
+                          selectedDate = newValue!;
                         });
                       },
                     ),
@@ -336,8 +495,7 @@ class _BirthPageState extends State<BirthPage> {
                     MaterialPageRoute(
                       builder: (context) => CharacterPage(
                         name: widget.name,
-                        birthDate:
-                            '$_selectedYear-$_selectedMonth-$_selectedDate',
+                        birthDate: '$selectedYear-$selectedMonth-$selectedDate',
                       ),
                     ),
                   );
@@ -468,10 +626,15 @@ class _CharacterPageState extends State<CharacterPage> {
                 ),
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TestPage(),
-                      ));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FinalPage(
+                        name: widget.name,
+                        birthDate: widget.birthDate,
+                        selectedCharacter: selectedChar,
+                      ),
+                    ),
+                  );
                 },
                 child: Text(
                   '다음',
