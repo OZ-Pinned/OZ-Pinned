@@ -12,13 +12,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const WriteGalleryPage(),
+      home: const WriteGalleryPage(
+        emotion: 2,
+      ),
     );
   }
 }
 
 class WriteGalleryPage extends StatefulWidget {
-  const WriteGalleryPage({super.key});
+  final int emotion;
+  const WriteGalleryPage({super.key, required this.emotion});
 
   @override
   State<WriteGalleryPage> createState() => _WriteGalleryPageState();
@@ -92,7 +95,7 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
               onTap: pickImage,
               child: Container(
                 height: 200,
-                color: Color(0xffF4F4F4),
+                color: Color(0xffFFFFF),
                 child: _pickedImage == null
                     ? const Icon(Icons.add_a_photo, size: 30)
                     : Image.memory(_pickedImage!, fit: BoxFit.cover),
@@ -209,7 +212,7 @@ class DiaryDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffFFFFFF),
+      backgroundColor: Color(0xffF8F8F8),
       appBar: AppBar(
         title: const Text('감정 꾸미기'),
         leading: IconButton(
@@ -220,32 +223,125 @@ class DiaryDetailPage extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            Container(
-              height: 380,
-              margin: const EdgeInsets.only(top: 40),
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: Color(0xffF5DE99),
+            SizedBox(height: 40),
+            InkWell(
+              child: Container(
+                height: 380,
+                width: 280,
+                decoration: BoxDecoration(
+                  color: Color(0xffF5DE99),
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
+                    Image.memory(image, fit: BoxFit.cover),
+                    SizedBox(height: 10),
+                    Text(title,
+                        style: TextStyle(
+                          fontFamily: 'LeeSeoYun',
+                          fontSize: 28,
+                          color: Colors.black,
+                        )),
+                    Text('2024.12.20',
+                        style: TextStyle(
+                          fontFamily: 'LeeSeoYun',
+                          fontSize: 20,
+                          color: Colors.white,
+                        )),
+                  ],
+                ),
               ),
+              onTap: () {},
+            ),
+            Spacer(),
+            Container(
+              padding: EdgeInsets.fromLTRB(28, 0, 0, 0),
+              height: 230,
+              width: double.infinity,
+              decoration: BoxDecoration(color: Color(0xffFFFFFF)),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.memory(image, fit: BoxFit.cover),
-                  SizedBox(height: 10),
-                  Text(title,
-                      style: TextStyle(
-                        fontFamily: 'LeeSeoYun',
-                        fontSize: 28,
-                        color: Colors.black,
-                      )),
-                  Text('2024.12.20',
-                      style: TextStyle(
-                        fontFamily: 'LeeSeoYun',
-                        fontSize: 20,
-                        color: Colors.white,
-                      )),
+                  SizedBox(height: 20),
+                  Text(
+                    "컬러",
+                    style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        MaterialButton(
+                          height: 52,
+                          onPressed: () {},
+                          color: Color(0xffFFFFFF),
+                          shape: const CircleBorder(),
+                        ),
+                        MaterialButton(
+                          height: 50,
+                          onPressed: () {},
+                          color: Color(0xff555555),
+                          shape: const CircleBorder(),
+                        ),
+                        MaterialButton(
+                          height: 50,
+                          onPressed: () {},
+                          color: Color(0xffF0B8B2),
+                          shape: const CircleBorder(),
+                        ),
+                        MaterialButton(
+                          height: 50,
+                          onPressed: () {},
+                          color: Color(0xffF5DE99),
+                          shape: const CircleBorder(),
+                        ),
+                        MaterialButton(
+                          height: 50,
+                          onPressed: () {},
+                          color: Color(0xffA898C6),
+                          shape: const CircleBorder(),
+                        ),
+                        MaterialButton(
+                          height: 50,
+                          onPressed: () {},
+                          color: Color(0xff9FA9A1),
+                          shape: const CircleBorder(),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 47),
+                  SizedBox(
+                    width: 320, // 버튼 너비
+                    height: 52, // 버튼 높이
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xffFF516A), // 버튼 배경색
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(7)), // 테두리
+                        ),
+                      ),
+                      child: const Text(
+                        '완료',
+                        style: TextStyle(
+                          fontFamily: 'LeeSeoYun',
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),
