@@ -11,7 +11,7 @@ const diaryRoutes = require('./routes/diaryRoutes');
 // Express 앱 초기화
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
 
 // MongoDB 연결 설정
 const mongoURI = 'mongodb://pinnedUser:pinnedPassword@localhost:27017/pinned'; // 새로운 사용자와 비밀번호로 연결
@@ -25,7 +25,7 @@ app.use('/user', userRoutes);  // user 관련 API 라우트 연결
 app.use('/chatbot', chatbotRoutes);
 app.use('/mypage', mypageRoutes);
 app.use('/test', testRoutes);
-app.use('diary',diaryRoutes);
+app.use('/diary',diaryRoutes);
 
 // 서버 포트 설정
 const PORT = 3000;
