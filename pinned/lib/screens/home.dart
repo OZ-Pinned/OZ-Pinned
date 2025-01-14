@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
+import 'package:pinned/icon/custom_icon_icons.dart';
 import 'package:pinned/screens/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'meditation.dart';
@@ -101,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 // 감정 기록 부분 수정
-                SizedBox(height: 20),
+                SizedBox(height: 16),
                 SafeArea(
                   child: Container(
                     width: 320,
@@ -153,6 +154,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 child: SvgPicture.asset(
                                   'assets/images/${getImage(i)}',
+                                  fit: BoxFit.cover,
                                   width: 62,
                                   height: 65,
                                 ),
@@ -172,11 +174,14 @@ class _HomePageState extends State<HomePage> {
                       for (int i = 0; i < 2; i++) ...[
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7),
-                            ),
-                            padding: EdgeInsets.all(0),
-                          ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7),
+                              ),
+                              padding: EdgeInsets.all(0),
+                              fixedSize: Size(
+                                153,
+                                135,
+                              )),
                           onPressed: () {
                             if (i == 0) {
                               Navigator.push(
@@ -198,14 +203,84 @@ class _HomePageState extends State<HomePage> {
                             'assets/images/${getButtonImage(i)}',
                             width: 153,
                             height: 135,
+                            fit: BoxFit.fill,
                           ),
                         ),
                         if (i < 1) const SizedBox(width: 13),
                       ],
                     ],
                   ),
-                )
-                // 컨텐츠
+                ),
+                SafeArea(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Stack(
+                        alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
+                        children: [
+                          Positioned(
+                            top: -25, // 텍스트 상자 위에 위치하도록 조정
+                            child: SvgPicture.asset(
+                              'assets/images/koko.svg',
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(
+                              top: 9,
+                              bottom: 9,
+                              right: 44,
+                              left: 44,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Color(0xffFFFFFF),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(19.5),
+                                topRight: Radius.circular(19.5),
+                                bottomRight: Radius.circular(0),
+                                bottomLeft: Radius.circular(19.5),
+                              ),
+                              border: Border.all(
+                                color: Color(0xffDADADA),
+                              ),
+                            ),
+                            width: 246,
+                            height: 58,
+                            child: Text(
+                              '${widget.name}아!\n오늘 하루는 어땠어?',
+                              style: TextStyle(
+                                  fontFamily: 'LeeSeoYun',
+                                  fontSize: 18,
+                                  height: 1.14),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        width: 58,
+                        height: 58,
+                        decoration: BoxDecoration(
+                          color: Color(0xffFF516A), // 원하는 배경색
+                          shape: BoxShape.circle, // 원형 배경
+                        ),
+                        child: Center(
+                          // 아이콘을 가운데 배치
+                          child: IconButton(
+                            onPressed: () {
+                              // 버튼 클릭 시 실행될 동작
+                            },
+                            icon: Icon(CustomIcon.ChatAI),
+                            iconSize: 48, // 아이콘 크기
+                            color: Colors.white, // 아이콘 색상
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
