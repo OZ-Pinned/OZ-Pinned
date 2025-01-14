@@ -64,8 +64,8 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
   }
 
   Future<void> pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
       final Uint8List imageData = await image.readAsBytes();
@@ -95,11 +95,11 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
               onTap: pickImage,
               child: Container(
                 height: 200,
-                color: Color(0xffFFFFF),
+                color: Color(0x0fffffff),
+                alignment: Alignment.center,
                 child: _pickedImage == null
                     ? const Icon(Icons.add_a_photo, size: 30)
                     : Image.memory(_pickedImage!, fit: BoxFit.cover),
-                alignment: Alignment.center,
               ),
             ),
             const SizedBox(height: 20),
@@ -156,6 +156,7 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                   } else {
                     print("No image selected");
                   }
+                  print(widget.emotion);
                   Navigator.push(
                     context,
                     MaterialPageRoute(

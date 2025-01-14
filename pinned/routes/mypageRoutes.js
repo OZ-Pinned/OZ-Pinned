@@ -11,7 +11,8 @@ router.use(bodyParser.json());
 router.get('/get/:email', async (req, res) => {
     try {
       const { email } = req.params;
-      const test = await testScoreDB.find({ email });
+      const test = await TestDB.find({ email });
+      console.log(test)
       if (!test) {
         return res.status(404).json({ success: false, message: 'Test score not found' });
       }
@@ -23,12 +24,15 @@ router.get('/get/:email', async (req, res) => {
   });
   
 
-  router.patch('/change/:email', async (req, res) => {
+  router.post('/change/:email', async (req, res) => {
     const { email } = req.params;
     const { character } = req.body; // 변경할 character 값
+
+    console.log(email, character)
   
     try {
       const existingUser = await UserDB.findOne({ email });
+      console.log(existingUser)
       if (!existingUser) {
         return res.status(404).json({ success: false, message: 'User not found' });
       }
@@ -38,7 +42,12 @@ router.get('/get/:email', async (req, res) => {
   
       await existingUser.save(); // 업데이트된 데이터 저장
   
-      return res.status(200).json({ success: true, message: 'Character updated successfully', user });
+      return res.status(200).json({ 
+        success: true, 
+        message: 'Character updated successfully', 
+        user: existingUser 
+      });
+      
     } catch (error) {
       console.error('Error updating character:', error);
       return res.status(500).json({ success: false, message: 'Failed to update character', error: error.message });

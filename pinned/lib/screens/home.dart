@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:pinned/icon/custom_icon_icons.dart';
+import 'package:pinned/screens/emotion.dart';
 import 'package:pinned/screens/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'meditation.dart';
 import 'test.dart';
 import 'gallery_write.dart';
+import 'mypage.dart';
 
 class HomePage extends StatefulWidget {
   final String email;
@@ -52,7 +54,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Color(0xffFF516A),
+      ),
       body: Stack(
         children: [
           // 배경 SVG 이미지
@@ -77,20 +81,37 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SvgPicture.asset('assets/images/smallLogo.svg'),
-                    IconButton(
-                      icon: Icon(Icons.person_3_outlined),
-                      padding: EdgeInsets.all(0),
-                      color: Color(0xffFFFFFF),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TestPage(
-                              lang: true,
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: Color(0xffFFFFFF), // 원하는 배경색
+                        shape: BoxShape.circle, // 원형 배경
+                      ),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Center(
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MyPage(
+                                    email: widget.email,
+                                    character: widget.character,
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: Icon(
+                              CustomIcon.MyPage,
                             ),
+                            iconSize: 32, // 아이콘 크기
+                            color: Color(0xffFF516A), // 아이콘 색상
                           ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -127,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => WriteGalleryPage()),
+                                      builder: (context) => EmotionPage()),
                                 );
                               },
                               icon: Icon(Icons.add),
@@ -227,7 +248,7 @@ class _HomePageState extends State<HomePage> {
                         alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
                         children: [
                           Positioned(
-                            top: -25, // 텍스트 상자 위에 위치하도록 조정
+                            top: 100, // 텍스트 상자 위에 위치하도록 조정
                             child: SvgPicture.asset(
                               'assets/images/KoKoChar.svg',
                               width: 50,

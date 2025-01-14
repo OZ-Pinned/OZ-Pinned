@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'gallery_write.dart';
 
 void main() => runApp(MyApp());
 
@@ -146,64 +147,13 @@ class _EmotionPageState extends State<EmotionPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    content: Container(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "지난 2주 이내의 감정을\n바탕으로 선택해주세요!",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 25,
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xffFF516A),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              fixedSize: Size(201, 31),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              '확인',
-                              style:
-                                  TextStyle(fontSize: 13, color: Colors.white),
-                            ),
-                          ), // 버튼 내 텍스트 간격
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              "다시 보지 않기",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WriteGalleryPage(
+                    emotion: (currentValue / 25).toInt(),
+                  ),
+                ),
               );
             },
             style: ElevatedButton.styleFrom(

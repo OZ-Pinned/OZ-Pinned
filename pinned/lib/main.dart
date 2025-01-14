@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pinned/screens/home.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 
 void main() {
   runApp(const MyApp());
@@ -151,8 +156,51 @@ class _EmailPageState extends State<EmailPage> {
   void inputEmail(value) {
     setState(() {
       inputedEmail = value;
-      print(inputedEmail);
+      // print(inputedEmail);
     });
+  }
+
+  String emailBody = "";
+
+  Future<String> _getEmailBody() async {
+    String body = '';
+    for (int i = 0; i < 6; i++) {
+      var rnd = Random().nextInt(10);
+      body += rnd.toString();
+    }
+
+    print(body);
+    return body;
+  }
+
+  void _sendEmail(String recipientEmail) async {
+    emailBody = await _getEmailBody();
+    String username = 'jieyn7@naver.com'; // 본인의 네이버 이메일
+    String password = '2BGMWYJPRJNN'; // 앱 비밀번호
+
+    final smtpServer = SmtpServer(
+      'smtp.naver.com',
+      port: 587,
+      username: username,
+      password: password,
+      ignoreBadCertificate: false,
+    );
+
+    final message = Message()
+      ..from = Address(username)
+      ..recipients.add(inputedEmail) // 사용자 이메일
+      ..subject = '핀드 인증번호'
+      ..text = '인증번호: $emailBody';
+
+    try {
+      await send(message, smtpServer);
+      print('이메일 전송 성공');
+    } catch (e) {
+      print('이메일 전송 실패: $e');
+      if (e is MailerException) {
+        print(e);
+      }
+    }
   }
 
   @override
@@ -215,12 +263,15 @@ class _EmailPageState extends State<EmailPage> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
+                    _sendEmail(inputedEmail);
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => CertificationPage(
                           logined: widget.logined,
                           email: inputedEmail,
+                          certificationCode: emailBody,
                         ),
                       ),
                     );
@@ -252,10 +303,12 @@ class _EmailPageState extends State<EmailPage> {
 class CertificationPage extends StatefulWidget {
   final bool logined;
   final String email;
+  final String certificationCode;
   const CertificationPage({
     super.key,
     required this.logined,
     required this.email,
+    required this.certificationCode,
   });
 
   @override
@@ -266,18 +319,26 @@ class _CertificationPageState extends State<CertificationPage> {
   String userName = "";
   int userCharacter = 0;
 
+  String certifyCode = "";
+  String helpText = "";
+
   final List<TextEditingController> _controllers =
       List.generate(6, (_) => TextEditingController());
 
   // 각 TextField에 포커스를 이동하는 함수
   void _onFieldChanged(String value, int index) {
-    if (value.length == 1 && index < 5) {
-      // 현재 입력이 1자일 때, 다음 TextField로 포커스를 이동
-      FocusScope.of(context).nextFocus();
-    } else if (value.isEmpty && index > 0) {
-      // 입력값이 없으면 이전 TextField로 포커스를 이동
-      FocusScope.of(context).previousFocus();
-    }
+    setState(() {
+      // certifyCode 업데이트
+      certifyCode = _controllers.map((controller) => controller.text).join();
+
+      if (value.length == 1 && index < 5) {
+        // 현재 입력이 1자일 때, 다음 TextField로 포커스를 이동
+        FocusScope.of(context).nextFocus();
+      } else if (value.isEmpty && index > 0) {
+        // 입력값이 없으면 이전 TextField로 포커스를 이동
+        FocusScope.of(context).previousFocus();
+      }
+    });
   }
 
   Future<void> storeEmail(String email) async {
@@ -297,8 +358,6 @@ class _CertificationPageState extends State<CertificationPage> {
       );
 
       final data = await json.decode(response.body);
-
-      print("Response data: $data");
 
       if (data['success']) {
         print("Login successful : $data");
@@ -337,44 +396,70 @@ class _CertificationPageState extends State<CertificationPage> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(6, (index) {
-                  return SizedBox(
-                    width: 50,
-                    child: TextField(
-                      controller: _controllers[index],
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                      maxLength: 1,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white, // 내부 배경색 설정
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7),
-                          borderSide: BorderSide(
-                            color: Color(0xffDADADA), // 외부 테두리 색상
-                            width: 1.0, // 외부 테두리 두께
-                          ),
+                children: List.generate(
+                  6,
+                  (index) {
+                    return SizedBox(
+                      width: 50,
+                      child: TextField(
+                        controller: _controllers[index],
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        maxLength: 1,
+                        style: TextStyle(
+                          fontSize: 30,
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
-                            width: 1.0, // 외부 테두리 두께
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(
+                            top: 9.5,
+                            bottom: 9.5,
+                            right: 16,
+                            left: 16,
                           ),
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.transparent, // 기본 테두리 투명
-                            width: 0, // 두께 0
+                          filled: true,
+                          fillColor: Colors.white, // 내부 배경색 설정
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide(
+                              color: Color(0xffDADADA), // 외부 테두리 색상
+                              width: 1.0, // 외부 테두리 두께
+                            ),
                           ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xffFF324F), // 포커스 시 동일한 색상 유지
+                              width: 1.0, // 외부 테두리 두께
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.transparent, // 기본 테두리 투명
+                              width: 0, // 두께 0
+                            ),
+                          ),
+                          counterText: "", // 글자 수 카운트 텍스트를 숨김
                         ),
-                        counterText: "", // 글자 수 카운트 텍스트를 숨김
+                        onChanged: (value) {
+                          _onFieldChanged(value, index); // 값 변경 시 다음으로 포커스를 이동
+                        },
                       ),
-                      onChanged: (value) {
-                        _onFieldChanged(value, index); // 값 변경 시 다음으로 포커스를 이동
-                      },
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    helpText,
+                    style: TextStyle(
+                      color: Color(0xffFF324F),
                     ),
-                  );
-                }),
+                  ),
+                ],
               ),
               SizedBox(
                 height: 420,
@@ -389,7 +474,9 @@ class _CertificationPageState extends State<CertificationPage> {
                     await storeEmail(widget.email); // 이메일 저장 후
 
                     // 로그인 성공 후 조건에 따라 화면 전환
-                    if (widget.logined == true) {
+                    if (widget.logined == true &&
+                        (certifyCode == widget.certificationCode)) {
+                      helpText = "";
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -401,14 +488,20 @@ class _CertificationPageState extends State<CertificationPage> {
                         ),
                       );
                     } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CharacterPage(
-                            email: widget.email,
+                      print("$certifyCode  ${widget.certificationCode}");
+                      if ((certifyCode == widget.certificationCode)) {
+                        helpText = "";
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CharacterPage(
+                              email: widget.email,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      } else {
+                        helpText = "인증 코드를 다시 한 번 확인해 주세요.";
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -783,7 +876,7 @@ class _NamePageState extends State<NamePage> {
   void inputName(value) {
     setState(() {
       inputedName = value;
-      print(inputedName);
+      // print(inputedName);
     });
   }
 
