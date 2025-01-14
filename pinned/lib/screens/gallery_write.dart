@@ -197,7 +197,7 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
   }
 }
 
-class DiaryDetailPage extends StatelessWidget {
+class DiaryDetailPage extends StatefulWidget {
   final String title;
   final String content;
   final Uint8List image;
@@ -208,6 +208,13 @@ class DiaryDetailPage extends StatelessWidget {
     required this.content,
     required this.image,
   });
+
+  @override
+  State<DiaryDetailPage> createState() => _DiaryDetailPageState();
+}
+
+class _DiaryDetailPageState extends State<DiaryDetailPage> {
+  Color _containerColor = Color(0xffF5DE99); // 상태로 관리될 컨테이너 색상
 
   @override
   Widget build(BuildContext context) {
@@ -224,38 +231,35 @@ class DiaryDetailPage extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: 40),
-            InkWell(
-              child: Container(
-                height: 380,
-                width: 280,
-                decoration: BoxDecoration(
-                  color: Color(0xffF5DE99),
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(height: 20),
-                    Image.memory(image, fit: BoxFit.cover),
-                    SizedBox(height: 10),
-                    Text(title,
-                        style: TextStyle(
-                          fontFamily: 'LeeSeoYun',
-                          fontSize: 28,
-                          color: Colors.black,
-                        )),
-                    Text('2024.12.20',
-                        style: TextStyle(
-                          fontFamily: 'LeeSeoYun',
-                          fontSize: 20,
-                          color: Colors.white,
-                        )),
-                  ],
-                ),
+            Container(
+              height: 380,
+              width: 280,
+              decoration: BoxDecoration(
+                color: _containerColor, // 이곳에서 색상을 사용
               ),
-              onTap: () {},
+              child: Column(
+                children: [
+                  SizedBox(height: 20),
+                  Image.memory(widget.image, fit: BoxFit.cover),
+                  SizedBox(height: 10),
+                  Text(widget.title,
+                      style: TextStyle(
+                        fontFamily: 'LeeSeoYun',
+                        fontSize: 28,
+                        color: Colors.black,
+                      )),
+                  Text('2024.12.20',
+                      style: TextStyle(
+                        fontFamily: 'LeeSeoYun',
+                        fontSize: 20,
+                        color: Colors.white,
+                      )),
+                ],
+              ),
             ),
+            SizedBox(height: 10),
             Spacer(),
             Container(
-              padding: EdgeInsets.fromLTRB(28, 0, 0, 0),
               height: 230,
               width: double.infinity,
               decoration: BoxDecoration(color: Color(0xffFFFFFF)),
@@ -275,66 +279,50 @@ class DiaryDetailPage extends StatelessWidget {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: [
-                        MaterialButton(
-                          height: 52,
-                          onPressed: () {},
-                          color: Color(0xffFFFFFF),
-                          shape: const CircleBorder(),
-                        ),
-                        MaterialButton(
+                      children: List.generate(6, (index) {
+                        final List<Color> colors = [
+                          Color(0xffFFFFFF),
+                          Color(0xff555555),
+                          Color(0xffF0B8B2),
+                          Color(0xffF5DE99),
+                          Color(0xffA898C6),
+                          Color(0xff9FA9A1),
+                        ];
+
+                        return MaterialButton(
                           height: 50,
-                          onPressed: () {},
-                          color: Color(0xff555555),
+                          onPressed: () {
+                            setState(() {
+                              _containerColor = colors[index];
+                            });
+                          },
+                          color: colors[index],
                           shape: const CircleBorder(),
-                        ),
-                        MaterialButton(
-                          height: 50,
-                          onPressed: () {},
-                          color: Color(0xffF0B8B2),
-                          shape: const CircleBorder(),
-                        ),
-                        MaterialButton(
-                          height: 50,
-                          onPressed: () {},
-                          color: Color(0xffF5DE99),
-                          shape: const CircleBorder(),
-                        ),
-                        MaterialButton(
-                          height: 50,
-                          onPressed: () {},
-                          color: Color(0xffA898C6),
-                          shape: const CircleBorder(),
-                        ),
-                        MaterialButton(
-                          height: 50,
-                          onPressed: () {},
-                          color: Color(0xff9FA9A1),
-                          shape: const CircleBorder(),
-                        )
-                      ],
+                        );
+                      }),
                     ),
                   ),
                   SizedBox(height: 47),
-                  SizedBox(
-                    width: 320, // 버튼 너비
-                    height: 52, // 버튼 높이
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xffFF516A), // 버튼 배경색
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(7)), // 테두리
+                  Center(
+                    child: SizedBox(
+                      width: 320,
+                      height: 52,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xffFF516A),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(7)),
+                          ),
                         ),
-                      ),
-                      child: const Text(
-                        '완료',
-                        style: TextStyle(
-                          fontFamily: 'LeeSeoYun',
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                        child: const Text(
+                          '완료',
+                          style: TextStyle(
+                            fontFamily: 'LeeSeoYun',
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
