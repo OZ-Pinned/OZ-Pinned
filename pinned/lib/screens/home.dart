@@ -6,6 +6,7 @@ import 'package:pinned/screens/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'meditation.dart';
 import 'test.dart';
+import 'gallery_write.dart';
 
 class HomePage extends StatefulWidget {
   final String email;
@@ -122,7 +123,13 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             SizedBox(), // 왼쪽 빈 공간
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => WriteGalleryPage()),
+                                );
+                              },
                               icon: Icon(Icons.add),
                               color: Color(0xffFF516A),
                             ),

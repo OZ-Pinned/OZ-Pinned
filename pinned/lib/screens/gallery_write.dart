@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 void main() => runApp(const MyApp());
 
@@ -27,6 +29,36 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
   final TextEditingController _contentController = TextEditingController();
 
   Uint8List? _pickedImage;
+
+// 다이어리 업로드 함수
+  Future<void> uploadDiary(
+      String email, String title, String content, Uint8List? imageBytes) async {
+    String apiUrl = 'http://localhost:3000/diary/upload';
+    String base64Image = imageBytes != null ? base64Encode(imageBytes) : '';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'email': email,
+          'title': title,
+          'diary': content,
+          'image': base64Image,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        print('Diary uploaded successfully');
+      } else {
+        print('Failed to upload diary: ${response.body}');
+      }
+    } catch (e) {
+      print('Error uploading diary: $e');
+    }
+  }
 
   Future<void> pickImage() async {
     final ImagePicker _picker = ImagePicker();
@@ -70,33 +102,57 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
             const SizedBox(height: 20),
             TextField(
               controller: _titleController,
+              style: TextStyle(
+                fontFamily: 'LeeSeoYun',
+                fontSize: 18,
+                color: Colors.black,
+              ),
               decoration: const InputDecoration(
                 filled: true,
                 fillColor: Color(0xffF4F4F4),
                 labelText: '제목을 작성해주세요.',
+                labelStyle: TextStyle(
+                  fontFamily: 'LeeSeoYun', // 폰트 패밀리 설정
+                  color: Color(0xff888888), // 라벨 색상
+                  fontSize: 18, // 라벨 글자 크기
+                ),
                 enabledBorder: InputBorder.none,
               ),
             ),
             const SizedBox(height: 20),
             TextField(
               controller: _contentController,
+              style: TextStyle(
+                fontFamily: 'LeeSeoYun',
+                fontSize: 18,
+                color: Colors.black,
+              ),
               decoration: const InputDecoration(
                 filled: true,
                 fillColor: Color(0xffF4F4F4),
                 labelText: '본문을 작성해주세요.',
+                labelStyle: TextStyle(
+                  fontFamily: 'LeeSeoYun', // 폰트 패밀리 설정
+                  color: Color(0xff888888), // 라벨 색상
+                  fontSize: 18, // 라벨 글자 크기
+                ),
                 enabledBorder: InputBorder.none,
               ),
               maxLines: 6, // 텍스트 필드 세로
               keyboardType: TextInputType.multiline,
             ),
-            const SizedBox(height: 20), // 버튼과 입력 필드 간 간격
+            const SizedBox(height: 130), // 버튼과 입력 필드 간 간격
             SizedBox(
               width: 320, // 버튼 너비
               height: 52, // 버튼 높이
               child: ElevatedButton(
                 onPressed: () {
-                  print("제목: ${_titleController.text}");
-                  print("본문: ${_contentController.text}");
+                  if (_pickedImage != null) {
+                    uploadDiary('test@example.com', _titleController.text,
+                        _contentController.text, _pickedImage);
+                  } else {
+                    print("No image selected");
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xffFF516A), // 버튼 배경색
@@ -105,7 +161,7 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                   ),
                 ),
                 child: const Text(
-                  '확인',
+                  '다음',
                   style: TextStyle(
                     fontFamily: 'LeeSeoYun',
                     fontSize: 20,
