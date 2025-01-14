@@ -80,18 +80,29 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SvgPicture.asset('assets/images/smallLogo.svg'),
-                    IconButton(
-                      icon: Icon(Icons.person_3_outlined),
-                      padding: EdgeInsets.all(0),
-                      color: Color(0xffFFFFFF),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EmotionPage(),
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: Color(0xffFFFFFF), // 원하는 배경색
+                        shape: BoxShape.circle, // 원형 배경
+                      ),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Center(
+                          child: IconButton(
+                            onPressed: () {
+                              // 버튼 클릭 시 실행될 동작
+                            },
+                            icon: Icon(
+                              CustomIcon.MyPage,
+                            ),
+                            iconSize: 32, // 아이콘 크기
+                            color: Color(0xffFF516A), // 아이콘 색상
                           ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -228,7 +239,7 @@ class _HomePageState extends State<HomePage> {
                         alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
                         children: [
                           Positioned(
-                            top: -25, // 텍스트 상자 위에 위치하도록 조정
+                            top: 100, // 텍스트 상자 위에 위치하도록 조정
                             child: SvgPicture.asset(
                               'assets/images/KoKoChar.svg',
                               width: 50,

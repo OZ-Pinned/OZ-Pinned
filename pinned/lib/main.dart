@@ -327,14 +327,18 @@ class _CertificationPageState extends State<CertificationPage> {
 
   // 각 TextField에 포커스를 이동하는 함수
   void _onFieldChanged(String value, int index) {
-    if (value.length == 1 && index < 6) {
-      // 현재 입력이 1자일 때, 다음 TextField로 포커스를 이동
-      FocusScope.of(context).nextFocus();
-      certifyCode += value;
-    } else if (value.isEmpty && index > 0) {
-      // 입력값이 없으면 이전 TextField로 포커스를 이동
-      FocusScope.of(context).previousFocus();
-    }
+    setState(() {
+      // certifyCode 업데이트
+      certifyCode = _controllers.map((controller) => controller.text).join();
+
+      if (value.length == 1 && index < 5) {
+        // 현재 입력이 1자일 때, 다음 TextField로 포커스를 이동
+        FocusScope.of(context).nextFocus();
+      } else if (value.isEmpty && index > 0) {
+        // 입력값이 없으면 이전 TextField로 포커스를 이동
+        FocusScope.of(context).previousFocus();
+      }
+    });
   }
 
   Future<void> storeEmail(String email) async {
@@ -355,8 +359,6 @@ class _CertificationPageState extends State<CertificationPage> {
 
       final data = await json.decode(response.body);
 
-      //  print("Response data: $data");
-
       if (data['success']) {
         print("Login successful : $data");
         userName = data['user']['name'];
@@ -369,34 +371,6 @@ class _CertificationPageState extends State<CertificationPage> {
     } catch (error) {
       print(error);
     }
-  }
-
-  void dialog(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: true, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('인증번호가 잘못 입력되었습니다.'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[
-                Text('강아지 키우고 싶다'),
-                Text('감자튀김 먹고싶다'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('확인'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -473,12 +447,12 @@ class _CertificationPageState extends State<CertificationPage> {
                   },
                 ),
               ),
+              SizedBox(
+                height: 20,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: 20,
-                  ),
                   Text(
                     helpText,
                     style: TextStyle(
