@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pinned/screens/home.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 
 void main() {
   runApp(const MyApp());
@@ -151,8 +156,51 @@ class _EmailPageState extends State<EmailPage> {
   void inputEmail(value) {
     setState(() {
       inputedEmail = value;
-      print(inputedEmail);
+      // print(inputedEmail);
     });
+  }
+
+  String emailBody = "";
+
+  Future<String> _getEmailBody() async {
+    String body = '';
+    for (int i = 0; i < 6; i++) {
+      var rnd = Random().nextInt(10);
+      body += rnd.toString();
+    }
+
+    print(body);
+    return body;
+  }
+
+  void _sendEmail(String recipientEmail) async {
+    emailBody = await _getEmailBody();
+    String username = 'jieyn7@naver.com'; // 본인의 네이버 이메일
+    String password = '2BGMWYJPRJNN'; // 앱 비밀번호
+
+    final smtpServer = SmtpServer(
+      'smtp.naver.com',
+      port: 587,
+      username: username,
+      password: password,
+      ignoreBadCertificate: false,
+    );
+
+    final message = Message()
+      ..from = Address(username)
+      ..recipients.add(inputedEmail) // 사용자 이메일
+      ..subject = '핀드 인증번호'
+      ..text = '인증번호: $emailBody';
+
+    try {
+      await send(message, smtpServer);
+      print('이메일 전송 성공');
+    } catch (e) {
+      print('이메일 전송 실패: $e');
+      if (e is MailerException) {
+        print(e);
+      }
+    }
   }
 
   @override
@@ -215,12 +263,15 @@ class _EmailPageState extends State<EmailPage> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
+                    _sendEmail(inputedEmail);
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => CertificationPage(
                           logined: widget.logined,
                           email: inputedEmail,
+                          certificationCode: emailBody,
                         ),
                       ),
                     );
@@ -252,10 +303,12 @@ class _EmailPageState extends State<EmailPage> {
 class CertificationPage extends StatefulWidget {
   final bool logined;
   final String email;
+  final String certificationCode;
   const CertificationPage({
     super.key,
     required this.logined,
     required this.email,
+    required this.certificationCode,
   });
 
   @override
@@ -266,14 +319,17 @@ class _CertificationPageState extends State<CertificationPage> {
   String userName = "";
   int userCharacter = 0;
 
+  String certifyCode = "";
+
   final List<TextEditingController> _controllers =
       List.generate(6, (_) => TextEditingController());
 
   // 각 TextField에 포커스를 이동하는 함수
   void _onFieldChanged(String value, int index) {
-    if (value.length == 1 && index < 5) {
+    if (value.length == 1 && index < 6) {
       // 현재 입력이 1자일 때, 다음 TextField로 포커스를 이동
       FocusScope.of(context).nextFocus();
+      certifyCode += value;
     } else if (value.isEmpty && index > 0) {
       // 입력값이 없으면 이전 TextField로 포커스를 이동
       FocusScope.of(context).previousFocus();
@@ -298,7 +354,7 @@ class _CertificationPageState extends State<CertificationPage> {
 
       final data = await json.decode(response.body);
 
-      print("Response data: $data");
+      //  print("Response data: $data");
 
       if (data['success']) {
         print("Login successful : $data");
@@ -389,7 +445,8 @@ class _CertificationPageState extends State<CertificationPage> {
                     await storeEmail(widget.email); // 이메일 저장 후
 
                     // 로그인 성공 후 조건에 따라 화면 전환
-                    if (widget.logined == true) {
+                    if (widget.logined == true &&
+                        (certifyCode == widget.certificationCode)) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -401,14 +458,16 @@ class _CertificationPageState extends State<CertificationPage> {
                         ),
                       );
                     } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CharacterPage(
-                            email: widget.email,
+                      if ((certifyCode == widget.certificationCode)) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CharacterPage(
+                              email: widget.email,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -783,7 +842,7 @@ class _NamePageState extends State<NamePage> {
   void inputName(value) {
     setState(() {
       inputedName = value;
-      print(inputedName);
+      // print(inputedName);
     });
   }
 
