@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() => runApp(MyApp());
 
@@ -329,6 +330,15 @@ class _ResultPageState extends State<ResultPage> {
     }
   }
 
+  List buttonImageList = [
+    'meditationButton.svg',
+    'selfTestButton.svg',
+  ];
+
+  String getButtonImage(int value) {
+    return buttonImageList[value];
+  }
+
   @override
   Widget build(BuildContext context) {
     int totalScore = widget.totalScore;
@@ -413,47 +423,39 @@ class _ResultPageState extends State<ResultPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: 120,
-                        width: 153,
-                        child: ElevatedButton(
-                          onPressed: () {},
+                      for (int i = 0; i < 2; i++) ...[
+                        ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.zero,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(7),
                             ),
+                            padding: EdgeInsets.all(0),
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(
-                              'assets/images/meditationButton.jpg',
-                              fit: BoxFit.cover,
-                            ),
+                          child: SvgPicture.asset(
+                            'assets/images/${getButtonImage(i)}',
+                            width: 153,
+                            height: 135,
                           ),
+                          onPressed: () {
+                            if (i == 0) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TestPage(lang: false),
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TestPage(lang: true),
+                                ),
+                              );
+                            }
+                          },
                         ),
-                      ),
-                      const SizedBox(width: 6.5),
-                      SizedBox(
-                        height: 120,
-                        width: 153,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(
-                              'assets/images/chatbotButton.jpg',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
+                        if (i < 1) const SizedBox(width: 13),
+                      ],
                     ],
                   ),
                   SizedBox(height: 50),
