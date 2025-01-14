@@ -115,8 +115,12 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
+                SizedBox(
+                  height: 20,
+                ),
                 Text(
                   '${widget.name}아, 수고했어!',
+                  textAlign: TextAlign.start,
                   style: TextStyle(
                     fontFamily: 'LeeSeoYun',
                     fontSize: 26,
@@ -240,73 +244,90 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SafeArea(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Stack(
-                        alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
-                        children: [
-                          Positioned(
-                            top: 100, // 텍스트 상자 위에 위치하도록 조정
-                            child: SvgPicture.asset(
-                              'assets/images/KoKoChar.svg',
-                              width: 50,
-                              height: 50,
-                              fit: BoxFit.contain,
+                  child: Container(
+                    padding: EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 50),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Stack(
+                              alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
+                              clipBehavior: Clip.none,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(
+                                    top: 9,
+                                    bottom: 9,
+                                    right: 44,
+                                    left: 44,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xffFFFFFF),
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(19.5),
+                                      topRight: Radius.circular(19.5),
+                                      bottomRight: Radius.circular(0),
+                                      bottomLeft: Radius.circular(19.5),
+                                    ),
+                                    border: Border.all(
+                                      color: Color(0xffDADADA),
+                                    ),
+                                  ),
+                                  width: 246,
+                                  height: 58,
+                                  child: Center(
+                                    child: Text(
+                                      textAlign: TextAlign.center,
+                                      '${widget.name}아!\n오늘 하루는 어땠어?',
+                                      style: TextStyle(
+                                        fontFamily: 'LeeSeoYun',
+                                        fontSize: 18,
+                                        height: 1.14,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: -58, // 텍스트 상자 위에 위치하도록 조정
+                                  left: 10,
+                                  child: SvgPicture.asset(
+                                    'assets/images/KoKoChar.svg',
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(
-                              top: 9,
-                              bottom: 9,
-                              right: 44,
-                              left: 44,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Color(0xffFFFFFF),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(19.5),
-                                topRight: Radius.circular(19.5),
-                                bottomRight: Radius.circular(0),
-                                bottomLeft: Radius.circular(19.5),
+                            Container(
+                              width: 58,
+                              height: 58,
+                              decoration: BoxDecoration(
+                                color: Color(0xffFF516A), // 원하는 배경색
+                                shape: BoxShape.circle, // 원형 배경
                               ),
-                              border: Border.all(
-                                color: Color(0xffDADADA),
+                              child: Center(
+                                // 아이콘을 가운데 배치
+                                child: IconButton(
+                                  onPressed: () {
+                                    // 버튼 클릭 시 실행될 동작
+                                  },
+                                  icon: Icon(CustomIcon.ChatAI),
+                                  iconSize: 48, // 아이콘 크기
+                                  color: Colors.white, // 아이콘 색상
+                                ),
                               ),
                             ),
-                            width: 246,
-                            height: 58,
-                            child: Text(
-                              '${widget.name}아!\n오늘 하루는 어땠어?',
-                              style: TextStyle(
-                                  fontFamily: 'LeeSeoYun',
-                                  fontSize: 18,
-                                  height: 1.14),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        width: 58,
-                        height: 58,
-                        decoration: BoxDecoration(
-                          color: Color(0xffFF516A), // 원하는 배경색
-                          shape: BoxShape.circle, // 원형 배경
+                          ],
                         ),
-                        child: Center(
-                          // 아이콘을 가운데 배치
-                          child: IconButton(
-                            onPressed: () {
-                              // 버튼 클릭 시 실행될 동작
-                            },
-                            icon: Icon(CustomIcon.ChatAI),
-                            iconSize: 48, // 아이콘 크기
-                            color: Colors.white, // 아이콘 색상
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
