@@ -320,6 +320,7 @@ class _CertificationPageState extends State<CertificationPage> {
   int userCharacter = 0;
 
   String certifyCode = "";
+  String helpText = "";
 
   final List<TextEditingController> _controllers =
       List.generate(6, (_) => TextEditingController());
@@ -421,53 +422,70 @@ class _CertificationPageState extends State<CertificationPage> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(6, (index) {
-                  return SizedBox(
-                    width: 50,
-                    child: TextField(
-                      controller: _controllers[index],
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                      maxLength: 1,
-                      style: TextStyle(
-                        fontSize: 30,
+                children: List.generate(
+                  6,
+                  (index) {
+                    return SizedBox(
+                      width: 50,
+                      child: TextField(
+                        controller: _controllers[index],
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        maxLength: 1,
+                        style: TextStyle(
+                          fontSize: 30,
+                        ),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(
+                            top: 9.5,
+                            bottom: 9.5,
+                            right: 16,
+                            left: 16,
+                          ),
+                          filled: true,
+                          fillColor: Colors.white, // 내부 배경색 설정
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: BorderSide(
+                              color: Color(0xffDADADA), // 외부 테두리 색상
+                              width: 1.0, // 외부 테두리 두께
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xffFF324F), // 포커스 시 동일한 색상 유지
+                              width: 1.0, // 외부 테두리 두께
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.transparent, // 기본 테두리 투명
+                              width: 0, // 두께 0
+                            ),
+                          ),
+                          counterText: "", // 글자 수 카운트 텍스트를 숨김
+                        ),
+                        onChanged: (value) {
+                          _onFieldChanged(value, index); // 값 변경 시 다음으로 포커스를 이동
+                        },
                       ),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                          top: 9.5,
-                          bottom: 9.5,
-                          right: 16,
-                          left: 16,
-                        ),
-                        filled: true,
-                        fillColor: Colors.white, // 내부 배경색 설정
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7),
-                          borderSide: BorderSide(
-                            color: Color(0xffDADADA), // 외부 테두리 색상
-                            width: 1.0, // 외부 테두리 두께
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xffFF324F), // 포커스 시 동일한 색상 유지
-                            width: 1.0, // 외부 테두리 두께
-                          ),
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.transparent, // 기본 테두리 투명
-                            width: 0, // 두께 0
-                          ),
-                        ),
-                        counterText: "", // 글자 수 카운트 텍스트를 숨김
-                      ),
-                      onChanged: (value) {
-                        _onFieldChanged(value, index); // 값 변경 시 다음으로 포커스를 이동
-                      },
+                    );
+                  },
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    helpText,
+                    style: TextStyle(
+                      color: Color(0xffFF324F),
                     ),
-                  );
-                }),
+                  ),
+                ],
               ),
               SizedBox(
                 height: 420,
@@ -484,6 +502,7 @@ class _CertificationPageState extends State<CertificationPage> {
                     // 로그인 성공 후 조건에 따라 화면 전환
                     if (widget.logined == true &&
                         (certifyCode == widget.certificationCode)) {
+                      helpText = "";
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -497,6 +516,7 @@ class _CertificationPageState extends State<CertificationPage> {
                     } else {
                       print("$certifyCode  ${widget.certificationCode}");
                       if ((certifyCode == widget.certificationCode)) {
+                        helpText = "";
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -506,7 +526,7 @@ class _CertificationPageState extends State<CertificationPage> {
                           ),
                         );
                       } else {
-                        dialog(context);
+                        helpText = "인증 코드를 다시 한 번 확인해 주세요.";
                       }
                     }
                   },
