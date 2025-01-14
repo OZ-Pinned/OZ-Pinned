@@ -92,7 +92,7 @@ flutter:
   fonts:
     - family: LeeSeoYun
       fonts:
-        - asset: assets/sfonts/LeeSeoYun.ttf
+        - asset: assets/fonts/LeeSeoYun.ttf
           weight: 700
     - family:  CustomIcon
       fonts:

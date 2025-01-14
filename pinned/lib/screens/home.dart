@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:pinned/icon/custom_icon_icons.dart';
+import 'package:pinned/screens/emotion.dart';
 import 'package:pinned/screens/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'meditation.dart';
@@ -87,9 +88,7 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TestPage(
-                              lang: true,
-                            ),
+                            builder: (context) => EmotionPage(),
                           ),
                         );
                       },

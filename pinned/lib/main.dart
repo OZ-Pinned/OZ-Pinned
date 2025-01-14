@@ -376,7 +376,7 @@ class _CertificationPageState extends State<CertificationPage> {
       barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('소원'),
+          title: const Text('인증번호가 잘못 입력되었습니다.'),
           content: SingleChildScrollView(
             child: ListBody(
               children: const <Widget>[
