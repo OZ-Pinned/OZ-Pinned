@@ -102,26 +102,46 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
             const SizedBox(height: 20),
             TextField(
               controller: _titleController,
+              style: TextStyle(
+                fontFamily: 'LeeSeoYun',
+                fontSize: 18,
+                color: Colors.black,
+              ),
               decoration: const InputDecoration(
                 filled: true,
                 fillColor: Color(0xffF4F4F4),
                 labelText: '제목을 작성해주세요.',
+                labelStyle: TextStyle(
+                  fontFamily: 'LeeSeoYun', // 폰트 패밀리 설정
+                  color: Color(0xff888888), // 라벨 색상
+                  fontSize: 18, // 라벨 글자 크기
+                ),
                 enabledBorder: InputBorder.none,
               ),
             ),
             const SizedBox(height: 20),
             TextField(
               controller: _contentController,
+              style: TextStyle(
+                fontFamily: 'LeeSeoYun',
+                fontSize: 18,
+                color: Colors.black,
+              ),
               decoration: const InputDecoration(
                 filled: true,
                 fillColor: Color(0xffF4F4F4),
                 labelText: '본문을 작성해주세요.',
+                labelStyle: TextStyle(
+                  fontFamily: 'LeeSeoYun', // 폰트 패밀리 설정
+                  color: Color(0xff888888), // 라벨 색상
+                  fontSize: 18, // 라벨 글자 크기
+                ),
                 enabledBorder: InputBorder.none,
               ),
               maxLines: 6, // 텍스트 필드 세로
               keyboardType: TextInputType.multiline,
             ),
-            const SizedBox(height: 20), // 버튼과 입력 필드 간 간격
+            const SizedBox(height: 130), // 버튼과 입력 필드 간 간격
             SizedBox(
               width: 320, // 버튼 너비
               height: 52, // 버튼 높이
@@ -141,7 +161,7 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                   ),
                 ),
                 child: const Text(
-                  '확인',
+                  '다음',
                   style: TextStyle(
                     fontFamily: 'LeeSeoYun',
                     fontSize: 20,
