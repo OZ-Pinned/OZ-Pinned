@@ -149,7 +149,11 @@ class _EmotionPageState extends State<EmotionPage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => WriteGalleryPage()),
+                MaterialPageRoute(
+                  builder: (context) => WriteGalleryPage(
+                    emotion: (currentValue / 25).toInt(),
+                  ),
+                ),
               );
             },
             style: ElevatedButton.styleFrom(

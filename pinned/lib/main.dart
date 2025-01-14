@@ -429,7 +429,16 @@ class _CertificationPageState extends State<CertificationPage> {
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
                       maxLength: 1,
+                      style: TextStyle(
+                        fontSize: 30,
+                      ),
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                          top: 9.5,
+                          bottom: 9.5,
+                          right: 16,
+                          left: 16,
+                        ),
                         filled: true,
                         fillColor: Colors.white, // 내부 배경색 설정
                         enabledBorder: OutlineInputBorder(
@@ -441,7 +450,7 @@ class _CertificationPageState extends State<CertificationPage> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
+                            color: Color(0xffFF324F), // 포커스 시 동일한 색상 유지
                             width: 1.0, // 외부 테두리 두께
                           ),
                         ),
