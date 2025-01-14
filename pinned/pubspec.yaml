@@ -114,6 +114,8 @@ flutter:
     - assets/images/emotionBackground.svg
     - assets/images/smallBackground.svg
     - assets/images/smallBackground.png
+    - assets/images/meditationButton.svg
+    - assets/images/selfTestButton.svg
 
   #
   # For details regarding fonts from package dependencies,
