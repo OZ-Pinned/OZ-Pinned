@@ -31,7 +31,6 @@ class _MyPageState extends State<MyPage> {
             'http://localhost:3000/mypage/get/${widget.email}'), // Node.js 서버의 IP 주소 사용
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
         },
       );
 
@@ -53,8 +52,6 @@ class _MyPageState extends State<MyPage> {
                 ),
               ),
             );
-
-            print(dates);
           },
         );
       } else {
@@ -62,6 +59,33 @@ class _MyPageState extends State<MyPage> {
       }
     } catch (error) {
       print('Error fetching test: $error');
+    }
+  }
+
+  Future<void> changeCharacter(int character) async {
+    try {
+      final response = await http.post(
+        Uri.parse(
+            'http://localhost:3000/mypage/change/${widget.email}'), // Node.js 서버의 IP 주소 사용
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'character': character,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+      print('Response body: ${response.body}');
+
+      if (data['success']) {
+        print(data);
+        print('교체 성공!');
+      } else {
+        print('Error: ${data['message']}');
+      }
+    } catch (error) {
+      print('Error fetching diary: $error');
     }
   }
 
@@ -101,7 +125,8 @@ class _MyPageState extends State<MyPage> {
 
   void toggleSelect(int value) {
     setState(() {
-      selectedChar = value; // 선택된 캐릭터의 인덱스 업데이트
+      selectedChar = value;
+      changeCharacter(selectedChar); // 선택된 캐릭터의 인덱스 업데이트
     });
   }
 
@@ -124,8 +149,9 @@ class _MyPageState extends State<MyPage> {
                 ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
+                    fixedSize: Size(67, 35),
                     backgroundColor: Color(0xffE9E9E9),
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(7),
                     ),
@@ -163,100 +189,105 @@ class _MyPageState extends State<MyPage> {
                     Expanded(
                       child: scores.isEmpty
                           ? Center(child: Text("데이터를 불러오는 중입니다..."))
-                          : Padding(
-                              padding: EdgeInsets.only(top: 36),
-                              child: LineChart(
-                                LineChartData(
-                                  gridData: FlGridData(
-                                    show: true,
-                                    drawHorizontalLine: true,
-                                    drawVerticalLine: false,
-                                    getDrawingHorizontalLine: (value) => FlLine(
-                                      color: Color(0xffe0e0e0), // 격자선 색상
-                                      strokeWidth: 1,
+                          : Center(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 36),
+                                child: LineChart(
+                                  LineChartData(
+                                    gridData: FlGridData(
+                                      show: true,
+                                      drawHorizontalLine: true,
+                                      drawVerticalLine: false,
+                                      getDrawingHorizontalLine: (value) =>
+                                          FlLine(
+                                        color: Color(0xffe0e0e0), // 격자선 색상
+                                        strokeWidth: 1,
+                                      ),
+                                      horizontalInterval: 10,
                                     ),
-                                  ),
-                                  titlesData: FlTitlesData(
-                                      leftTitles: AxisTitles(
-                                        sideTitles: SideTitles(
-                                          showTitles: true,
-                                          reservedSize: 30,
-                                          getTitlesWidget: (value, meta) {
-                                            if (value % 10 == 0) {
-                                              return Text(
-                                                '${value.toInt()}',
-                                                style: TextStyle(
-                                                  color: Color(0xff7589a2),
-                                                  fontSize: 12,
-                                                ),
-                                              );
-                                            }
-                                            return Container();
-                                          },
-                                          interval: 10,
+                                    titlesData: FlTitlesData(
+                                        leftTitles: AxisTitles(
+                                          sideTitles: SideTitles(
+                                            showTitles: true,
+                                            reservedSize: 30,
+                                            getTitlesWidget: (value, meta) {
+                                              if (value % 10 == 0) {
+                                                return Text(
+                                                  '${value.toInt()}',
+                                                  style: TextStyle(
+                                                    color: Color(0xff7589a2),
+                                                    fontSize: 12,
+                                                  ),
+                                                );
+                                              }
+                                              return Container();
+                                            },
+                                            interval: 10,
+                                          ),
+                                        ),
+                                        bottomTitles: AxisTitles(
+                                          sideTitles: SideTitles(
+                                            showTitles: true,
+                                            reservedSize: 30,
+                                            getTitlesWidget: (value, meta) {
+                                              if (value.toInt() <
+                                                  dates.length) {
+                                                return Text(
+                                                  dates[value.toInt()],
+                                                  style: TextStyle(
+                                                    color: Color(0xff7589a2),
+                                                    fontSize: 12,
+                                                  ),
+                                                );
+                                              }
+                                              return Container();
+                                            },
+                                            interval: 1,
+                                          ),
+                                        ),
+                                        topTitles: AxisTitles(),
+                                        rightTitles: AxisTitles()),
+                                    borderData: FlBorderData(
+                                      show: true,
+                                      border: Border(
+                                        top: BorderSide(
+                                          color: Color(0xffCCCCCC),
+                                          width: 1,
+                                        ),
+                                        bottom: BorderSide(
+                                          color: Color(0xffCCCCCC),
+                                          width: 1,
                                         ),
                                       ),
-                                      bottomTitles: AxisTitles(
-                                        sideTitles: SideTitles(
-                                          showTitles: true,
-                                          reservedSize: 30,
-                                          getTitlesWidget: (value, meta) {
-                                            if (value.toInt() < dates.length) {
-                                              return Text(
-                                                dates[value.toInt()],
-                                                style: TextStyle(
-                                                  color: Color(0xff7589a2),
-                                                  fontSize: 12,
-                                                ),
-                                              );
-                                            }
-                                            return Container();
-                                          },
-                                          interval: 1,
-                                        ),
-                                      ),
-                                      topTitles: AxisTitles(),
-                                      rightTitles: AxisTitles()),
-                                  borderData: FlBorderData(
-                                    show: true,
-                                    border: Border(
-                                      top: BorderSide(
-                                        color: Color(0xffCCCCCC),
-                                        width: 1,
-                                      ),
-                                      bottom: BorderSide(
-                                        color: Color(0xffCCCCCC),
-                                        width: 1,
-                                      ),
                                     ),
-                                  ),
-                                  minX: 0,
-                                  maxX: 4,
-                                  minY: 0,
-                                  maxY: 30, // Y축 최대값 설정
-                                  lineBarsData: [
-                                    LineChartBarData(
-                                      spots: scores
-                                          .asMap()
-                                          .entries
-                                          .map((entry) => FlSpot(
-                                                entry.key.toDouble(),
-                                                entry.value,
-                                              ))
-                                          .toList(),
-                                      isCurved: false,
-                                      color: Color(0xffFF5C5C), // 선 색상
-                                      barWidth: 3,
-                                      isStrokeCapRound: true,
-                                      dotData: FlDotData(
-                                        show: true,
+                                    minX: 0,
+                                    maxX: 4,
+                                    minY: 0,
+                                    maxY: 30, // Y축 최대값 설정
+                                    lineBarsData: [
+                                      LineChartBarData(
+                                        spots: scores
+                                            .asMap()
+                                            .entries
+                                            .map((entry) => FlSpot(
+                                                  entry.key.toDouble(),
+                                                  entry.value,
+                                                ))
+                                            .toList(),
+                                        isCurved: false,
+                                        color: Color(0xffFF5C5C), // 선 색상
+                                        barWidth: 3,
+                                        isStrokeCapRound: true,
+                                        dotData: FlDotData(
+                                          show: true,
 
-                                        checkToShowDot: (spot, _) =>
-                                            true, // 모든 점 표시
+                                          checkToShowDot: (spot, _) =>
+                                              true, // 모든 점 표시
+                                        ),
+                                        belowBarData: BarAreaData(show: false),
                                       ),
-                                      belowBarData: BarAreaData(show: false),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
