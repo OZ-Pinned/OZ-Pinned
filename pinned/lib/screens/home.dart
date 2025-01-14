@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'meditation.dart';
 import 'test.dart';
 import 'gallery_write.dart';
+import 'mypage.dart';
 
 class HomePage extends StatefulWidget {
   final String email;
@@ -93,7 +94,15 @@ class _HomePageState extends State<HomePage> {
                         child: Center(
                           child: IconButton(
                             onPressed: () {
-                              // 버튼 클릭 시 실행될 동작
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MyPage(
+                                    email: widget.email,
+                                    character: widget.character,
+                                  ),
+                                ),
+                              );
                             },
                             icon: Icon(
                               CustomIcon.MyPage,

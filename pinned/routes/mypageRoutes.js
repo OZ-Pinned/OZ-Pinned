@@ -11,7 +11,8 @@ router.use(bodyParser.json());
 router.get('/get/:email', async (req, res) => {
     try {
       const { email } = req.params;
-      const test = await testScoreDB.find({ email });
+      const test = await TestDB.find({ email });
+      console.log(test)
       if (!test) {
         return res.status(404).json({ success: false, message: 'Test score not found' });
       }
