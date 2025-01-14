@@ -75,7 +75,7 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffFFFFFF),
+      backgroundColor: Color(0xffF8F8F8),
       appBar: AppBar(
         title: const Text('감정 갤러리'),
         leading: IconButton(
@@ -153,6 +153,15 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                   } else {
                     print("No image selected");
                   }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DiaryDetailPage(
+                              title: _titleController.text,
+                              content: _contentController.text,
+                              image: _pickedImage!,
+                            )),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xffFF516A), // 버튼 배경색
@@ -182,5 +191,64 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
     _titleController.dispose();
     _contentController.dispose();
     super.dispose();
+  }
+}
+
+class DiaryDetailPage extends StatelessWidget {
+  final String title;
+  final String content;
+  final Uint8List image;
+
+  const DiaryDetailPage({
+    super.key,
+    required this.title,
+    required this.content,
+    required this.image,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xffFFFFFF),
+      appBar: AppBar(
+        title: const Text('감정 꾸미기'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            Container(
+              height: 380,
+              margin: const EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Color(0xffF5DE99),
+              ),
+              child: Column(
+                children: [
+                  Image.memory(image, fit: BoxFit.cover),
+                  SizedBox(height: 10),
+                  Text(title,
+                      style: TextStyle(
+                        fontFamily: 'LeeSeoYun',
+                        fontSize: 28,
+                        color: Colors.black,
+                      )),
+                  Text('2024.12.20',
+                      style: TextStyle(
+                        fontFamily: 'LeeSeoYun',
+                        fontSize: 20,
+                        color: Colors.white,
+                      )),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
