@@ -52,6 +52,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xffFF516A),
+      ),
       body: Stack(
         children: [
           // 배경 SVG 이미지

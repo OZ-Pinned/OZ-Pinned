@@ -370,6 +370,34 @@ class _CertificationPageState extends State<CertificationPage> {
     }
   }
 
+  void dialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('소원'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('강아지 키우고 싶다'),
+                Text('감자튀김 먹고싶다'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('확인'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -458,6 +486,7 @@ class _CertificationPageState extends State<CertificationPage> {
                         ),
                       );
                     } else {
+                      print("$certifyCode  ${widget.certificationCode}");
                       if ((certifyCode == widget.certificationCode)) {
                         Navigator.push(
                           context,
@@ -467,6 +496,8 @@ class _CertificationPageState extends State<CertificationPage> {
                             ),
                           ),
                         );
+                      } else {
+                        dialog(context);
                       }
                     }
                   },
