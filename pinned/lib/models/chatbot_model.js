@@ -1,10 +1,24 @@
-const mongoose = require('mongoose');
+// Import mongoose
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
-const chatbotSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true, },
-  texts: [{ sender: String, text: String,}]  // 점수를 배열로 저장
-});
+// Define chatbot schema
+const chatbotDBSchema = new Schema(
+  {
+    email: {
+        type: String,
+        required: true
+      },
+      conversations: [{
+        sender: String,
+        message: String,
+        createdAt: { type: Date, default: Date.now }
+      }]
+  }
+);
 
-const ChatbotDB = mongoose.model('Chatbot', chatbotSchema);
+// 모델 생성
+const chatbotDBModel = mongoose.model("chatbotDB", chatbotDBSchema);
 
-module.exports = ChatbotDB;
+// 모델 내보내기
+module.exports = chatbotDBModel;

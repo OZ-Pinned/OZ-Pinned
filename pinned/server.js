@@ -6,6 +6,7 @@ const userRoutes = require('./routes/userRoutes');  // userRoutes.js 파일을 �
 const chatbotRoutes = require('./routes/chatbotRoutes');
 const mypageRoutes = require('./routes/mypageRoutes');
 const testRoutes = require('./routes/testRoutes');
+const diaryRoutes = require('./routes/diaryRoutes');
 
 // Express 앱 초기화
 const app = express();
@@ -24,6 +25,7 @@ app.use('/user', userRoutes);  // user 관련 API 라우트 연결
 app.use('/chatbot', chatbotRoutes);
 app.use('/mypage', mypageRoutes);
 app.use('/test', testRoutes);
+app.use('diary',diaryRoutes);
 
 // 서버 포트 설정
 const PORT = 3000;
