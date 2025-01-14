@@ -112,6 +112,8 @@ flutter:
     - assets/images/smallLogo.svg
     - assets/images/homeBackground.svg
     - assets/images/emotionBackground.svg
+    - assets/images/smallBackground.svg
+    - assets/images/smallBackground.png
 
   #
   # For details regarding fonts from package dependencies,

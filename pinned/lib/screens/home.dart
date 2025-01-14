@@ -20,6 +20,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List pictureList = [
+    'smallAngryEmotion.svg',
+    'smallSadEmotion.svg',
+    'smallNoneEmotion.svg',
+    'smallHappyEmotion.svg'
+  ];
+
+  String getImage(int value) {
+    return pictureList[value];
+  }
+
   Future<String?> getEmail() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('email'); // 'email' 키에 저장된 값 반환
@@ -80,93 +91,75 @@ class _HomePageState extends State<HomePage> {
                 ),
                 // 감정 기록 부분 수정
                 SizedBox(height: 20),
-                Stack(
-                  children: [
-                    // 물결 배경
-                    Positioned.fill(
-                      child: WaveCanvas(),
-                    ),
-                    // 컨텐츠
-                    SafeArea(
-                      child: Column(
-                        children: [
-                          SizedBox(height: 20),
-                          Text(
-                            "오늘의 감정 기록하기",
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.black,
-                            ),
-                          ),
-                          // 나머지 컨텐츠 추가
-                        ],
+                SafeArea(
+                  child: Container(
+                    width: 320,
+                    height: 255,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/smallBackground.png'),
+                        fit: BoxFit.cover,
                       ),
                     ),
-                  ],
-                ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween, // 버튼과 중앙 콘텐츠의 배치
+                          children: [
+                            SizedBox(), // 왼쪽 빈 공간
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.add),
+                              color: Color(0xffFF516A),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          "오늘의 감정 기록하기",
+                          style: TextStyle(
+                            fontFamily: 'LeeSeoYun',
+                            fontSize: 20,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 65,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            for (int i = 0; i < 4; i++) ...[
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(7),
+                                  ),
+                                  padding: EdgeInsets.all(0),
+                                ),
+                                child: SvgPicture.asset(
+                                  'assets/images/${getImage(i)}',
+                                  width: 62,
+                                  height: 65,
+                                ),
+                              ),
+                              if (i < 3) const SizedBox(width: 7), // 버튼 간 간격
+                            ],
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+                // 컨텐츠
               ],
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class WavePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final gradientPaint = Paint()
-      ..color = Color(0xFFFFFFFF) // 물결 색상
-      ..style = PaintingStyle.fill;
-
-    final path = Path();
-
-    // 위쪽 하얀색 영역
-    path.lineTo(0, size.height * 0.5); // 하얀색 영역의 아래 경계
-    path.lineTo(size.width, size.height * 0.5); // 하얀색 영역의 아래 경계
-    path.lineTo(size.width, 0); // 왼쪽 상단
-    path.close();
-    canvas.drawPath(path, gradientPaint);
-
-    // 물결 경로 생성 (아래쪽 물결)
-    final wavePaint = Paint()
-      ..shader = LinearGradient(
-        colors: [Color(0xFFFFE9EC), Colors.white],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-      ).createShader(
-          Rect.fromLTRB(0, size.height * 0.5, size.width, size.height))
-      ..style = PaintingStyle.fill;
-
-    final wavePath = Path();
-
-    wavePath.moveTo(0, size.height * 0.7); // 물결 시작 위치
-    wavePath.quadraticBezierTo(size.width * 0.25, size.height * 0.55,
-        size.width * 0.5, size.height * 0.7);
-    wavePath.quadraticBezierTo(
-        size.width * 0.75, size.height * 0.85, size.width, size.height * 0.7);
-    wavePath.lineTo(size.width, size.height); // 물결이 끝나는 지점
-    wavePath.lineTo(0, size.height); // 물결이 끝나는 지점
-    wavePath.close();
-
-    canvas.drawPath(wavePath, wavePaint); // 물결 그리기
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
-}
-
-class WaveCanvas extends StatelessWidget {
-  const WaveCanvas({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size(320, 255), // 사각형 크기 설정
-      painter: WavePainter(),
     );
   }
 }
