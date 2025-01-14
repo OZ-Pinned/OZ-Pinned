@@ -120,7 +120,7 @@ flutter:
     - assets/images/smallBackground.png
     - assets/images/meditationButton.svg
     - assets/images/selfTestButton.svg
-    - assets/images/koko.svg
+    - assets/images/KoKoChar.svg
 
   #
   # For details regarding fonts from package dependencies,

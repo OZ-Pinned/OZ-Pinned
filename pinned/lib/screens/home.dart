@@ -222,10 +222,10 @@ class _HomePageState extends State<HomePage> {
                           Positioned(
                             top: -25, // 텍스트 상자 위에 위치하도록 조정
                             child: SvgPicture.asset(
-                              'assets/images/koko.svg',
+                              'assets/images/KoKoChar.svg',
                               width: 50,
                               height: 50,
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain,
                             ),
                           ),
                           Container(
