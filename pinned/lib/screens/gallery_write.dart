@@ -30,35 +30,6 @@ class WriteGalleryPage extends StatefulWidget {
 
 class _WriteGalleryPageState extends State<WriteGalleryPage> {
   final String email = "test@example.com";
-  // 다이어리 DB에 업로드
-  Future<void> uploadDiary(
-      String title, String content, Uint8List? imageBytes) async {
-    final apiUrl = 'http://localhost:3000/diary/upload';
-    String base64Image = imageBytes != null ? base64Encode(imageBytes) : '';
-
-    try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-        },
-        body: json.encode({
-          'email': email, // 클래스 레벨 변수 사용
-          'title': title,
-          'diary': content,
-          'image': base64Image,
-        }),
-      );
-
-      if (response.statusCode == 201) {
-        print('Diary uploaded successfully');
-      } else {
-        print('Failed to upload diary: ${response.body}');
-      }
-    } catch (e) {
-      print('Error uploading diary: $e');
-    }
-  }
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
@@ -79,6 +50,8 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
   @override
   Widget build(BuildContext context) {
     String email = "test@example.com";
+    String nowdate = DateFormat('yyyy.MM.dd').format(DateTime.now());
+
     return Scaffold(
       backgroundColor: Color(0xffF8F8F8),
       appBar: AppBar(
@@ -158,12 +131,13 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DiaryDetailPage(
-                                title: _titleController.text,
-                                content: _contentController.text,
-                                image: _pickedImage!,
-                                email: email,
-                              )),
+                        builder: (context) => DiaryDetailPage(
+                          title: _titleController.text,
+                          content: _contentController.text,
+                          image: _pickedImage!,
+                          email: email,
+                        ),
+                      ),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -221,9 +195,40 @@ class DiaryDetailPage extends StatefulWidget {
 }
 
 class _DiaryDetailPageState extends State<DiaryDetailPage> {
-  Color _containerColor = Color(0xffF5DE99); // 상태로 관리될 컨테이너 색상
-  String nowdate = DateFormat('yyyy.MM.dd').format(DateTime.now());
+  Future<void> uploadDiary(String email, String title, String content,
+      Uint8List? imageBytes, String nowDate, Color color) async {
+    final apiUrl = 'http://localhost:3000/diary/upload';
+    String base64Image = imageBytes != null ? base64Encode(imageBytes) : '';
+    String hexColor = '#${color.value.toRadixString(16).substring(2)}';
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'email': email, // 클래스 레벨 변수 사용
+          'title': title,
+          'diary': content,
+          'image': base64Image,
+          'createdAt': nowDate,
+          'color': hexColor,
+        }),
+      );
 
+      if (response.statusCode == 201) {
+        print('Diary uploaded successfully');
+      } else {
+        print('Failed to upload diary: ${response.body}');
+      }
+    } catch (e) {
+      print('Error uploading diary: $e');
+    }
+  }
+
+  // 상태로 관리될 컨테이너 색상
+  String nowdate = DateFormat('yyyy.MM.dd').format(DateTime.now());
+  Color _containerColor = const Color(0xffF5DE99);
   bool isFront = true; // true면 이미지가 보이고, false면 빈 화면이 보임
 
   void _flipCard() {
@@ -252,14 +257,20 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
               child: Container(
                 height: 380,
                 width: 280,
-                decoration: BoxDecoration(
-                  color: _containerColor, // 컨테이너 색상 지정
-                ),
+                decoration: BoxDecoration(color: _containerColor //컨테이너 색상 지정
+                    ),
                 child: isFront
                     ? Column(
                         children: [
                           SizedBox(height: 20),
-                          Image.memory(widget.image, fit: BoxFit.cover),
+                          SizedBox(
+                            width: 249,
+                            height: 253,
+                            child: Image.memory(
+                              widget.image,
+                              fit: BoxFit.fill, // 또는 BoxFit.fill로 테스트
+                            ),
+                          ),
                           SizedBox(height: 10),
                           Text(widget.title,
                               style: TextStyle(
@@ -316,13 +327,14 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: List.generate(6, (index) {
+                          // 상태로 관리될 컨테이너 색상
                           final List<Color> colors = [
-                            Color(0xffFFFFFF),
-                            Color(0xff555555),
-                            Color(0xffF0B8B2),
-                            Color(0xffF5DE99),
-                            Color(0xffA898C6),
-                            Color(0xff9FA9A1),
+                            const Color(0xFFFFFFFF),
+                            const Color(0xFF555555),
+                            const Color(0xFFF0B8B2),
+                            const Color(0xFFF5DE99),
+                            const Color(0xFFA898C6),
+                            const Color(0xFF9FA9A1),
                           ];
                           return MaterialButton(
                             height: 50,
@@ -344,12 +356,24 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                       width: double.infinity,
                       height: 52,
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ViewAllDiaryPage()),
-                          );
+                        onPressed: () async {
+                          if (widget.title.isNotEmpty &&
+                              widget.content.isNotEmpty) {
+                            await uploadDiary(
+                              widget.email,
+                              widget.title,
+                              widget.content,
+                              widget.image,
+                              nowdate,
+                              _containerColor, // 선택된 색상 저장
+                            );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewAllDiaryPage(),
+                              ),
+                            );
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xffFF516A),
@@ -383,14 +407,23 @@ class DiaryEntry {
   final String title;
   final String content;
   final String image;
+  final String createdAt;
+  final String color;
 
-  DiaryEntry({required this.title, required this.content, required this.image});
+  DiaryEntry(
+      {required this.title,
+      required this.content,
+      required this.image,
+      required this.createdAt,
+      required this.color});
 
   factory DiaryEntry.fromJson(Map<String, dynamic> json) {
     return DiaryEntry(
       title: json['title'] ?? 'Untitled',
       content: json['diary'] ?? '',
       image: json['image'] ?? '',
+      createdAt: json['createdAt'] ?? '',
+      color: json['color'] ?? '#F5DE99',
     );
   }
 }
@@ -421,6 +454,8 @@ Future<List<DiaryEntry>> fetchDiaries(String email) async {
 }
 
 class ViewAllDiaryPage extends StatefulWidget {
+  const ViewAllDiaryPage({Key? key}) : super(key: key);
+
   @override
   _ViewAllDiaryPageState createState() => _ViewAllDiaryPageState();
 }
@@ -439,6 +474,10 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('감정 갤러리'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: FutureBuilder<List<DiaryEntry>>(
         future: futureDiaries,
@@ -448,25 +487,80 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                DiaryEntry entry = snapshot.data![index];
-                return Card(
-                  child: Column(
-                    children: <Widget>[
-                      Image.memory(
-                        base64Decode(entry.image),
-                        fit: BoxFit.cover,
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Wrap(
+                  spacing: 10, // 카드 간 가로 간격
+                  runSpacing: 13, // 카드 간 세로 간격
+                  children: List.generate(snapshot.data!.length, (index) {
+                    DiaryEntry entry = snapshot.data![index];
+                    Color cardColor = Color(
+                      int.parse(
+                          entry.color.replaceFirst('#', '0xff')), // #을 0xff로 변경
+                    );
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width / 2 -
+                          20, // 화면 너비에 따라 자동 조정
+                      child: GestureDetector(
+                        onTap: () {
+                          // 카드 클릭 시 동작
+                        },
+                        child: Card(
+                          color: cardColor,
+                          shape: RoundedRectangleBorder(
+                              // 카드 모서리 둥글게
+                              ),
+                          elevation: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 15),
+                              Center(
+                                child: Image.memory(
+                                  base64Decode(entry.image),
+                                  width: 135,
+                                  height: 135,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(15, 15, 10, 15),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      entry.title,
+                                      style: const TextStyle(
+                                        fontFamily: 'LeeSeoYun',
+                                        fontSize: 15, // 제목 폰트 크기
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      DateFormat('yyyy.MM.dd').format(
+                                          DateTime.parse(entry.createdAt)),
+                                      style: const TextStyle(
+                                        fontFamily: 'LeeSeoYun',
+                                        fontSize: 10, // 날짜 폰트 크기
+                                        color: Color(0xff888888),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      ListTile(
-                        title: Text(entry.title),
-                        subtitle: Text(entry.content),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                    );
+                  }),
+                ),
+              ),
             );
           }
         },
