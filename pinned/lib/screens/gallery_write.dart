@@ -132,6 +132,7 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => DiaryDetailPage(
+                          id: null,
                           title: _titleController.text,
                           content: _contentController.text,
                           image: _pickedImage!,
@@ -177,6 +178,7 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
 }
 
 class DiaryDetailPage extends StatefulWidget {
+  final String? id;
   final String title;
   final String content;
   final Uint8List image;
@@ -184,6 +186,7 @@ class DiaryDetailPage extends StatefulWidget {
 
   const DiaryDetailPage({
     Key? key,
+    this.id,
     required this.email,
     required this.title,
     required this.content,
@@ -195,34 +198,54 @@ class DiaryDetailPage extends StatefulWidget {
 }
 
 class _DiaryDetailPageState extends State<DiaryDetailPage> {
-  Future<void> uploadDiary(String email, String title, String content,
+  Future<void> saveOrUpdateDiary(String email, String title, String content,
       Uint8List? imageBytes, String nowDate, Color color) async {
-    final apiUrl = 'http://localhost:3000/diary/upload';
+    final apiUrl = widget.id == null
+        ? 'http://localhost:3000/diary/upload' // 업로드 URL
+        : 'http://localhost:3000/edit'; // 수정 URL
+
+    // 공통 데이터
     String base64Image = imageBytes != null ? base64Encode(imageBytes) : '';
     String hexColor = '#${color.value.toRadixString(16).substring(2)}';
-    try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-        },
-        body: json.encode({
-          'email': email, // 클래스 레벨 변수 사용
-          'title': title,
-          'diary': content,
-          'image': base64Image,
-          'createdAt': nowDate,
-          'color': hexColor,
-        }),
-      );
 
-      if (response.statusCode == 201) {
-        print('Diary uploaded successfully');
+    // 요청 데이터 분리
+    Map<String, dynamic> body = widget.id == null
+        ? {
+            'email': email,
+            'title': title,
+            'diary': content,
+            'image': base64Image,
+            'createdAt': nowDate,
+            'color': hexColor,
+          }
+        : {
+            'email': email,
+            '_id': widget.id, // 업데이트 대상 ID
+            'color': hexColor, // 색상만 업데이트
+          };
+
+    try {
+      final response = widget.id == null
+          ? await http.post(
+              Uri.parse(apiUrl),
+              headers: {'Content-Type': 'application/json'},
+              body: json.encode(body),
+            )
+          : await http.patch(
+              Uri.parse(apiUrl),
+              headers: {'Content-Type': 'application/json'},
+              body: json.encode(body),
+            );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        print(
+            'Diary ${widget.id == null ? 'uploaded' : 'updated'} successfully');
       } else {
-        print('Failed to upload diary: ${response.body}');
+        print(
+            'Failed to ${widget.id == null ? 'upload' : 'update'} diary: ${response.body}');
       }
     } catch (e) {
-      print('Error uploading diary: $e');
+      print('Error saving or updating diary: $e');
     }
   }
 
@@ -359,7 +382,7 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                         onPressed: () async {
                           if (widget.title.isNotEmpty &&
                               widget.content.isNotEmpty) {
-                            await uploadDiary(
+                            await saveOrUpdateDiary(
                               widget.email,
                               widget.title,
                               widget.content,
@@ -404,6 +427,7 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
 }
 
 class DiaryEntry {
+  final String id;
   final String title;
   final String content;
   final String image;
@@ -411,7 +435,8 @@ class DiaryEntry {
   final String color;
 
   DiaryEntry(
-      {required this.title,
+      {required this.id,
+      required this.title,
       required this.content,
       required this.image,
       required this.createdAt,
@@ -419,6 +444,7 @@ class DiaryEntry {
 
   factory DiaryEntry.fromJson(Map<String, dynamic> json) {
     return DiaryEntry(
+      id: json['_id'] ?? '',
       title: json['title'] ?? 'Untitled',
       content: json['diary'] ?? '',
       image: json['image'] ?? '',
@@ -428,7 +454,7 @@ class DiaryEntry {
   }
 }
 
-Future<List<DiaryEntry>> fetchDiaries(String email) async {
+Future<List<DiaryEntry>> ViewDiary(String email) async {
   String apiUrl = 'http://localhost:3000/diary/get/test@example.com';
   try {
     final response = await http.get(headers: {
@@ -464,7 +490,7 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
   @override
   void initState() {
     super.initState();
-    futureDiaries = fetchDiaries('test@example.com');
+    futureDiaries = ViewDiary('test@example.com');
   }
 
   late Future<List<DiaryEntry>> futureDiaries;
@@ -504,7 +530,17 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                           20, // 화면 너비에 따라 자동 조정
                       child: GestureDetector(
                         onTap: () {
-                          // 카드 클릭 시 동작
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DiaryDetailPage(
+                                  id: entry.id,
+                                  email: 'test@example.com',
+                                  title: entry.title,
+                                  content: entry.content,
+                                  image: base64Decode(entry.image),
+                                ),
+                              ));
                         },
                         child: Card(
                           color: cardColor,
