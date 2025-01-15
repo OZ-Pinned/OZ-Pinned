@@ -102,6 +102,12 @@ flutter:
   assets:
     - assets/videos/
     - assets/images/
+    - assets/images/meditationImage1.svg
+    - assets/images/meditationImage2.svg
+    - assets/images/meditationImage3.svg
+    - assets/images/meditationImage4.svg
+    - assets/images/meditationImage5.svg
+    - assets/images/meditationImage6.svg
 
 
   #

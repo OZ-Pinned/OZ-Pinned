@@ -9,12 +9,12 @@ class MeditationVideoList extends StatelessWidget {
       'videos': [
         {
           'title': '생각을 비우는 방법',
-          'image': 'assets/images/image1.svg',
+          'image': 'assets/images/meditationImage1.png',
           'video': 'assets/videos/video1.mp3',
         },
         {
-          'title': '마음이 평온해지는 스트레스 감소 명상',
-          'image': 'assets/images/image2.svg',
+          'title': '마음이 평온해지는\n스트레스 감소 명상',
+          'image': 'assets/images/meditationImage2.png',
           'video': 'assets/videos/video1.mp3',
         }
       ]
@@ -24,12 +24,12 @@ class MeditationVideoList extends StatelessWidget {
       'videos': [
         {
           'title': '흥분된 마음을 진정시키는 물소리',
-          'image': 'assets/images/image3.svg',
+          'image': 'assets/images/meditationImage3.png',
           'video': 'assets/videos/video2.mp3',
         },
         {
-          'title': '머리가 맑아지는 숲 속 치유음악',
-          'image': 'assets/images/image4.svg',
+          'title': '머리가 맑아지는\n 숲 속 치유음악',
+          'image': 'assets/images/meditationImage4.png',
           'video': 'assets/videos/video2.mp3',
         }
       ]
@@ -38,13 +38,13 @@ class MeditationVideoList extends StatelessWidget {
       'section': '따듯한 장작타는 소리',
       'videos': [
         {
-          'title': '포근한 메리크리스마스 수면 음악',
-          'image': 'assets/images/image5.svg',
+          'title': '포근한 메리크리스마스\n수면 음악',
+          'image': 'assets/images/meditationImage5.png',
           'video': 'assets/videos/video3.mp3',
         },
         {
-          'title': '굳은 몸을 녹여주는 따뜻한 장작타는 소리',
-          'image': 'assets/images/image6.svg',
+          'title': '굳은 몸을 녹여주는\n따뜻한 장작타는 소리',
+          'image': 'assets/images/meditationImage6.png',
           'video': 'assets/videos/video3.mp3',
         }
       ]
@@ -56,16 +56,17 @@ class MeditationVideoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('코코의 추천 명상'),
         centerTitle: true,
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: videoList.map((section) {
             return Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -79,7 +80,7 @@ class MeditationVideoList extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2, // 한 줄에 2개의 아이템
-                      childAspectRatio: 3 / 4, // 아이템의 가로 세로 비율
+                      childAspectRatio: 160 / 220, // 아이템의 가로 세로 비율
                       mainAxisSpacing: 8, // 세로 간격
                       crossAxisSpacing: 8, // 가로 간격
                     ),
@@ -93,38 +94,47 @@ class MeditationVideoList extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => MeditationVideoPlayer(
+                                videoImage: video['image'],
                                 videoPath: video['video'],
                               ),
                             ),
                           );
                         },
                         child: Card(
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: SvgPicture.asset(
-                                  'assets/images/image1.svg',
-                                  width: 153,
-                                  height: 153,
-                                  fit: BoxFit.fill,
+                          elevation: 0,
+                          color: Colors.white,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Image.asset(
+                                  video['image'],
+                                  width: 160,
+                                  height: 160,
+                                  fit: BoxFit.cover,
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  video['title'],
-                                  style: TextStyle(
-                                      fontFamily: 'LeeSeoYun', fontSize: 18),
-                                  textAlign: TextAlign.start,
+                                SizedBox(
+                                  height: 10,
                                 ),
-                              ),
-                            ],
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    video['title'],
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      fontFamily: 'LeeSeoYun',
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );
                     },
                   ),
-                  SizedBox(height: 16), // 섹션 간 간격
                 ],
               ),
             );
@@ -136,9 +146,11 @@ class MeditationVideoList extends StatelessWidget {
 }
 
 class MeditationVideoPlayer extends StatefulWidget {
+  final String videoImage;
   final String videoPath;
 
-  const MeditationVideoPlayer({super.key, required this.videoPath});
+  const MeditationVideoPlayer(
+      {super.key, required this.videoImage, required this.videoPath});
 
   @override
   _MeditationVideoPlayerState createState() => _MeditationVideoPlayerState();
@@ -171,60 +183,68 @@ class _MeditationVideoPlayerState extends State<MeditationVideoPlayer> {
         title: const Text('명상 영상 재생'),
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _controller.value.isInitialized
-                ? AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
-                  )
-                : const CircularProgressIndicator(),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    _controller.seekTo(
-                        _controller.value.position - Duration(seconds: 10));
-                  },
-                  icon: SvgPicture.asset(
-                    'assets/images/beforeTenButton.svg',
-                    width: 40,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(widget.videoImage),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _controller.value.isInitialized
+                  ? AspectRatio(
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: VideoPlayer(_controller),
+                    )
+                  : const CircularProgressIndicator(),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      _controller.seekTo(
+                          _controller.value.position - Duration(seconds: 10));
+                    },
+                    icon: SvgPicture.asset(
+                      'assets/images/beforeTenButton.svg',
+                      width: 40,
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    play = !play;
-                    if (play) {
-                      _controller.play();
-                    } else {
-                      _controller.pause();
-                    }
-                    setState(() {});
-                  },
-                  icon: SvgPicture.asset(
-                    play
-                        ? 'assets/images/stopButton.svg'
-                        : 'assets/images/playButton.svg',
-                    width: 40,
+                  IconButton(
+                    onPressed: () {
+                      play = !play;
+                      if (play) {
+                        _controller.play();
+                      } else {
+                        _controller.pause();
+                      }
+                      setState(() {});
+                    },
+                    icon: SvgPicture.asset(
+                      play
+                          ? 'assets/images/stopButton.svg'
+                          : 'assets/images/playButton.svg',
+                      width: 40,
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    _controller.seekTo(
-                        _controller.value.position + Duration(seconds: 10));
-                  },
-                  icon: SvgPicture.asset(
-                    'assets/images/afterTenButton.svg',
-                    width: 40,
+                  IconButton(
+                    onPressed: () {
+                      _controller.seekTo(
+                          _controller.value.position + Duration(seconds: 10));
+                    },
+                    icon: SvgPicture.asset(
+                      'assets/images/afterTenButton.svg',
+                      width: 40,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
