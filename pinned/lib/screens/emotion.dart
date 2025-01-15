@@ -124,10 +124,12 @@ class _EmotionPageState extends State<EmotionPage> {
                 thumbShape: CustomSliderThumbCircle(
                     thumbColor: getOuterCircleColorCode(currentValue),
                     innerCircleColor: getInnerCircleColorCode(currentValue)),
-                overlayColor:
-                    Colors.blue.withOpacity(0.2), // 썸 클릭 시 나오는 오버레이 색상
-                overlayShape:
-                    RoundSliderOverlayShape(overlayRadius: 20.0), // 오버레이 크기
+                overlayColor: Colors.blue.withValues(
+                  alpha: 2.0,
+                ), // 썸 클릭 시 나오는 오버레이 색상
+                overlayShape: RoundSliderOverlayShape(
+                  overlayRadius: 20.0,
+                ), // 오버레이 크기
                 tickMarkShape: RoundSliderTickMarkShape(), // 트랙 위의 점 표시 스타일
                 activeTickMarkColor:
                     getOuterCircleColorCode(currentValue), // 활성화된 점 색상

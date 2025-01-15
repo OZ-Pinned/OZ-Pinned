@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +7,6 @@ import 'package:pinned/icon/custom_icon_icons.dart';
 import 'package:pinned/screens/emotion.dart';
 import 'package:pinned/screens/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'meditation.dart';
-import 'test.dart';
-import 'gallery_write.dart';
 import 'mypage.dart';
 import 'package:http/http.dart' as http;
 
@@ -55,6 +54,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   SvgPicture getCharacter(int value) {
+    // ignore: avoid_print
     print(value);
     if (value == 0) {
       return SvgPicture.asset(
@@ -117,26 +117,18 @@ class _HomePageState extends State<HomePage> {
       );
 
       final data = json.decode(response.body);
-      print(data);
       if (data['success']) {
-        print("바뀐 캐릭터..   =>    ${data['user']['character']}");
         setState(() {
           // 서버에서 가져온 캐릭터 값을 업데이트
           selectedChar = data['user']['character'];
-          print(selectedChar);
         });
-      } else {
-        print('Error: ${data['message']}');
-      }
-    } catch (error) {
-      print('Error fetching test: $error');
-    }
+      } else {}
+    } catch (error) {}
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    print("didChangeDependencies 호출");
     getUser();
   }
 
@@ -193,7 +185,6 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ).then(
                                 (_) {
-                                  print("마이페이지에서 돌아옴. 서버 데이터 갱신 시도.");
                                   getUser();
                                 },
                               );
