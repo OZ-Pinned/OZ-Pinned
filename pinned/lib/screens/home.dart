@@ -51,6 +51,31 @@ class _HomePageState extends State<HomePage> {
     return prefs.getString('email'); // 'email' 키에 저장된 값 반환
   }
 
+  SvgPicture getCharacter(int value) {
+    if (value == 0) {
+      return SvgPicture.asset(
+        'assets/images/KoKoChar.svg',
+        width: 80,
+        height: 80,
+        fit: BoxFit.contain,
+      );
+    } else if (value == 1) {
+      return SvgPicture.asset(
+        'assets/images/RuRuChar.svg',
+        width: 100,
+        height: 103,
+        fit: BoxFit.contain,
+      );
+    } else {
+      return SvgPicture.asset(
+        'assets/images/KiKiChar.svg',
+        width: 99,
+        height: 94,
+        fit: BoxFit.contain,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -296,12 +321,7 @@ class _HomePageState extends State<HomePage> {
                                 Positioned(
                                   top: -58, // 텍스트 상자 위에 위치하도록 조정
                                   left: 10,
-                                  child: SvgPicture.asset(
-                                    'assets/images/KoKoChar.svg',
-                                    width: 80,
-                                    height: 80,
-                                    fit: BoxFit.contain,
-                                  ),
+                                  child: getCharacter(widget.character),
                                 ),
                               ],
                             ),

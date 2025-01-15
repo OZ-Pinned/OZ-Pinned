@@ -130,8 +130,9 @@ flutter:
     - assets/images/KoKoChar.svg
     - assets/images/certifyCodeChar.svg
     - assets/images/inputEmailChar.svg
-    - assets/inputNameChar.svg
-    - assets/SmallKoKo.svg
+    - assets/images/inputNameChar.svg
+    - assets/images/SmallKoKo.svg
+    - assets/images/KiKiChar.svg
 
   #
   # For details regarding fonts from package dependencies,
