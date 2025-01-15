@@ -9,6 +9,7 @@ import 'meditation.dart';
 import 'test.dart';
 import 'gallery_write.dart';
 import 'mypage.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   final String email;
@@ -26,6 +27,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int selectedChar = 0;
+
   List pictureList = [
     'smallAngryEmotion.svg',
     'smallSadEmotion.svg',
@@ -52,6 +55,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   SvgPicture getCharacter(int value) {
+    print(value);
     if (value == 0) {
       return SvgPicture.asset(
         'assets/images/KoKoChar.svg',
@@ -61,19 +65,59 @@ class _HomePageState extends State<HomePage> {
       );
     } else if (value == 1) {
       return SvgPicture.asset(
-        'assets/images/RuRuChar.svg',
-        width: 100,
-        height: 103,
+        'assets/images/Kangeroo.svg',
+        width: 80,
+        height: 80,
         fit: BoxFit.contain,
       );
     } else {
       return SvgPicture.asset(
         'assets/images/KiKiChar.svg',
-        width: 99,
-        height: 94,
+        width: 80,
+        height: 80,
         fit: BoxFit.contain,
       );
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUser(); // 서버에서 데이터 가져오기
+    selectedChar = widget.character;
+  }
+
+  Future<void> getUser() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://localhost:3000/home/get/${widget.email}'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      final data = json.decode(response.body);
+      print(data);
+      if (data['success']) {
+        print("바뀐 캐릭터..   =>    ${data['user']['character']}");
+        setState(() {
+          // 서버에서 가져온 캐릭터 값을 업데이트
+          selectedChar = data['user']['character'];
+          print(selectedChar);
+        });
+      } else {
+        print('Error: ${data['message']}');
+      }
+    } catch (error) {
+      print('Error fetching test: $error');
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print("didChangeDependencies 호출");
+    getUser();
   }
 
   @override
@@ -124,9 +168,14 @@ class _HomePageState extends State<HomePage> {
                                 MaterialPageRoute(
                                   builder: (context) => MyPage(
                                     email: widget.email,
-                                    character: widget.character,
+                                    character: selectedChar,
                                   ),
                                 ),
+                              ).then(
+                                (_) {
+                                  print("마이페이지에서 돌아옴. 서버 데이터 갱신 시도.");
+                                  getUser();
+                                },
                               );
                             },
                             icon: Icon(
@@ -321,7 +370,7 @@ class _HomePageState extends State<HomePage> {
                                 Positioned(
                                   top: -58, // 텍스트 상자 위에 위치하도록 조정
                                   left: 10,
-                                  child: getCharacter(widget.character),
+                                  child: getCharacter(selectedChar),
                                 ),
                               ],
                             ),
