@@ -7,6 +7,7 @@ const chatbotRoutes = require('./routes/chatbotRoutes');
 const mypageRoutes = require('./routes/mypageRoutes');
 const testRoutes = require('./routes/testRoutes');
 const diaryRoutes = require('./routes/diaryRoutes');
+const homeRoutes = require('./routes/homeRoutes');
 
 // Express 앱 초기화
 const app = express();
@@ -26,6 +27,7 @@ app.use('/chatbot', chatbotRoutes);
 app.use('/mypage', mypageRoutes);
 app.use('/test', testRoutes);
 app.use('/diary',diaryRoutes);
+app.use('/home', homeRoutes);
 
 // 서버 포트 설정
 const PORT = 3000;

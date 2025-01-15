@@ -40,7 +40,7 @@ class _TestPageState extends State<TestPage> {
   void initState() {
     super.initState();
     // 초기화: testList에 초기값 설정
-    testList = widget.lang ? EnglishList : KoreanList;
+    testList = widget.lang ? englishList : koreanList;
   }
 
   @override
@@ -49,9 +49,9 @@ class _TestPageState extends State<TestPage> {
 
     // 조건에 따라 testList 초기화 (setState 내부에서 초기화하는 것이 아닌, 이미 초기화된 상태에서 업데이트 필요)
     if (widget.lang == true) {
-      testList = EnglishList;
+      testList = englishList;
     } else {
-      testList = KoreanList;
+      testList = koreanList;
     }
   }
 
@@ -106,8 +106,9 @@ class _TestPageState extends State<TestPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('테스트'),
+        backgroundColor: Colors.white,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,4 +1,4 @@
-List<Map<String, dynamic>> KoreanList = [
+List<Map<String, dynamic>> koreanList = [
   {
     'questionText': '일 또는 여가 활동을 하는데\n흥미나 즐거움을 느끼지 못한다.',
     'answers': [

@@ -16,6 +16,7 @@ class MyPage extends StatefulWidget {
 class _MyPageState extends State<MyPage> {
   List<double> scores = []; // 점수 데이터를 double로 저장
   List<String> dates = [];
+  int selectedChar = 0;
 
   @override
   void initState() {
@@ -41,17 +42,21 @@ class _MyPageState extends State<MyPage> {
         setState(
           () {
             scores = List<double>.from(
-              data['test'][0]['scores'].map(
+              data['test']['scores'].map(
                 (e) => e['score'].toDouble(),
               ),
             );
+            scores =
+                scores.sublist((scores.length > 5) ? scores.length - 5 : 0);
             dates = List<String>.from(
-              data['test'][0]['scores'].map(
+              data['test']['scores'].map(
                 (e) => e['createdAt'].substring(
                   5,
                 ),
               ),
             );
+            dates = dates.sublist((dates.length > 5) ? dates.length - 5 : 0);
+            selectedChar = data['user']['character'];
           },
         );
       } else {
@@ -80,7 +85,6 @@ class _MyPageState extends State<MyPage> {
 
       if (data['success']) {
         print(data);
-        print('교체 성공!');
       } else {
         print('Error: ${data['message']}');
       }
@@ -88,8 +92,6 @@ class _MyPageState extends State<MyPage> {
       print('Error fetching diary: $error');
     }
   }
-
-  int selectedChar = 0;
 
   SvgPicture getImage(int value) {
     if (value == 0) {
@@ -126,7 +128,8 @@ class _MyPageState extends State<MyPage> {
   void toggleSelect(int value) {
     setState(() {
       selectedChar = value;
-      changeCharacter(selectedChar); // 선택된 캐릭터의 인덱스 업데이트
+      print(value);
+      changeCharacter(value); // 선택된 캐릭터의 인덱스 업데이트
     });
   }
 
@@ -134,7 +137,9 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffffffff),
-      appBar: AppBar(title: Text("My Page")),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+      ),
       body: Container(
         decoration: BoxDecoration(
           color: Color(0xFFFFFFFF),
@@ -332,7 +337,7 @@ class _MyPageState extends State<MyPage> {
                             ),
                             padding: const EdgeInsets.all(6),
                           ),
-                          onPressed: () => toggleSelect(i),
+                          onPressed: () => {toggleSelect(i)},
                           child: getImage(i),
                         ),
                       ),

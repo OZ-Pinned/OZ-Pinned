@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'gallery_write.dart';
 
 void main() => runApp(MyApp());
@@ -26,13 +27,13 @@ class _EmotionPageState extends State<EmotionPage> {
 
   String getImagePath(double value) {
     if (value <= 25) {
-      return 'assets/images/angryEmotion.png'; // 슬라이더 값이 0~25일 때
+      return 'assets/images/angryEmotion.svg'; // 슬라이더 값이 0~25일 때
     } else if (value <= 50) {
-      return 'assets/images/sadEmotion.png'; // 슬라이더 값이 26~50일 때
+      return 'assets/images/sadEmotion.svg'; // 슬라이더 값이 26~50일 때
     } else if (value <= 75) {
-      return 'assets/images/noneEmotion.png'; // 슬라이더 값이 51~75일 때
+      return 'assets/images/noneEmotion.svg'; // 슬라이더 값이 51~75일 때
     } else {
-      return 'assets/images/happyEmotion.png'; // 슬라이더 값이 76~100일 때
+      return 'assets/images/happyEmotion.svg'; // 슬라이더 값이 76~100일 때
     }
   }
 
@@ -76,104 +77,112 @@ class _EmotionPageState extends State<EmotionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('emotionPage'),
+        backgroundColor: getColorCode(currentValue),
       ),
       backgroundColor: getColorCode(currentValue),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 75,
-          ),
-          Text(
-            '오늘의 기분은 어떤가요?',
-            style: TextStyle(
-                fontFamily: 'LeeSeoYun', color: Colors.white, fontSize: 26),
-          ),
-          SizedBox(
-            height: 93,
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: AnimatedSwitcher(
-              duration: Duration(milliseconds: 300), // 애니메이션 속도 설정
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                return FadeTransition(
-                    opacity: animation, child: child); // 페이드 효과
-              },
-              child: SizedBox(
-                key: ValueKey<double>(
-                    currentValue), // 슬라이더 값에 따라 다른 키를 설정하여 애니메이션 적용
-                height: 181,
-                width: 300,
-                child: Image.asset(
-                  getImagePath(currentValue),
-                  fit: BoxFit.contain, // 이미지를 중앙에 맞춰줍니다.
-                ),
-              ),
+      body: Container(
+        padding: EdgeInsets.only(
+          left: 20,
+          right: 20,
+        ),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 75,
             ),
-          ),
-          SizedBox(
-            height: 138,
-          ),
-          SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                activeTrackColor: Color(0xffFFF2F0), // 슬라이더의 활성화된 트랙 색상
-                inactiveTrackColor: Color(0xffFFF2F0), // 비활성화된 트랙 색상
-                trackHeight: 17.0, // 트랙 두께
-                thumbColor: Color(0xff6499F9), // 슬라이더의 썸(핸들) 색상
-                thumbShape: CustomSliderThumbCircle(
-                    thumbColor: getOuterCircleColorCode(currentValue),
-                    innerCircleColor: getInnerCircleColorCode(currentValue)),
-                overlayColor:
-                    Colors.blue.withOpacity(0.2), // 썸 클릭 시 나오는 오버레이 색상
-                overlayShape:
-                    RoundSliderOverlayShape(overlayRadius: 20.0), // 오버레이 크기
-                tickMarkShape: RoundSliderTickMarkShape(), // 트랙 위의 점 표시 스타일
-                activeTickMarkColor:
-                    getOuterCircleColorCode(currentValue), // 활성화된 점 색상
-                inactiveTickMarkColor:
-                    getOuterCircleColorCode(currentValue), // 비활성화된 점 색상
-              ),
-              child: Slider(
-                value: currentValue,
-                max: 100,
-                divisions: 3,
-                onChanged: (value) => setState(() {
-                  currentValue = value;
-                }),
-              )),
-          SizedBox(
-            height: 78,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WriteGalleryPage(
-                    emotion: (currentValue / 25).toInt(),
+            Text(
+              '오늘의 기분은 어떤가요?',
+              style: TextStyle(
+                  fontFamily: 'LeeSeoYun', color: Colors.white, fontSize: 26),
+            ),
+            SizedBox(
+              height: 93,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: AnimatedSwitcher(
+                duration: Duration(milliseconds: 300), // 애니메이션 속도 설정
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(
+                      opacity: animation, child: child); // 페이드 효과
+                },
+                child: SizedBox(
+                  key: ValueKey<double>(
+                      currentValue), // 슬라이더 값에 따라 다른 키를 설정하여 애니메이션 적용
+                  height: 181,
+                  width: 350,
+                  child: SvgPicture.asset(
+                    getImagePath(currentValue),
+                    fit: BoxFit.contain, // 이미지를 중앙에 맞춰줍니다.
                   ),
                 ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              minimumSize: Size(320, 48),
-            ),
-            child: Text(
-              '다음',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
               ),
             ),
-          ),
-        ],
+            SizedBox(
+              height: 138,
+            ),
+            SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  activeTrackColor: Color(0xffFFF2F0), // 슬라이더의 활성화된 트랙 색상
+                  inactiveTrackColor: Color(0xffFFF2F0), // 비활성화된 트랙 색상
+                  trackHeight: 17.0, // 트랙 두께
+                  thumbColor: Color(0xff6499F9), // 슬라이더의 썸(핸들) 색상
+                  thumbShape: CustomSliderThumbCircle(
+                      thumbColor: getOuterCircleColorCode(currentValue),
+                      innerCircleColor: getInnerCircleColorCode(currentValue)),
+                  overlayColor: Colors.blue.withValues(
+                    alpha: 2.0,
+                  ), // 썸 클릭 시 나오는 오버레이 색상
+                  overlayShape: RoundSliderOverlayShape(
+                    overlayRadius: 20.0,
+                  ), // 오버레이 크기
+                  tickMarkShape: RoundSliderTickMarkShape(), // 트랙 위의 점 표시 스타일
+                  activeTickMarkColor:
+                      getOuterCircleColorCode(currentValue), // 활성화된 점 색상
+                  inactiveTickMarkColor:
+                      getOuterCircleColorCode(currentValue), // 비활성화된 점 색상
+                ),
+                child: Slider(
+                  value: currentValue,
+                  max: 100,
+                  divisions: 3,
+                  onChanged: (value) => setState(() {
+                    currentValue = value;
+                  }),
+                )),
+            SizedBox(
+              height: 78,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WriteGalleryPage(
+                      emotion: (currentValue / 25).toInt(),
+                    ),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                minimumSize: Size(350, 48),
+              ),
+              child: Text(
+                '다음',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

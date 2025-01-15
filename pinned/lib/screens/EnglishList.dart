@@ -1,4 +1,4 @@
-List<Map<String, dynamic>> EnglishList = [
+List<Map<String, dynamic>> englishList = [
   {
     'questionText': 'How often did you feel\ntired out for no reason?',
     'answers': [

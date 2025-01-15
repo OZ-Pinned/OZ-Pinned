@@ -1,12 +1,12 @@
+// ignore_for_file: library_private_types_in_public_api, avoid_print, avoid_unnecessary_containers, use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pinned/screens/home.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'dart:math';
-import 'package:flutter/material.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
@@ -57,7 +57,9 @@ class _SelectPageState extends State<SelectPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffffffff),
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+      ),
       body: Center(
         child: Column(
           children: [
@@ -147,12 +149,10 @@ class _EmailPageState extends State<EmailPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     inputedEmail = "";
     super.initState();
   }
 
-  @override
   void inputEmail(value) {
     setState(() {
       inputedEmail = value;
@@ -207,7 +207,9 @@ class _EmailPageState extends State<EmailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Color(0xfffffffff),
+      ),
       body: Center(
         child: Padding(
           padding: EdgeInsets.only(
@@ -217,46 +219,109 @@ class _EmailPageState extends State<EmailPage> {
           child: Column(
             children: [
               SizedBox(
-                height: 40,
+                height: 57,
               ),
-              SvgPicture.asset(
-                'assets/images/emailChar.svg',
-                height: 80,
-                width: 320,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Stack(
+                    alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
+                    clipBehavior: Clip.none,
+                    children: [
+                      SizedBox(
+                        height: 250,
+                      ),
+                      Container(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white, // 내부 배경색 설정
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(7),
+                              borderSide: BorderSide(
+                                color: Color(0xffDADADA), // 외부 테두리 색상
+                                width: 1.0, // 외부 테두리 두께
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
+                                width: 1.0, // 외부 테두리 두께
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0xffDADADA), // 기본 테두리 투명
+                                width: 0, // 두께 0
+                              ),
+                            ),
+                          ),
+                          onChanged: (value) {
+                            inputEmail(value);
+                          },
+                        ),
+                      ),
+                      Positioned(
+                        top: 28, // 텍스트 상자 위에 위치하도록 조정
+                        left: 10,
+                        child: Row(
+                          children: [
+                            Column(
+                              children: [
+                                Container(
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                      top: 2,
+                                      bottom: 0,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xffEDEDED),
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(19.5),
+                                        topRight: Radius.circular(19.5),
+                                        bottomRight: Radius.circular(0),
+                                        bottomLeft: Radius.circular(19.5),
+                                      ),
+                                      border: Border.all(
+                                        color: Color(0xffDADADA),
+                                      ),
+                                    ),
+                                    width: 204,
+                                    height: 43,
+                                    child: Text(
+                                      '이메일을 알려줘',
+                                      style: TextStyle(
+                                        fontFamily: 'LeeSeoYun',
+                                        fontSize: 24,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 50,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            SvgPicture.asset(
+                              'assets/images/KoKoChar.svg',
+                              width: 98,
+                              height: 92.5,
+                              fit: BoxFit.contain,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               SizedBox(
-                height: 17,
-              ),
-              TextField(
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white, // 내부 배경색 설정
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(7),
-                    borderSide: BorderSide(
-                      color: Color(0xffDADADA), // 외부 테두리 색상
-                      width: 1.0, // 외부 테두리 두께
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
-                      width: 1.0, // 외부 테두리 두께
-                    ),
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.transparent, // 기본 테두리 투명
-                      width: 0, // 두께 0
-                    ),
-                  ),
-                ),
-                onChanged: (value) {
-                  inputEmail(value);
-                },
-              ),
-              SizedBox(
-                height: 420,
+                height: 300,
               ),
               SizedBox(
                 width: 350,
@@ -377,149 +442,211 @@ class _CertificationPageState extends State<CertificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffffffff),
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Color(0xfffffffff),
+      ),
       body: Center(
         child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
           child: Column(
             children: [
               SizedBox(
-                height: 40,
+                height: 150,
               ),
-              SvgPicture.asset(
-                'assets/images/certificationChar.svg',
-                height: 80,
-                width: 320,
-              ),
-              SizedBox(
-                height: 17,
-              ),
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(
-                  6,
-                  (index) {
-                    return SizedBox(
-                      width: 50,
-                      child: TextField(
-                        controller: _controllers[index],
-                        keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.next,
-                        maxLength: 1,
-                        style: TextStyle(
-                          fontSize: 30,
-                        ),
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(
-                            top: 9.5,
-                            bottom: 9.5,
-                            right: 16,
-                            left: 16,
-                          ),
-                          filled: true,
-                          fillColor: Colors.white, // 내부 배경색 설정
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7),
-                            borderSide: BorderSide(
-                              color: Color(0xffDADADA), // 외부 테두리 색상
-                              width: 1.0, // 외부 테두리 두께
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0xffFF324F), // 포커스 시 동일한 색상 유지
-                              width: 1.0, // 외부 테두리 두께
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.transparent, // 기본 테두리 투명
-                              width: 0, // 두께 0
-                            ),
-                          ),
-                          counterText: "", // 글자 수 카운트 텍스트를 숨김
-                        ),
-                        onChanged: (value) {
-                          _onFieldChanged(value, index); // 값 변경 시 다음으로 포커스를 이동
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    helpText,
-                    style: TextStyle(
-                      color: Color(0xffFF324F),
-                    ),
+                  Stack(
+                    alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
+                    clipBehavior: Clip.none,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: List.generate(
+                          6,
+                          (index) {
+                            return SizedBox(
+                              width: 50,
+                              child: TextField(
+                                controller: _controllers[index],
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                maxLength: 1,
+                                style: TextStyle(
+                                  fontSize: 30,
+                                ),
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.only(
+                                    top: 9.5,
+                                    bottom: 9.5,
+                                    right: 16,
+                                    left: 16,
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white, // 내부 배경색 설정
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(7),
+                                    borderSide: BorderSide(
+                                      color: Color(0xffDADADA), // 외부 테두리 색상
+                                      width: 1.0, // 외부 테두리 두께
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color:
+                                          Color(0xffFF324F), // 포커스 시 동일한 색상 유지
+                                      width: 1.0, // 외부 테두리 두께
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent, // 기본 테두리 투명
+                                      width: 0, // 두께 0
+                                    ),
+                                  ),
+                                  counterText: "", // 글자 수 카운트 텍스트를 숨김
+                                ),
+                                onChanged: (value) {
+                                  _onFieldChanged(
+                                      value, index); // 값 변경 시 다음으로 포커스를 이동
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Positioned(
+                        top: -115, // 텍스트 상자 위에 위치하도록 조정
+                        left: 10,
+                        child: Row(
+                          children: [
+                            Container(
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                  top: 2,
+                                  bottom: 0,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Color(0xffEDEDED),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(19.5),
+                                    topRight: Radius.circular(19.5),
+                                    bottomRight: Radius.circular(0),
+                                    bottomLeft: Radius.circular(19.5),
+                                  ),
+                                  border: Border.all(
+                                    color: Color(0xffDADADA),
+                                  ),
+                                ),
+                                width: 204,
+                                height: 43,
+                                child: Text(
+                                  '인증번호를 입력해줘',
+                                  style: TextStyle(
+                                    fontFamily: 'LeeSeoYun',
+                                    fontSize: 24,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 50,
+                            ),
+                            Column(
+                              children: [
+                                SizedBox(
+                                  height: 50,
+                                ),
+                                SvgPicture.asset(
+                                  'assets/images/KoKoChar.svg',
+                                  width: 98,
+                                  height: 92.5,
+                                  fit: BoxFit.contain,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        helpText,
+                        style: TextStyle(
+                          color: Color(0xffFF324F),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 350,
+                  ),
+                  SizedBox(
+                    width: 350,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        // login()과 storeEmail()이 완료될 때까지 기다림
+                        await login(widget.email); // 로그인 처리 후
+                        await storeEmail(widget.email); // 이메일 저장 후
+
+                        // 로그인 성공 후 조건에 따라 화면 전환
+                        if (widget.logined == true &&
+                            (certifyCode == widget.certificationCode)) {
+                          helpText = "";
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomePage(
+                                email: widget.email,
+                                character: userCharacter,
+                                name: userName,
+                              ),
+                            ),
+                          );
+                        } else {
+                          print("$certifyCode  ${widget.certificationCode}");
+                          if ((certifyCode == widget.certificationCode)) {
+                            helpText = "";
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CharacterPage(
+                                  email: widget.email,
+                                ),
+                              ),
+                            );
+                          } else {
+                            helpText = "인증 코드를 다시 한 번 확인해 주세요.";
+                          }
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xffFF516A),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(7)),
+                        ),
+                      ),
+                      child: Text(
+                        "확인",
+                        style: TextStyle(
+                          color: Color(0xffFFFFFF),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
-              SizedBox(
-                height: 420,
-              ),
-              SizedBox(
-                width: 350,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    // login()과 storeEmail()이 완료될 때까지 기다림
-                    await login(widget.email); // 로그인 처리 후
-                    await storeEmail(widget.email); // 이메일 저장 후
-
-                    // 로그인 성공 후 조건에 따라 화면 전환
-                    if (widget.logined == true &&
-                        (certifyCode == widget.certificationCode)) {
-                      helpText = "";
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomePage(
-                            email: widget.email,
-                            character: userCharacter,
-                            name: userName,
-                          ),
-                        ),
-                      );
-                    } else {
-                      print("$certifyCode  ${widget.certificationCode}");
-                      if ((certifyCode == widget.certificationCode)) {
-                        helpText = "";
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CharacterPage(
-                              email: widget.email,
-                            ),
-                          ),
-                        );
-                      } else {
-                        helpText = "인증 코드를 다시 한 번 확인해 주세요.";
-                      }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffFF516A),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(7)),
-                    ),
-                  ),
-                  child: Text(
-                    "확인",
-                    style: TextStyle(
-                      color: Color(0xffFFFFFF),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              )
             ],
           ),
         ),
@@ -583,7 +710,7 @@ class _CharacterPageState extends State<CharacterPage> {
     return Scaffold(
       backgroundColor: const Color(0xffFFFFFF),
       appBar: AppBar(
-        title: const Text("Birth Input"),
+        backgroundColor: Color(0xfffffffff),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -710,25 +837,13 @@ class _HelloPageState extends State<HelloPage> {
     }
   }
 
-  SvgPicture getImage(int value) {
+  String getImage(int value) {
     if (value == 0) {
-      return SvgPicture.asset(
-        'assets/images/Koala.svg',
-        height: 247,
-        width: 168,
-      );
+      return 'assets/images/Koala.svg';
     } else if (value == 1) {
-      return SvgPicture.asset(
-        'assets/images/Kangeroo.svg',
-        height: 247,
-        width: 168,
-      );
+      return 'assets/images/Kangeroo.svg';
     } else {
-      return SvgPicture.asset(
-        'assets/images/Quoka.svg',
-        height: 247,
-        width: 168,
-      );
+      return 'assets/images/Quoka.svg';
     }
   }
 
@@ -736,12 +851,14 @@ class _HelloPageState extends State<HelloPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Color(0xfffffffff),
+      ),
       body: Center(
         child: Column(
           children: [
             SizedBox(
-              height: 40,
+              height: 50,
             ),
             Container(
               padding: EdgeInsets.only(
@@ -767,6 +884,9 @@ class _HelloPageState extends State<HelloPage> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 25,
+            ),
             Container(
               width: 300,
               height: 300,
@@ -776,12 +896,22 @@ class _HelloPageState extends State<HelloPage> {
                   Radius.circular(300),
                 ),
               ),
-              child: getImage(
-                widget.character,
+              child: Center(
+                // 크기를 중앙에 배치
+                child: SizedBox(
+                  width: 168,
+                  height: 247,
+                  child: Container(
+                    child: SvgPicture.asset(
+                      getImage(widget.character),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
               ),
             ),
             SizedBox(
-              height: 200,
+              height: 160,
             ),
             SizedBox(
               width: 320,
@@ -852,7 +982,7 @@ class _NamePageState extends State<NamePage> {
 
       final data = json.decode(response.body);
 
-      if (response.statusCode == 201 && data['success']) {
+      if (data['success']) {
         print('Signup successful: $data');
         await storeEmail(email); // 이메일 저장
       } else {
@@ -867,12 +997,10 @@ class _NamePageState extends State<NamePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     inputedName = "";
     super.initState();
   }
 
-  @override
   void inputName(value) {
     setState(() {
       inputedName = value;
@@ -884,7 +1012,9 @@ class _NamePageState extends State<NamePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Color(0xfffffffff),
+      ),
       body: Center(
         child: Padding(
           padding: EdgeInsets.only(
@@ -894,46 +1024,109 @@ class _NamePageState extends State<NamePage> {
           child: Column(
             children: [
               SizedBox(
-                height: 40,
+                height: 57,
               ),
-              SvgPicture.asset(
-                'assets/images/usernameChar.svg',
-                height: 80,
-                width: 320,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Stack(
+                    alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
+                    clipBehavior: Clip.none,
+                    children: [
+                      SizedBox(
+                        height: 250,
+                      ),
+                      Container(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white, // 내부 배경색 설정
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(7),
+                              borderSide: BorderSide(
+                                color: Color(0xffDADADA), // 외부 테두리 색상
+                                width: 1.0, // 외부 테두리 두께
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
+                                width: 1.0, // 외부 테두리 두께
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0xffDADADA), // 기본 테두리 투명
+                                width: 0, // 두께 0
+                              ),
+                            ),
+                          ),
+                          onChanged: (value) {
+                            inputName(value);
+                          },
+                        ),
+                      ),
+                      Positioned(
+                        top: 28, // 텍스트 상자 위에 위치하도록 조정
+                        left: 10,
+                        child: Row(
+                          children: [
+                            Column(
+                              children: [
+                                Container(
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                      top: 2,
+                                      bottom: 0,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xffEDEDED),
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(19.5),
+                                        topRight: Radius.circular(19.5),
+                                        bottomRight: Radius.circular(0),
+                                        bottomLeft: Radius.circular(19.5),
+                                      ),
+                                      border: Border.all(
+                                        color: Color(0xffDADADA),
+                                      ),
+                                    ),
+                                    width: 204,
+                                    height: 43,
+                                    child: Text(
+                                      '너의 이름은 뭐야?',
+                                      style: TextStyle(
+                                        fontFamily: 'LeeSeoYun',
+                                        fontSize: 24,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 50,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            SvgPicture.asset(
+                              'assets/images/KoKoChar.svg',
+                              width: 98,
+                              height: 92.5,
+                              fit: BoxFit.contain,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               SizedBox(
-                height: 17,
-              ),
-              TextField(
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white, // 내부 배경색 설정
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(7),
-                    borderSide: BorderSide(
-                      color: Color(0xffDADADA), // 외부 테두리 색상
-                      width: 1.0, // 외부 테두리 두께
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
-                      width: 1.0, // 외부 테두리 두께
-                    ),
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.transparent, // 기본 테두리 투명
-                      width: 0, // 두께 0
-                    ),
-                  ),
-                ),
-                onChanged: (value) {
-                  inputName(value);
-                },
-              ),
-              SizedBox(
-                height: 420,
+                height: 300,
               ),
               SizedBox(
                 width: 350,
