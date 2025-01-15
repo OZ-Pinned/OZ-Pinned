@@ -22,6 +22,10 @@ const diarySchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now  // 생성 날짜는 문서가 생성될 때 자동으로 설정됩니다.
+  },
+  color:{
+    type : String,
+    required: true
   }
 });
 

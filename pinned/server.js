@@ -15,7 +15,7 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '10gb' }));
 
 // MongoDB 연결 설정
-const mongoURI = 'mongodb://hyewon4052:k4468198@localhost:27017/pinned'; // 새로운 사용자와 비밀번호로 연결
+const mongoURI = 'mongodb://pinnedUser:pinnedPassword@localhost:27017/pinned'; // 새로운 사용자와 비밀번호로 연결
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB 연결 성공'))
   .catch((error) => console.error('MongoDB 연결 실패:', error));
