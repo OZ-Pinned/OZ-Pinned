@@ -137,7 +137,9 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffffffff),
-      appBar: AppBar(title: Text("My Page")),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+      ),
       body: Container(
         decoration: BoxDecoration(
           color: Color(0xFFFFFFFF),

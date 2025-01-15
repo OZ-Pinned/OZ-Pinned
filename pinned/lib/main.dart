@@ -57,7 +57,9 @@ class _SelectPageState extends State<SelectPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffffffff),
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+      ),
       body: Center(
         child: Column(
           children: [
@@ -205,7 +207,9 @@ class _EmailPageState extends State<EmailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Color(0xfffffffff),
+      ),
       body: Center(
         child: Padding(
           padding: EdgeInsets.only(
@@ -438,7 +442,9 @@ class _CertificationPageState extends State<CertificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffffffff),
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Color(0xfffffffff),
+      ),
       body: Center(
         child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
@@ -704,7 +710,7 @@ class _CharacterPageState extends State<CharacterPage> {
     return Scaffold(
       backgroundColor: const Color(0xffFFFFFF),
       appBar: AppBar(
-        title: const Text("Birth Input"),
+        backgroundColor: Color(0xfffffffff),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -845,7 +851,9 @@ class _HelloPageState extends State<HelloPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Color(0xfffffffff),
+      ),
       body: Center(
         child: Column(
           children: [
@@ -1004,7 +1012,9 @@ class _NamePageState extends State<NamePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Color(0xfffffffff),
+      ),
       body: Center(
         child: Padding(
           padding: EdgeInsets.only(
