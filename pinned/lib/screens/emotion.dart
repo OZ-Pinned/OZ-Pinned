@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'gallery_write.dart';
 
 void main() => runApp(MyApp());
@@ -26,13 +27,13 @@ class _EmotionPageState extends State<EmotionPage> {
 
   String getImagePath(double value) {
     if (value <= 25) {
-      return 'assets/images/angryEmotion.png'; // 슬라이더 값이 0~25일 때
+      return 'assets/images/angryEmotion.svg'; // 슬라이더 값이 0~25일 때
     } else if (value <= 50) {
-      return 'assets/images/sadEmotion.png'; // 슬라이더 값이 26~50일 때
+      return 'assets/images/sadEmotion.svg'; // 슬라이더 값이 26~50일 때
     } else if (value <= 75) {
-      return 'assets/images/noneEmotion.png'; // 슬라이더 값이 51~75일 때
+      return 'assets/images/noneEmotion.svg'; // 슬라이더 값이 51~75일 때
     } else {
-      return 'assets/images/happyEmotion.png'; // 슬라이더 값이 76~100일 때
+      return 'assets/images/happyEmotion.svg'; // 슬라이더 값이 76~100일 때
     }
   }
 
@@ -95,22 +96,21 @@ class _EmotionPageState extends State<EmotionPage> {
           Align(
             alignment: Alignment.center,
             child: AnimatedSwitcher(
-              duration: Duration(milliseconds: 300), // 애니메이션 속도 설정
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                return FadeTransition(
-                    opacity: animation, child: child); // 페이드 효과
-              },
-              child: SizedBox(
-                key: ValueKey<double>(
-                    currentValue), // 슬라이더 값에 따라 다른 키를 설정하여 애니메이션 적용
-                height: 181,
-                width: 300,
-                child: Image.asset(
-                  getImagePath(currentValue),
-                  fit: BoxFit.contain, // 이미지를 중앙에 맞춰줍니다.
-                ),
-              ),
-            ),
+                duration: Duration(milliseconds: 300), // 애니메이션 속도 설정
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(
+                      opacity: animation, child: child); // 페이드 효과
+                },
+                child: SizedBox(
+                  key: ValueKey<double>(
+                      currentValue), // 슬라이더 값에 따라 다른 키를 설정하여 애니메이션 적용
+                  height: 181,
+                  width: 300,
+                  child: SvgPicture.asset(
+                    getImagePath(currentValue),
+                    fit: BoxFit.contain, // 이미지를 중앙에 맞춰줍니다.
+                  ),
+                )),
           ),
           SizedBox(
             height: 138,

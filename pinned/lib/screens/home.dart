@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
       );
     } else if (value == 1) {
       return SvgPicture.asset(
-        'assets/images/Kangeroo.svg',
+        'assets/images/textRuRu.svg',
         width: 80,
         height: 80,
         fit: BoxFit.contain,
@@ -77,6 +77,26 @@ class _HomePageState extends State<HomePage> {
         height: 80,
         fit: BoxFit.contain,
       );
+    }
+  }
+
+  double getTop(int value) {
+    if (value == 0) {
+      return -58;
+    } else if (value == 1) {
+      return -70;
+    } else {
+      return -65;
+    }
+  }
+
+  double getLeft(int value) {
+    if (value == 0) {
+      return 10;
+    } else if (value == 1) {
+      return 10;
+    } else {
+      return 10;
     }
   }
 
@@ -368,8 +388,9 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 Positioned(
-                                  top: -58, // 텍스트 상자 위에 위치하도록 조정
-                                  left: 10,
+                                  top: getTop(
+                                      selectedChar), // 텍스트 상자 위에 위치하도록 조정
+                                  left: getLeft(selectedChar),
                                   child: getCharacter(selectedChar),
                                 ),
                               ],

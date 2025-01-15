@@ -102,10 +102,10 @@ flutter:
   assets:
     - assets/images/Kangeroo.png
     - assets/images/Koala.png
-    - assets/images/angryEmotion.png
-    - assets/images/happyEmotion.png
-    - assets/images/sadEmotion.png
-    - assets/images/noneEmotion.png
+    - assets/images/angryEmotion.svg
+    - assets/images/happyEmotion.svg
+    - assets/images/sadEmotion.svg
+    - assets/images/noneEmotion.svg
     - assets/images/askKoala.png
     - assets/images/meditationButton.jpg
     - assets/images/chatbotButton.jpg
@@ -133,7 +133,7 @@ flutter:
     - assets/images/inputNameChar.svg
     - assets/images/SmallKoKo.svg
     - assets/images/KiKiChar.svg
-    - assets/images/RuRuChar.svg
+    - assets/images/textRuRu.svg
 
 
   #

@@ -46,7 +46,8 @@ class _MyPageState extends State<MyPage> {
                 (e) => e['score'].toDouble(),
               ),
             );
-            scores = scores.sublist(scores.length - 5);
+            scores =
+                scores.sublist((scores.length > 5) ? scores.length - 5 : 0);
             dates = List<String>.from(
               data['test']['scores'].map(
                 (e) => e['createdAt'].substring(
@@ -54,7 +55,7 @@ class _MyPageState extends State<MyPage> {
                 ),
               ),
             );
-            dates = dates.sublist(dates.length - 5);
+            dates = dates.sublist((dates.length > 5) ? dates.length - 5 : 0);
             selectedChar = data['user']['character'];
           },
         );
