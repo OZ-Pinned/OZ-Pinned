@@ -9,7 +9,7 @@ router.use(cors());
 router.use(bodyParser.json());
 
 router.post('/upload', async (req, res) => {
-    const { email, title, diary, image } = req.body;
+    const { email, title, diary, image, createdAt, color  } = req.body;
     
     try {
       // 다이어리 생성
@@ -18,6 +18,8 @@ router.post('/upload', async (req, res) => {
         title,
         diary,
         image,
+        createdAt,
+        color
       });
   
       return res.status(201).json({ success: true, diary: createdDiary });
@@ -52,9 +54,37 @@ router.delete('/delete/:email', async (req, res) => {
         if (result.deletedCount === 0) {
             return res.status(404).json({ success: false, message: 'No diary found for this email' });
         }
-        return res.status(200).json({ success: true, message: 'Diary successfully deleted' });
+        return res.status(200).json({ success: true, diary: diaries.map(diary => ({
+            ...diary.toObject(),
+            _id: diary._id.toString(), // _id를 문자열로 변환
+          })),
+        });
     } catch (error) {
         return res.status(500).json({ success: false, message: 'Failed to delete diary', error: error.message });
+    }
+});
+
+router.patch('/edit', async (req, res) => {
+    const { email, _id, color } = req.body;
+
+    if (!email || !_id || !color) {
+        return res.status(400).json({ success: false, message: 'Email, diaryId, and color are required' });
+    }
+
+    try {
+        const updatedDiary = await DiaryDB.findOneAndUpdate(
+            { email, _id: _id }, // 조건: 이메일과 다이어리 ID가 일치
+            { $set: { color } }, // 업데이트: color 필드 변경
+            { new: true } // 업데이트 후 변경된 다이어리 반환
+        );
+
+        if (!updatedDiary) {
+            return res.status(404).json({ success: false, message: 'Diary not found' });
+        }
+
+        return res.status(200).json({ success: true, diary: updatedDiary });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: 'Failed to update diary', error: error.message });
     }
 });
 
