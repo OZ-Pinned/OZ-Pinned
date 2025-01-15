@@ -32,7 +32,6 @@ dependencies:
   flutter:
     sdk: flutter
   image_picker: ^0.8.5+3
-  file_picker: ^5.2.2
   shared_preferences: ^2.3.5
   http: ^1.2.2
   shelf: ^1.0.0

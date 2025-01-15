@@ -16,7 +16,8 @@ const diarySchema = new Schema({
     required: true  // 다이어리 내용 필드도 필수입니다.
   },
   image: {
-    type: String  // 이미지 URL은 필수는 아니므로, required 옵션은 없습니다.
+    type: String,  // 이미지 URL은 필수는 아니므로, required 옵션은 없습니다.
+    required: true
   },
   createdAt: {
     type: Date,
