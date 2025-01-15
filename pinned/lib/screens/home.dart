@@ -9,6 +9,7 @@ import 'package:pinned/screens/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'mypage.dart';
 import 'package:http/http.dart' as http;
+import 'meditation.dart';
 
 class HomePage extends StatefulWidget {
   final String email;
@@ -304,7 +305,7 @@ class _HomePageState extends State<HomePage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => TestPage(lang: false),
+                                  builder: (context) => MeditationVideoList(),
                                 ),
                               );
                             } else {

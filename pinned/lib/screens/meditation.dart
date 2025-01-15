@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:video_player/video_player.dart';
 
 class MeditationVideoList extends StatelessWidget {
   final List<Map<String, String>> videoList = [
-    {'title': '명상 영상 1', 'id': 'zAIZpNbYytI'},
-    {'title': '명상 영상 2', 'id': 'LfrO8t8lsWU'},
-    {'title': '명상 영상 3', 'id': 'xvFZjo5PgG0'},
+    {
+      'title': '명상 영상 1',
+      'path':
+          'assets/videos/5MinutesOfGuidedMeditationForLettingGoOfAngerSELF.mp3'
+    },
+    {
+      'title': '명상 영상 2',
+      'path': 'assets/videos/8MinutesofSelfForgivenessGuidedMeditationSELF.mp3'
+    },
+    {
+      'title': '명상 영상 3',
+      'path':
+          'assets/videos/5MinutesOfGuidedMeditationForLettingGoOfAngerSELF.mp3'
+    },
   ];
 
   MeditationVideoList({super.key});
@@ -14,66 +25,74 @@ class MeditationVideoList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('명상 영상 리스트'),
+        title: const Text('명상 영상 리스트'),
       ),
-      body: ListView.builder(
-        itemCount: videoList.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(videoList[index]['title']!),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      MeditationVideoPlayer(videoId: videoList[index]['id']!),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: videoList.map((video) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        MeditationVideoPlayer(videoPath: video['path']!),
+                  ),
+                );
+              },
+              child: Container(
+                margin: const EdgeInsets.all(8.0),
+                width: 200,
+                decoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              );
-            },
-          );
-        },
+                child: Center(
+                  child: Text(
+                    video['title']!,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
 }
 
 class MeditationVideoPlayer extends StatefulWidget {
-  final String videoId;
+  final String videoPath;
 
-  const MeditationVideoPlayer({super.key, required this.videoId});
+  const MeditationVideoPlayer({super.key, required this.videoPath});
 
   @override
   _MeditationVideoPlayerState createState() => _MeditationVideoPlayerState();
 }
 
 class _MeditationVideoPlayerState extends State<MeditationVideoPlayer> {
-  late YoutubePlayerController _controller;
-  bool _isPlaying = false; // 재생 상태 관리
+  late VideoPlayerController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = YoutubePlayerController(
-      params: YoutubePlayerParams(
-        mute: false,
-        showControls: true,
-        showFullscreenButton: true,
-      ),
-    );
-
-    // 비디오 로드
-    _controller.loadVideoById(videoId: widget.videoId);
-
-    _controller.listen((event) {
-      setState(() {
-        _isPlaying = event.playerState == PlayerState.playing;
+    _controller = VideoPlayerController.asset(widget.videoPath)
+      ..initialize().then((_) {
+        setState(() {});
+        _controller.play();
       });
-    });
   }
 
   @override
   void dispose() {
-    _controller.close();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -81,83 +100,22 @@ class _MeditationVideoPlayerState extends State<MeditationVideoPlayer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('명상 영상 재생'),
+        title: const Text('명상 영상 재생'),
       ),
-      body: Column(
-        children: [
-          YoutubePlayerControllerProvider(
-            controller: _controller,
-            child: YoutubePlayer(
-              controller: _controller,
-              aspectRatio: 16 / 9,
-            ),
-          ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () async {
-                  // 현재 시간에서 10초 뒤로
-                  final currentPosition = await _controller.currentTime;
-                  _controller.seekTo(seconds: currentPosition - 10);
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.replay_10),
-                    SizedBox(width: 5),
-                    Text("10초 뒤로"),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_isPlaying) {
-                    _controller.pauseVideo();
-                  } else {
-                    _controller.playVideo();
-                  }
-                },
-                child: Row(
-                  children: [
-                    Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
-                    SizedBox(width: 5),
-                    Text(_isPlaying ? "일시정지" : "재생"),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  // 현재 시간에서 10초 앞으로
-                  final currentPosition = await _controller.currentTime;
-                  _controller.seekTo(seconds: currentPosition + 10);
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.forward_10),
-                    SizedBox(width: 5),
-                    Text("10초 앞으로"),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              _controller.enterFullScreen();
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.fullscreen),
-                SizedBox(width: 5),
-                Text("풀스크린"),
-              ],
-            ),
-          ),
-        ],
+      body: Center(
+        child: _controller.value.isInitialized
+            ? AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoPlayer(_controller),
+              )
+            : const CircularProgressIndicator(),
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: MeditationVideoList(),
+  ));
 }

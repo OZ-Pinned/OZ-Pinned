@@ -49,6 +49,7 @@ dependencies:
   device_info_plus: ^11.2.0
   package_info_plus: ^8.1.2
   ios_utsname_ext: ^2.3.0
+  video_player: ^2.7.2
   
 dev_dependencies:
   flutter_test:
@@ -99,6 +100,7 @@ flutter:
       - asset: assets/fonts/CustomIcon.ttf
 
   assets:
+    - assets/videos/
     - assets/images/Kangeroo.png
     - assets/images/Koala.png
     - assets/images/angryEmotion.svg
