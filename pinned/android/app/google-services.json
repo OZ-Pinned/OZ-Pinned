@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "903349834135",
+    "project_id": "oz-pinned",
+    "storage_bucket": "oz-pinned.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:903349834135:android:1fc39dadf6a76aa43834d2",
+        "android_client_info": {
+          "package_name": "com.ozprojects.pinned"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaY5lyoNUbdtRReruKPorEy3FrmjPIJqk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
