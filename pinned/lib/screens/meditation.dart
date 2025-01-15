@@ -1,11 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:video_player/video_player.dart';
 
 class MeditationVideoList extends StatelessWidget {
-  final List<Map<String, String>> videoList = [
-    {'title': '명상 영상 1', 'id': 'zAIZpNbYytI'},
-    {'title': '명상 영상 2', 'id': 'LfrO8t8lsWU'},
-    {'title': '명상 영상 3', 'id': 'xvFZjo5PgG0'},
+  final List<Map<String, dynamic>> videoList = [
+    {
+      'section': '명상 가이드',
+      'videos': [
+        {
+          'title': '생각을 비우는 방법',
+          'image': 'assets/images/meditationImage1.png',
+          'video': 'assets/videos/video1.mp3',
+        },
+        {
+          'title': '마음이 평온해지는\n스트레스 감소 명상',
+          'image': 'assets/images/meditationImage2.png',
+          'video': 'assets/videos/video1.mp3',
+        }
+      ]
+    },
+    {
+      'section': '힐링 자연의 소리',
+      'videos': [
+        {
+          'title': '흥분된 마음을 진정시키는 물소리',
+          'image': 'assets/images/meditationImage3.png',
+          'video': 'assets/videos/video2.mp3',
+        },
+        {
+          'title': '머리가 맑아지는\n 숲 속 치유음악',
+          'image': 'assets/images/meditationImage4.png',
+          'video': 'assets/videos/video2.mp3',
+        }
+      ]
+    },
+    {
+      'section': '따듯한 장작타는 소리',
+      'videos': [
+        {
+          'title': '포근한 메리크리스마스\n수면 음악',
+          'image': 'assets/images/meditationImage5.png',
+          'video': 'assets/videos/video3.mp3',
+        },
+        {
+          'title': '굳은 몸을 녹여주는\n따뜻한 장작타는 소리',
+          'image': 'assets/images/meditationImage6.png',
+          'video': 'assets/videos/video3.mp3',
+        }
+      ]
+    }
   ];
 
   MeditationVideoList({super.key});
@@ -13,67 +56,123 @@ class MeditationVideoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('명상 영상 리스트'),
+        centerTitle: true,
+        backgroundColor: Colors.white,
       ),
-      body: ListView.builder(
-        itemCount: videoList.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(videoList[index]['title']!),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      MeditationVideoPlayer(videoId: videoList[index]['id']!),
-                ),
-              );
-            },
-          );
-        },
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: videoList.map((section) {
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    section['section'],
+                    style: TextStyle(fontSize: 24, fontFamily: 'LeeSeoYun'),
+                  ),
+                  SizedBox(height: 8),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // 한 줄에 2개의 아이템
+                      childAspectRatio: 160 / 220, // 아이템의 가로 세로 비율
+                      mainAxisSpacing: 8, // 세로 간격
+                      crossAxisSpacing: 8, // 가로 간격
+                    ),
+                    itemCount: section['videos'].length,
+                    itemBuilder: (context, videoIndex) {
+                      final video = section['videos'][videoIndex];
+                      return GestureDetector(
+                        onTap: () {
+                          // 비디오 클릭 시, 재생 페이지로 이동
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MeditationVideoPlayer(
+                                videoImage: video['image'],
+                                videoPath: video['video'],
+                              ),
+                            ),
+                          );
+                        },
+                        child: Card(
+                          elevation: 0,
+                          color: Colors.white,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Image.asset(
+                                  video['image'],
+                                  width: 160,
+                                  height: 160,
+                                  fit: BoxFit.cover,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    video['title'],
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      fontFamily: 'LeeSeoYun',
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
 }
 
 class MeditationVideoPlayer extends StatefulWidget {
-  final String videoId;
+  final String videoImage;
+  final String videoPath;
 
-  const MeditationVideoPlayer({super.key, required this.videoId});
+  const MeditationVideoPlayer(
+      {super.key, required this.videoImage, required this.videoPath});
 
   @override
   _MeditationVideoPlayerState createState() => _MeditationVideoPlayerState();
 }
 
 class _MeditationVideoPlayerState extends State<MeditationVideoPlayer> {
-  late YoutubePlayerController _controller;
-  bool _isPlaying = false; // 재생 상태 관리
+  late VideoPlayerController _controller;
+  bool play = true;
 
   @override
   void initState() {
     super.initState();
-    _controller = YoutubePlayerController(
-      params: YoutubePlayerParams(
-        mute: false,
-        showControls: true,
-        showFullscreenButton: true,
-      ),
-    );
-
-    // 비디오 로드
-    _controller.loadVideoById(videoId: widget.videoId);
-
-    _controller.listen((event) {
-      setState(() {
-        _isPlaying = event.playerState == PlayerState.playing;
+    _controller = VideoPlayerController.asset(widget.videoPath)
+      ..initialize().then((_) {
+        setState(() {});
+        _controller.play();
       });
-    });
   }
 
   @override
   void dispose() {
-    _controller.close();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -81,82 +180,72 @@ class _MeditationVideoPlayerState extends State<MeditationVideoPlayer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('명상 영상 재생'),
+        title: const Text('명상 영상 재생'),
+        centerTitle: true,
       ),
-      body: Column(
-        children: [
-          YoutubePlayerControllerProvider(
-            controller: _controller,
-            child: YoutubePlayer(
-              controller: _controller,
-              aspectRatio: 16 / 9,
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(widget.videoImage),
+            fit: BoxFit.cover,
           ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                onPressed: () async {
-                  // 현재 시간에서 10초 뒤로
-                  final currentPosition = await _controller.currentTime;
-                  _controller.seekTo(seconds: currentPosition - 10);
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.replay_10),
-                    SizedBox(width: 5),
-                    Text("10초 뒤로"),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_isPlaying) {
-                    _controller.pauseVideo();
-                  } else {
-                    _controller.playVideo();
-                  }
-                },
-                child: Row(
-                  children: [
-                    Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
-                    SizedBox(width: 5),
-                    Text(_isPlaying ? "일시정지" : "재생"),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  // 현재 시간에서 10초 앞으로
-                  final currentPosition = await _controller.currentTime;
-                  _controller.seekTo(seconds: currentPosition + 10);
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.forward_10),
-                    SizedBox(width: 5),
-                    Text("10초 앞으로"),
-                  ],
-                ),
+              _controller.value.isInitialized
+                  ? AspectRatio(
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: VideoPlayer(_controller),
+                    )
+                  : const CircularProgressIndicator(),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      _controller.seekTo(
+                          _controller.value.position - Duration(seconds: 10));
+                    },
+                    icon: SvgPicture.asset(
+                      'assets/images/beforeTenButton.svg',
+                      width: 40,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      play = !play;
+                      if (play) {
+                        _controller.play();
+                      } else {
+                        _controller.pause();
+                      }
+                      setState(() {});
+                    },
+                    icon: SvgPicture.asset(
+                      play
+                          ? 'assets/images/stopButton.svg'
+                          : 'assets/images/playButton.svg',
+                      width: 40,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      _controller.seekTo(
+                          _controller.value.position + Duration(seconds: 10));
+                    },
+                    icon: SvgPicture.asset(
+                      'assets/images/afterTenButton.svg',
+                      width: 40,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              _controller.enterFullScreen();
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.fullscreen),
-                SizedBox(width: 5),
-                Text("풀스크린"),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

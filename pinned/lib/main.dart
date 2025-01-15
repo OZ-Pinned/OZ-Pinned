@@ -68,41 +68,7 @@ class _SelectPageState extends State<SelectPage> {
             ),
             Image.asset('assets/images/logo.png'),
             SizedBox(
-              height: 288,
-            ),
-            SizedBox(
-              width: 320,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  toggleSelect(false);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EmailPage(
-                        logined: logined,
-                      ),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xffFFFFFF),
-                  side: BorderSide(
-                    color: Color(0xffFF516A),
-                    width: 1.0,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
-                  ),
-                ),
-                child: Text(
-                  "처음이에요",
-                  style: TextStyle(color: Color(0xffFF516A), fontSize: 18),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 11,
+              height: 370,
             ),
             SizedBox(
               width: 320,
@@ -113,7 +79,9 @@ class _SelectPageState extends State<SelectPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EmailPage(logined: logined),
+                      builder: (context) => EmailPage(
+                        logined: true,
+                      ),
                     ),
                   );
                 },
@@ -125,7 +93,11 @@ class _SelectPageState extends State<SelectPage> {
                 ),
                 child: Text(
                   "사용해봤어요",
-                  style: TextStyle(color: Color(0xffFFFFFF), fontSize: 18),
+                  style: TextStyle(
+                    color: Color(0xffFFFFFF),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -146,6 +118,7 @@ class EmailPage extends StatefulWidget {
 
 class _EmailPageState extends State<EmailPage> {
   String inputedEmail = "";
+  String helpText = "";
 
   @override
   void initState() {
@@ -171,6 +144,46 @@ class _EmailPageState extends State<EmailPage> {
 
     print(body);
     return body;
+  }
+
+  Future<void> login(String email) async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:3000/user/login'), // Node.js 서버의 IP 주소 사용
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: json.encode({'email': email}),
+      );
+
+      final data = json.decode(response.body);
+
+      RegExp regex = RegExp(r'\w+@(gmail\.com|naver\.com)');
+
+      if (regex.hasMatch(inputedEmail)) {
+        _sendEmail(inputedEmail);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CertificationPage(
+              logined: widget.logined,
+              email: inputedEmail,
+              certificationCode: emailBody,
+            ),
+          ),
+        );
+        print("Signup successful : $data");
+      } else {
+        setState(() {
+          helpText = "이메일을 다시 한 번 확인해 주세요.";
+        });
+      }
+
+      print("Login failed : ${data['errorMessage']}");
+    } catch (error) {
+      print(error);
+    }
   }
 
   void _sendEmail(String recipientEmail) async {
@@ -222,44 +235,57 @@ class _EmailPageState extends State<EmailPage> {
                 height: 57,
               ),
               Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Stack(
                     alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
                     clipBehavior: Clip.none,
                     children: [
                       SizedBox(
-                        height: 250,
+                        height: 280,
                       ),
                       Container(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white, // 내부 배경색 설정
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(7),
-                              borderSide: BorderSide(
-                                color: Color(0xffDADADA), // 외부 테두리 색상
-                                width: 1.0, // 외부 테두리 두께
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextField(
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white, // 내부 배경색 설정
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(7),
+                                  borderSide: BorderSide(
+                                    color: Color(0xffDADADA), // 외부 테두리 색상
+                                    width: 1.0, // 외부 테두리 두께
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
+                                    width: 1.0, // 외부 테두리 두께
+                                  ),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xffDADADA), // 기본 테두리 투명
+                                    width: 0, // 두께 0
+                                  ),
+                                ),
+                              ),
+                              onChanged: (value) {
+                                inputEmail(value);
+                              },
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              helpText,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: Colors.red,
                               ),
                             ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
-                                width: 1.0, // 외부 테두리 두께
-                              ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0xffDADADA), // 기본 테두리 투명
-                                width: 0, // 두께 0
-                              ),
-                            ),
-                          ),
-                          onChanged: (value) {
-                            inputEmail(value);
-                          },
+                          ],
                         ),
                       ),
                       Positioned(
@@ -328,18 +354,7 @@ class _EmailPageState extends State<EmailPage> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    _sendEmail(inputedEmail);
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CertificationPage(
-                          logined: widget.logined,
-                          email: inputedEmail,
-                          certificationCode: emailBody,
-                        ),
-                      ),
-                    );
+                    login(inputedEmail);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xffFF516A),
@@ -425,13 +440,46 @@ class _CertificationPageState extends State<CertificationPage> {
       final data = await json.decode(response.body);
 
       if (data['success']) {
+        // 로그인 된 사용자일때
         print("Login successful : $data");
         userName = data['user']['name'];
         userCharacter = data['user']['character'];
         print('$userName $userCharacter');
+
+        if (certifyCode == widget.certificationCode) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(
+                name: userName,
+                email: widget.email,
+                character: userCharacter,
+              ),
+            ),
+          );
+        } else {
+          setState(() {
+            helpText = "인증번호를 확인해 주세요.";
+          });
+        }
+
         await storeEmail(email);
       } else {
-        print("Login failed : ${data['errorMessage']}");
+        if ((certifyCode == widget.certificationCode)) {
+          helpText = "";
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CharacterPage(
+                email: widget.email,
+              ),
+            ),
+          );
+        } else {
+          setState(() {
+            helpText = "인증 코드를 다시 한 번 확인해 주세요.";
+          });
+        }
       }
     } catch (error) {
       print(error);
@@ -596,38 +644,7 @@ class _CertificationPageState extends State<CertificationPage> {
                       onPressed: () async {
                         // login()과 storeEmail()이 완료될 때까지 기다림
                         await login(widget.email); // 로그인 처리 후
-                        await storeEmail(widget.email); // 이메일 저장 후
-
-                        // 로그인 성공 후 조건에 따라 화면 전환
-                        if (widget.logined == true &&
-                            (certifyCode == widget.certificationCode)) {
-                          helpText = "";
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomePage(
-                                email: widget.email,
-                                character: userCharacter,
-                                name: userName,
-                              ),
-                            ),
-                          );
-                        } else {
-                          print("$certifyCode  ${widget.certificationCode}");
-                          if ((certifyCode == widget.certificationCode)) {
-                            helpText = "";
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CharacterPage(
-                                  email: widget.email,
-                                ),
-                              ),
-                            );
-                          } else {
-                            helpText = "인증 코드를 다시 한 번 확인해 주세요.";
-                          }
-                        }
+                        await storeEmail(widget.email); // 이메일 저장
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xffFF516A),
