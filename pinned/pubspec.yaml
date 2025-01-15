@@ -101,40 +101,7 @@ flutter:
 
   assets:
     - assets/videos/
-    - assets/images/Kangeroo.png
-    - assets/images/Koala.png
-    - assets/images/angryEmotion.svg
-    - assets/images/happyEmotion.svg
-    - assets/images/sadEmotion.svg
-    - assets/images/noneEmotion.svg
-    - assets/images/askKoala.png
-    - assets/images/meditationButton.jpg
-    - assets/images/chatbotButton.jpg
-    - assets/images/logo.png
-    - assets/images/emailChar.svg
-    - assets/images/certificationChar.svg
-    - assets/images/Koala.svg
-    - assets/images/Kangeroo.svg
-    - assets/images/Quoka.svg
-    - assets/images/usernameChar.svg
-    - assets/images/smallAngryEmotion.svg
-    - assets/images/smallSadEmotion.svg
-    - assets/images/smallNoneEmotion.svg
-    - assets/images/smallHappyEmotion.svg
-    - assets/images/smallLogo.svg
-    - assets/images/homeBackground.svg
-    - assets/images/emotionBackground.svg
-    - assets/images/smallBackground.svg
-    - assets/images/smallBackground.png
-    - assets/images/meditationButton.svg
-    - assets/images/selfTestButton.svg
-    - assets/images/KoKoChar.svg
-    - assets/images/certifyCodeChar.svg
-    - assets/images/inputEmailChar.svg
-    - assets/images/inputNameChar.svg
-    - assets/images/SmallKoKo.svg
-    - assets/images/KiKiChar.svg
-    - assets/images/textRuRu.svg
+    - assets/images/
 
 
   #
