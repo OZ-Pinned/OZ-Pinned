@@ -73,7 +73,7 @@ router.patch('/edit', async (req, res) => {
 
     try {
         const updatedDiary = await DiaryDB.findOneAndUpdate(
-            { email, _id: _id }, // 조건: 이메일과 다이어리 ID가 일치
+            { email, _id }, // 조건: 이메일과 다이어리 ID가 일치
             { $set: { color } }, // 업데이트: color 필드 변경
             { new: true } // 업데이트 후 변경된 다이어리 반환
         );

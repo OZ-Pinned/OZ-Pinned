@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'emotion.dart';
 
 void main() => runApp(const MyApp());
 
@@ -198,54 +199,83 @@ class DiaryDetailPage extends StatefulWidget {
 }
 
 class _DiaryDetailPageState extends State<DiaryDetailPage> {
-  Future<void> saveOrUpdateDiary(String email, String title, String content,
-      Uint8List? imageBytes, String nowDate, Color color) async {
-    final apiUrl = widget.id == null
-        ? 'http://localhost:3000/diary/upload' // 업로드 URL
-        : 'http://localhost:3000/edit'; // 수정 URL
+  Future<void> uploadDiary(String email, String title, String content,
+      Uint8List imageBytes, String nowDate, Color color) async {
+    final apiUrl = 'http://localhost:3000/diary/upload'; // 업로드 URL
 
-    // 공통 데이터
-    String base64Image = imageBytes != null ? base64Encode(imageBytes) : '';
+    // 요청 데이터 생성
+    String base64Image = base64Encode(imageBytes);
     String hexColor = '#${color.value.toRadixString(16).substring(2)}';
 
-    // 요청 데이터 분리
-    Map<String, dynamic> body = widget.id == null
-        ? {
-            'email': email,
-            'title': title,
-            'diary': content,
-            'image': base64Image,
-            'createdAt': nowDate,
-            'color': hexColor,
-          }
-        : {
-            'email': email,
-            '_id': widget.id, // 업데이트 대상 ID
-            'color': hexColor, // 색상만 업데이트
-          };
+    Map<String, dynamic> body = {
+      'email': email,
+      'title': title,
+      'diary': content,
+      'image': base64Image,
+      'createdAt': nowDate,
+      'color': hexColor,
+    };
 
     try {
-      final response = widget.id == null
-          ? await http.post(
-              Uri.parse(apiUrl),
-              headers: {'Content-Type': 'application/json'},
-              body: json.encode(body),
-            )
-          : await http.patch(
-              Uri.parse(apiUrl),
-              headers: {'Content-Type': 'application/json'},
-              body: json.encode(body),
-            );
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body),
+      );
 
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        print(
-            'Diary ${widget.id == null ? 'uploaded' : 'updated'} successfully');
+      if (response.statusCode == 201) {
+        print('Diary uploaded successfully');
+        Navigator.pop(context);
       } else {
-        print(
-            'Failed to ${widget.id == null ? 'upload' : 'update'} diary: ${response.body}');
+        print('Failed to upload diary: ${response.body}');
       }
     } catch (e) {
-      print('Error saving or updating diary: $e');
+      print('Error uploading diary: $e');
+    }
+  }
+
+  Future<void> updateDiary(String email, String id, Color color) async {
+    final apiUrl = 'http://localhost:3000/diary/edit'; // 수정 URL
+
+    // 요청 데이터 생성
+    String hexColor = '#${color.value.toRadixString(16).substring(2)}';
+
+    Map<String, dynamic> body = {
+      'email': email,
+      '_id': id, // 업데이트 대상 ID
+      'color': hexColor, // 색상만 업데이트
+    };
+
+    try {
+      final response = await http.patch(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+        print('Diary updated successfully');
+        final updatedEntry = DiaryEntry.fromJson(jsonDecode(response.body));
+        Navigator.pop(context, updatedEntry); // 수정된 데이터 반환
+      } else {
+        print('Failed to update diary: ${response.body}');
+      }
+    } catch (e) {
+      print('Error updating diary: $e');
+    }
+  }
+
+  Future<void> saveOrUpdateDiary(
+      String email, String title, String content, Uint8List? imageBytes,
+      {required String nowDate, required Color color}) async {
+    if (widget.id == null && imageBytes != null) {
+      // 업로드
+      await uploadDiary(email, title, content, imageBytes, nowDate, color);
+    } else if (widget.id != null) {
+      // 수정
+      await updateDiary(email, widget.id!, color);
+    } else {
+      print('Invalid operation: Either id or imageBytes must be provided.');
     }
   }
 
@@ -387,9 +417,12 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                               widget.title,
                               widget.content,
                               widget.image,
-                              nowdate,
-                              _containerColor, // 선택된 색상 저장
+                              nowDate: nowdate,
+                              color: _containerColor,
                             );
+                            setState(() {
+                              ViewDiary('test@example.com');
+                            });
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -460,8 +493,6 @@ Future<List<DiaryEntry>> ViewDiary(String email) async {
     final response = await http.get(headers: {
       'Content-Type': 'application/json',
     }, Uri.parse(apiUrl));
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -493,11 +524,18 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
     futureDiaries = ViewDiary('test@example.com');
   }
 
+  void refreshDiaries() {
+    setState(() {
+      futureDiaries = ViewDiary('test@example.com');
+    });
+  }
+
   late Future<List<DiaryEntry>> futureDiaries;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(
         title: const Text('감정 갤러리'),
         leading: IconButton(
@@ -505,101 +543,133 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: FutureBuilder<List<DiaryEntry>>(
-        future: futureDiaries,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: Wrap(
-                  spacing: 10, // 카드 간 가로 간격
-                  runSpacing: 13, // 카드 간 세로 간격
-                  children: List.generate(snapshot.data!.length, (index) {
-                    DiaryEntry entry = snapshot.data![index];
-                    Color cardColor = Color(
-                      int.parse(
-                          entry.color.replaceFirst('#', '0xff')), // #을 0xff로 변경
-                    );
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width / 2 -
-                          20, // 화면 너비에 따라 자동 조정
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DiaryDetailPage(
-                                  id: entry.id,
-                                  email: 'test@example.com',
-                                  title: entry.title,
-                                  content: entry.content,
-                                  image: base64Decode(entry.image),
-                                ),
-                              ));
-                        },
-                        child: Card(
-                          color: cardColor,
-                          shape: RoundedRectangleBorder(
-                              // 카드 모서리 둥글게
-                              ),
-                          elevation: 3,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 15),
-                              Center(
-                                child: Image.memory(
-                                  base64Decode(entry.image),
-                                  width: 135,
-                                  height: 135,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 15, 10, 15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      entry.title,
-                                      style: const TextStyle(
-                                        fontFamily: 'LeeSeoYun',
-                                        fontSize: 15, // 제목 폰트 크기
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+      body: Stack(
+        children: [
+          FutureBuilder<List<DiaryEntry>>(
+            future: futureDiaries,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Wrap(
+                      spacing: 10, // 카드 간 가로 간격
+                      runSpacing: 13, // 카드 간 세로 간격
+                      children: List.generate(snapshot.data!.length, (index) {
+                        DiaryEntry entry = snapshot.data![index];
+                        Color cardColor = Color(
+                          int.parse(entry.color
+                              .replaceFirst('#', '0xff')), // #을 0xff로 변경
+                        );
+                        return SizedBox(
+                          width: MediaQuery.of(context).size.width / 2 -
+                              20, // 화면 너비에 따라 자동 조정
+                          child: GestureDetector(
+                            onTap: () {
+                              final updatedEntry = Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DiaryDetailPage(
+                                      id: entry.id,
+                                      email: 'test@example.com',
+                                      title: entry.title,
+                                      content: entry.content,
+                                      image: base64Decode(entry.image),
                                     ),
-                                    const SizedBox(height: 5),
-                                    Text(
-                                      DateFormat('yyyy.MM.dd').format(
-                                          DateTime.parse(entry.createdAt)),
-                                      style: const TextStyle(
-                                        fontFamily: 'LeeSeoYun',
-                                        fontSize: 10, // 날짜 폰트 크기
-                                        color: Color(0xff888888),
-                                      ),
+                                  ));
+                              if (updatedEntry != null) {
+                                refreshDiaries(); // 데이터 갱신
+                              }
+                            },
+                            child: Card(
+                              color: cardColor,
+                              shape: RoundedRectangleBorder(
+                                  // 카드 모서리 둥글게
+                                  ),
+                              elevation: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 15),
+                                  Center(
+                                    child: Image.memory(
+                                      base64Decode(entry.image),
+                                      width: 135,
+                                      height: 135,
+                                      fit: BoxFit.cover,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        15, 15, 10, 15),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          entry.title,
+                                          style: const TextStyle(
+                                            fontFamily: 'LeeSeoYun',
+                                            fontSize: 15, // 제목 폰트 크기
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          DateFormat('yyyy.MM.dd').format(
+                                              DateTime.parse(entry.createdAt)),
+                                          style: const TextStyle(
+                                            fontFamily: 'LeeSeoYun',
+                                            fontSize: 10, // 날짜 폰트 크기
+                                            color: Color(0xff888888),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    );
-                  }),
-                ),
+                        );
+                      }),
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+          Positioned(
+            bottom: 40, // 화면 위에서부터의 거리
+            right: 20, // 화면 오른쪽에서부터의 거리
+            child: Container(
+              width: 58,
+              height: 58,
+              decoration: const BoxDecoration(
+                color: Color(0xffFF516A), // 원형 배경색
+                shape: BoxShape.circle, // 원형 모양
               ),
-            );
-          }
-        },
+              child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EmotionPage(),
+                    ),
+                  );
+                  print("Floating button clicked");
+                },
+                icon: const Icon(Icons.add, size: 30, color: Colors.white),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
