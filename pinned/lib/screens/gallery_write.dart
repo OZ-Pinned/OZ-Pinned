@@ -691,18 +691,18 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(height: 15),
+                                  SizedBox(height: 10),
                                   Center(
                                     child: Image.memory(
                                       base64Decode(entry.image),
-                                      width: 135,
-                                      height: 135,
+                                      width: 150,
+                                      height: 150,
                                       fit: BoxFit.cover,
                                     ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(
-                                        15, 15, 10, 15),
+                                        10, 10, 10, 10),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
