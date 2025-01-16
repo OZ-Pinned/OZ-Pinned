@@ -159,6 +159,7 @@ class _EmotionPageState extends State<EmotionPage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => WriteGalleryPage(
+                      email: "test@example.com",
                       emotion: (currentValue / 25).toInt(),
                     ),
                   ),
