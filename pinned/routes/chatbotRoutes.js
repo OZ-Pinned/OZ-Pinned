@@ -26,13 +26,13 @@ else {
       const userInput = req.body.msg
 
       try {
-          // const model = genAI.getGenerativeModel({model : "gemini-1.5-flash"})
+          const model = genAI.getGenerativeModel({model : "gemini-1.5-flash"})
 
-          // let prompt = [userInput];
+          let prompt = [userInput];
 
-          // const response = await model.generateContent(prompt);
-          // console.log(response.response.text())
-          return res.status(201).json({success : true, res : '안녕하세요'});
+          const response = await model.generateContent(prompt);
+          console.log(response.response.text())
+          return res.status(201).json({success : true, res : response.response.text()});
 
       } catch (error) {
           console.log("error generating response : ", error)

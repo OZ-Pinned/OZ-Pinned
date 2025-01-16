@@ -2,9 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatBot extends StatefulWidget {
   const ChatBot({super.key});
@@ -15,43 +13,14 @@ class ChatBot extends StatefulWidget {
 
 class _ChatBotPageState extends State<ChatBot> {
   String inputedMessage = "";
-  List<Map<String, String>> chatedMessage = [];
+  final TextEditingController _controller = TextEditingController();
+  List<Map<String, String>> chatedMessage = [
+    // 첫 메시지를 추가하여 처음 화면에서 보여줄 수 있도록 설정
+    {'AI': '안녕 나는 코코야!\n오늘 너의 기분은 어때?'}
+  ];
 
-  Future<String?> _handleSubmitted() async {
-    print(inputedMessage);
-    try {
-      var response = await http.post(
-        Uri.parse("http://localhost:3000/chatbot/get"),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: jsonEncode(
-          {
-            'msg': inputedMessage,
-          },
-        ),
-      );
-
-      final data = json.decode(response.body);
-
-      if (response.statusCode == 201) {
-        print("data['res'], $inputedMessage");
-        chatedMessage.add({'User': inputedMessage});
-        chatedMessage.add({'AI': data['res']});
-
-        print(chatedMessage);
-
-        inputedMessage = "";
-      } else {
-        print('Failed to upload diary: ${response.body}');
-      }
-    } catch (error) {
-      print('ai error : $error');
-    }
-
-    return null;
-  }
+  final ScrollController _scrollController =
+      ScrollController(); // ScrollController 추가
 
   Future<String?> handleSubmitted() async {
     print(inputedMessage);
@@ -78,10 +47,19 @@ class _ChatBotPageState extends State<ChatBot> {
         setState(() {
           chatedMessage.add({'User': inputedMessage});
           chatedMessage.add({'AI': data['res']});
+          _controller.clear();
+          inputedMessage = "";
         });
 
         print(chatedMessage);
         inputedMessage = ""; // 메시지 입력란 초기화
+
+        // 새로운 메시지가 추가된 후 스크롤을 맨 아래로 내리기
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent + 200,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
       } else {
         print('Failed to upload diary: ${response.body}');
       }
@@ -96,9 +74,9 @@ class _ChatBotPageState extends State<ChatBot> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color(0xffFFF9F8),
       ),
-      extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar: false,
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -106,67 +84,13 @@ class _ChatBotPageState extends State<ChatBot> {
             fit: BoxFit.cover,
           ),
         ),
-        padding: EdgeInsets.only(top: 150, right: 17, left: 17, bottom: 20),
+        padding: EdgeInsets.only(top: 40, right: 0, left: 0, bottom: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              spacing: 7,
-              children: [
-                SvgPicture.asset(
-                  'assets/images/chatBotKoKo.svg',
-                  width: 45,
-                  height: 45,
-                ),
-                Text(
-                  '코코',
-                  style: TextStyle(
-                    fontFamily: 'LeeSeoYun',
-                    fontSize: 18,
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 60),
-              padding: EdgeInsets.only(
-                top: 7.5,
-                bottom: 7.5,
-                left: 17,
-                right: 17,
-              ),
-              decoration: BoxDecoration(
-                color: Color(0xffFFFFFF),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(0),
-                  topRight: Radius.circular(14),
-                  bottomRight: Radius.circular(14),
-                  bottomLeft: Radius.circular(14),
-                ),
-                border: Border.all(
-                  color: Color(0xffDADADA),
-                ),
-              ),
-              child: Text(
-                '안녕 나는 코코야!\n오늘 너의 기분은 어때?',
-                style: TextStyle(
-                  fontSize: 16,
-                  height: 1.2,
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 10, left: 60),
-              padding: EdgeInsets.only(
-                top: 7.5,
-                bottom: 7.5,
-                left: 17,
-                right: 17,
-              ),
-              child: SvgPicture.asset('assets/images/chatBotKoKoChar.svg'),
-            ),
             Expanded(
               child: ListView.builder(
+                controller: _scrollController, // ScrollController 연결
                 itemCount: chatedMessage.length,
                 itemBuilder: (context, index) {
                   final message = chatedMessage[index];
@@ -254,6 +178,18 @@ class _ChatBotPageState extends State<ChatBot> {
                                     ),
                                   ),
                                 ),
+                                if (index == 0)
+                                  Container(
+                                    margin: EdgeInsets.only(top: 10, left: 60),
+                                    padding: EdgeInsets.only(
+                                      top: 7.5,
+                                      bottom: 7.5,
+                                      left: 17,
+                                      right: 17,
+                                    ),
+                                    child: SvgPicture.asset(
+                                        'assets/images/chatBotKoKoChar.svg'),
+                                  ),
                               ],
                             ),
                     ),
@@ -271,13 +207,13 @@ class _ChatBotPageState extends State<ChatBot> {
                   children: [
                     Expanded(
                       child: TextField(
+                        controller: _controller,
                         decoration: InputDecoration.collapsed(
                           hintText: "메시지를 입력해주세요.",
                         ),
                         onChanged: (val) {
                           setState(() {
-                            inputedMessage =
-                                val; // inputedMessage를 업데이트하면서 UI도 갱신
+                            inputedMessage = val;
                           });
                         },
                       ),
@@ -291,7 +227,6 @@ class _ChatBotPageState extends State<ChatBot> {
                         ),
                         onPressed: () async {
                           if (inputedMessage.trim() != 0) {
-                            print('메시지 전송: $inputedMessage'); // 로그 추가
                             await handleSubmitted();
                           }
                         },
