@@ -419,7 +419,7 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
               height: 40,
             ),
             Container(
-              height: 230,
+              height: 275,
               width: double.infinity,
               padding: EdgeInsets.only(left: 20, right: 20),
               decoration: BoxDecoration(
@@ -432,58 +432,69 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 20),
-                  Text(
-                    "컬러",
-                    style: TextStyle(
-                      fontFamily: 'Pretendard',
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Center(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: List.generate(
-                          6,
-                          (index) {
-                            // 상태로 관리될 컨테이너 색상
-                            final List<Color> colors = [
-                              const Color(0xFFFFFFFF),
-                              const Color(0xFF555555),
-                              const Color(0xFFF0B8B2),
-                              const Color(0xFFF5DE99),
-                              const Color(0xFFA898C6),
-                              const Color(0xFF9FA9A1),
-                            ];
-
-                            return MaterialButton(
-                              height: 60,
-                              onPressed: () {
-                                setState(() {
-                                  _containerColor = colors[index];
-                                  _selectedIndex = index; // 선택된 버튼의 인덱스를 기록
-                                });
-                              },
-                              elevation: 0,
-                              color: colors[index],
-                              shape: CircleBorder(
-                                side: BorderSide(
-                                  color: _selectedIndex == index
-                                      ? Color(0xffFF516A)
-                                      : Color(0xffE9E9E9),
-
-                                  width: _selectedIndex == index
-                                      ? 2
-                                      : 1, // 선택된 버튼에만 보더 색상 변경
-                                ),
-                              ),
-                            );
-                          },
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 20,
                         ),
-                      ),
+                        Text(
+                          "컬러",
+                          style: TextStyle(
+                            fontFamily: 'Pretendard',
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Center(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: List.generate(
+                                6,
+                                (index) {
+                                  // 상태로 관리될 컨테이너 색상
+                                  final List<Color> colors = [
+                                    const Color(0xFFFFFFFF),
+                                    const Color(0xFF555555),
+                                    const Color(0xFFF0B8B2),
+                                    const Color(0xFFF5DE99),
+                                    const Color(0xFFA898C6),
+                                    const Color(0xFF9FA9A1),
+                                  ];
+
+                                  return MaterialButton(
+                                    height: 60,
+                                    onPressed: () {
+                                      setState(() {
+                                        _containerColor = colors[index];
+                                        _selectedIndex =
+                                            index; // 선택된 버튼의 인덱스를 기록
+                                      });
+                                    },
+                                    elevation: 0,
+                                    color: colors[index],
+                                    shape: CircleBorder(
+                                      side: BorderSide(
+                                        color: _selectedIndex == index
+                                            ? Color(0xffFF516A)
+                                            : Color(0xffE9E9E9),
+
+                                        width: _selectedIndex == index
+                                            ? 2
+                                            : 1, // 선택된 버튼에만 보더 색상 변경
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(height: 47),
