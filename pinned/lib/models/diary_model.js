@@ -26,6 +26,10 @@ const diarySchema = new Schema({
   color:{
     type : String,
     required: true
+  },
+  emotion:{
+    type : String,
+    required : true
   }
 });
 

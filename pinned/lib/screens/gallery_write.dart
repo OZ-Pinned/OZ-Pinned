@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'emotion.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() => runApp(const MyApp());
 
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: const WriteGalleryPage(
+        email: "test@example.com",
         emotion: 2,
       ),
     );
@@ -23,15 +25,16 @@ class MyApp extends StatelessWidget {
 
 class WriteGalleryPage extends StatefulWidget {
   final int emotion;
-  const WriteGalleryPage({super.key, required this.emotion});
+  final String email;
+
+  const WriteGalleryPage(
+      {super.key, required this.email, required this.emotion});
 
   @override
   State<WriteGalleryPage> createState() => _WriteGalleryPageState();
 }
 
 class _WriteGalleryPageState extends State<WriteGalleryPage> {
-  final String email = "test@example.com";
-
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   Uint8List? _pickedImage;
@@ -50,7 +53,6 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
 
   @override
   Widget build(BuildContext context) {
-    String email = "test@example.com";
     String nowdate = DateFormat('yyyy.MM.dd').format(DateTime.now());
 
     return Scaffold(
@@ -137,7 +139,8 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                           title: _titleController.text,
                           content: _contentController.text,
                           image: _pickedImage!,
-                          email: email,
+                          email: widget.email,
+                          emotion: widget.emotion,
                         ),
                       ),
                     );
@@ -184,6 +187,7 @@ class DiaryDetailPage extends StatefulWidget {
   final String content;
   final Uint8List image;
   final String email;
+  final int emotion;
 
   const DiaryDetailPage({
     Key? key,
@@ -192,6 +196,7 @@ class DiaryDetailPage extends StatefulWidget {
     required this.title,
     required this.content,
     required this.image,
+    required this.emotion,
   }) : super(key: key);
 
   @override
@@ -199,8 +204,20 @@ class DiaryDetailPage extends StatefulWidget {
 }
 
 class _DiaryDetailPageState extends State<DiaryDetailPage> {
+  String getImagePath(int emotion) {
+    if (emotion <= 25) {
+      return 'assets/images/angryEmotionSticker.svg';
+    } else if (emotion <= 50) {
+      return 'assets/images/sadEmotionSticker.svg';
+    } else if (emotion <= 75) {
+      return 'assets/images/noneEmotionSticker.svg';
+    } else {
+      return 'assets/images/happyEmotionSticker.svg';
+    }
+  }
+
   Future<void> uploadDiary(String email, String title, String content,
-      Uint8List imageBytes, String nowDate, Color color) async {
+      Uint8List imageBytes, String nowDate, Color color, int emotion) async {
     final apiUrl = 'http://localhost:3000/diary/upload'; // 업로드 URL
 
     // 요청 데이터 생성
@@ -214,6 +231,7 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
       'image': base64Image,
       'createdAt': nowDate,
       'color': hexColor,
+      'emotion': emotion,
     };
 
     try {
@@ -265,12 +283,13 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
     }
   }
 
-  Future<void> saveOrUpdateDiary(
-      String email, String title, String content, Uint8List? imageBytes,
+  Future<void> saveOrUpdateDiary(String email, String title, String content,
+      Uint8List? imageBytes, int emotion,
       {required String nowDate, required Color color}) async {
     if (widget.id == null && imageBytes != null) {
       // 업로드
-      await uploadDiary(email, title, content, imageBytes, nowDate, color);
+      await uploadDiary(
+          email, title, content, imageBytes, nowDate, color, emotion);
     } else if (widget.id != null) {
       // 수정
       await updateDiary(email, widget.id!, color);
@@ -307,52 +326,70 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
             SizedBox(height: 40),
             GestureDetector(
               onTap: _flipCard,
-              child: Container(
-                height: 380,
-                width: 280,
-                decoration: BoxDecoration(color: _containerColor //컨테이너 색상 지정
-                    ),
-                child: isFront
-                    ? Column(
-                        children: [
-                          SizedBox(height: 20),
-                          SizedBox(
-                            width: 249,
-                            height: 253,
-                            child: Image.memory(
-                              widget.image,
-                              fit: BoxFit.fill, // 또는 BoxFit.fill로 테스트
+              child: Stack(
+                children: [
+                  Container(
+                    height: 380,
+                    width: 280,
+                    decoration:
+                        BoxDecoration(color: _containerColor //컨테이너 색상 지정
+                            ),
+                    child: isFront
+                        ? Column(
+                            children: [
+                              SizedBox(height: 20),
+                              SizedBox(
+                                width: 249,
+                                height: 253,
+                                child: Image.memory(
+                                  widget.image,
+                                  fit: BoxFit.fill, // 또는 BoxFit.fill로 테스트
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(widget.title,
+                                  style: TextStyle(
+                                    fontFamily: 'LeeSeoYun',
+                                    fontSize: 28,
+                                    color: Colors.black,
+                                  )),
+                              Text(nowdate,
+                                  style: TextStyle(
+                                    fontFamily: 'LeeSeoYun',
+                                    fontSize: 20,
+                                    color: Color(0xff888888),
+                                  )),
+                            ],
+                          )
+                        : Center(
+                            child: SingleChildScrollView(
+                              padding: EdgeInsets.all(15),
+                              // 뒷면: 본문을 보여줍니다.
+                              child: Text(
+                                widget.content,
+                                style: TextStyle(
+                                  fontFamily: 'LeeSeoYun',
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                ),
+                              ),
                             ),
                           ),
-                          SizedBox(height: 10),
-                          Text(widget.title,
-                              style: TextStyle(
-                                fontFamily: 'LeeSeoYun',
-                                fontSize: 28,
-                                color: Colors.black,
-                              )),
-                          Text(nowdate,
-                              style: TextStyle(
-                                fontFamily: 'LeeSeoYun',
-                                fontSize: 20,
-                                color: Color(0xff888888),
-                              )),
-                        ],
-                      )
-                    : Center(
-                        child: SingleChildScrollView(
-                          padding: EdgeInsets.all(15),
-                          // 뒷면: 본문을 보여줍니다.
-                          child: Text(
-                            widget.content,
-                            style: TextStyle(
-                              fontFamily: 'LeeSeoYun',
-                              fontSize: 18,
-                              color: Colors.black,
-                            ),
-                          ),
+                  ),
+                  if (isFront)
+                    Positioned(
+                      bottom: 82,
+                      right: 16,
+                      child: SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: SvgPicture.asset(
+                          getImagePath(widget.emotion),
+                          fit: BoxFit.contain,
                         ),
                       ),
+                    ),
+                ],
               ),
             ),
             SizedBox(height: 10),
@@ -419,9 +456,10 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                               widget.image,
                               nowDate: nowdate,
                               color: _containerColor,
+                              widget.emotion,
                             );
                             setState(() {
-                              ViewDiary('test@example.com');
+                              ViewDiary(widget.email);
                             });
                             Navigator.push(
                               context,
@@ -466,6 +504,7 @@ class DiaryEntry {
   final String image;
   final String createdAt;
   final String color;
+  final int emotion;
 
   DiaryEntry(
       {required this.id,
@@ -473,7 +512,8 @@ class DiaryEntry {
       required this.content,
       required this.image,
       required this.createdAt,
-      required this.color});
+      required this.color,
+      required this.emotion});
 
   factory DiaryEntry.fromJson(Map<String, dynamic> json) {
     return DiaryEntry(
@@ -483,6 +523,7 @@ class DiaryEntry {
       image: json['image'] ?? '',
       createdAt: json['createdAt'] ?? '',
       color: json['color'] ?? '#F5DE99',
+      emotion: int.tryParse(json['emotion'].toString()) ?? 0,
     );
   }
 }
@@ -579,6 +620,7 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                                       title: entry.title,
                                       content: entry.content,
                                       image: base64Decode(entry.image),
+                                      emotion: entry.emotion,
                                     ),
                                   ));
                               if (updatedEntry != null) {
@@ -646,7 +688,7 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
             },
           ),
           Positioned(
-            bottom: 40, // 화면 위에서부터의 거리
+            bottom: 40, // 화면 아래에서부터의 거리
             right: 20, // 화면 오른쪽에서부터의 거리
             child: Container(
               width: 58,
