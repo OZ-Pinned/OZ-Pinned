@@ -56,7 +56,7 @@ class _ChatBotPageState extends State<ChatBot> {
 
         // 새로운 메시지가 추가된 후 스크롤을 맨 아래로 내리기
         _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent + 200,
+          _scrollController.position.maxScrollExtent + 100,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
