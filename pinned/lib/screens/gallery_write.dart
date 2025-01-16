@@ -34,6 +34,18 @@ class WriteGalleryPage extends StatefulWidget {
   State<WriteGalleryPage> createState() => _WriteGalleryPageState();
 }
 
+String getImagePath(int emotion) {
+  if (emotion <= 25) {
+    return 'assets/images/angryEmotionSticker.svg';
+  } else if (emotion <= 50) {
+    return 'assets/images/sadEmotionSticker.svg';
+  } else if (emotion <= 75) {
+    return 'assets/images/noneEmotionSticker.svg';
+  } else {
+    return 'assets/images/happyEmotionSticker.svg';
+  }
+}
+
 class _WriteGalleryPageState extends State<WriteGalleryPage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
@@ -205,17 +217,6 @@ class DiaryDetailPage extends StatefulWidget {
 
 class _DiaryDetailPageState extends State<DiaryDetailPage> {
   int _selectedIndex = 0;
-  String getImagePath(int emotion) {
-    if (emotion <= 25) {
-      return 'assets/images/angryEmotionSticker.svg';
-    } else if (emotion <= 50) {
-      return 'assets/images/sadEmotionSticker.svg';
-    } else if (emotion <= 75) {
-      return 'assets/images/noneEmotionSticker.svg';
-    } else {
-      return 'assets/images/happyEmotionSticker.svg';
-    }
-  }
 
   Future<void> uploadDiary(String email, String title, String content,
       Uint8List imageBytes, String nowDate, Color color, int emotion) async {
@@ -688,46 +689,64 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                                   // 카드 모서리 둥글게
                                   ),
                               elevation: 3,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              child: Stack(
                                 children: [
-                                  SizedBox(height: 10),
-                                  Center(
-                                    child: Image.memory(
-                                      base64Decode(entry.image),
-                                      width: 150,
-                                      height: 150,
-                                      fit: BoxFit.cover,
-                                    ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: 10),
+                                      Center(
+                                        child: Image.memory(
+                                          base64Decode(entry.image),
+                                          width: 150,
+                                          height: 150,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            10, 10, 10, 10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              entry.title,
+                                              style: const TextStyle(
+                                                fontFamily: 'LeeSeoYun',
+                                                fontSize: 15, // 제목 폰트 크기
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              DateFormat('yyyy.MM.dd').format(
+                                                  DateTime.parse(
+                                                      entry.createdAt)),
+                                              style: const TextStyle(
+                                                fontFamily: 'LeeSeoYun',
+                                                fontSize: 10, // 날짜 폰트 크기
+                                                color: Color(0xff888888),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        10, 10, 10, 10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          entry.title,
-                                          style: const TextStyle(
-                                            fontFamily: 'LeeSeoYun',
-                                            fontSize: 15, // 제목 폰트 크기
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Text(
-                                          DateFormat('yyyy.MM.dd').format(
-                                              DateTime.parse(entry.createdAt)),
-                                          style: const TextStyle(
-                                            fontFamily: 'LeeSeoYun',
-                                            fontSize: 10, // 날짜 폰트 크기
-                                            color: Color(0xff888888),
-                                          ),
-                                        ),
-                                      ],
+                                  Positioned(
+                                    bottom: 15,
+                                    right: 10,
+                                    child: SizedBox(
+                                      width: 34,
+                                      height: 34,
+                                      child: SvgPicture.asset(
+                                        getImagePath(entry.emotion),
+                                        fit: BoxFit.contain,
+                                      ),
                                     ),
                                   ),
                                 ],
