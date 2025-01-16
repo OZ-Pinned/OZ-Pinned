@@ -313,9 +313,9 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffFFFFFF),
+      backgroundColor: Color(0xffF8F8F8),
       appBar: AppBar(
-        backgroundColor: Color(0xfffffffff),
+        backgroundColor: Color(0xffF8F8F8),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -345,31 +345,44 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                       ],
                     ),
                     child: isFront
-                        ? Column(
-                            children: [
-                              SizedBox(height: 20),
-                              SizedBox(
-                                width: 249,
-                                height: 253,
-                                child: Image.memory(
-                                  widget.image,
-                                  fit: BoxFit.fill, // 또는 BoxFit.fill로 테스트
+                        ? Padding(
+                            padding: EdgeInsets.only(left: 20, right: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 20),
+                                SizedBox(
+                                  width: 249,
+                                  height: 253,
+                                  child: Image.memory(
+                                    widget.image,
+                                    fit: BoxFit.fill, // 또는 BoxFit.fill로 테스트
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 10),
-                              Text(widget.title,
-                                  style: TextStyle(
-                                    fontFamily: 'LeeSeoYun',
-                                    fontSize: 28,
-                                    color: Colors.black,
-                                  )),
-                              Text(nowdate,
-                                  style: TextStyle(
-                                    fontFamily: 'LeeSeoYun',
-                                    fontSize: 20,
-                                    color: Color(0xff888888),
-                                  )),
-                            ],
+                                SizedBox(height: 10),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.title,
+                                      style: TextStyle(
+                                        fontFamily: 'LeeSeoYun',
+                                        fontSize: 28,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      nowdate,
+                                      style: TextStyle(
+                                        fontFamily: 'LeeSeoYun',
+                                        fontSize: 20,
+                                        color: Color(0xff888888),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           )
                         : Center(
                             child: SingleChildScrollView(
@@ -409,7 +422,13 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
               height: 230,
               width: double.infinity,
               padding: EdgeInsets.only(left: 20, right: 20),
-              decoration: BoxDecoration(color: Color(0xffFFFFFF)),
+              decoration: BoxDecoration(
+                color: Color(0xffFFFFFF),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(35),
+                  topRight: Radius.circular(35),
+                ),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
