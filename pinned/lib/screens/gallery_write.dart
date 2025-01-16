@@ -190,20 +190,21 @@ class DiaryDetailPage extends StatefulWidget {
   final int emotion;
 
   const DiaryDetailPage({
-    Key? key,
+    super.key,
     this.id,
     required this.email,
     required this.title,
     required this.content,
     required this.image,
     required this.emotion,
-  }) : super(key: key);
+  });
 
   @override
   State<DiaryDetailPage> createState() => _DiaryDetailPageState();
 }
 
 class _DiaryDetailPageState extends State<DiaryDetailPage> {
+  int _selectedIndex = 0;
   String getImagePath(int emotion) {
     if (emotion <= 25) {
       return 'assets/images/angryEmotionSticker.svg';
@@ -312,13 +313,14 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffF8F8F8),
+      backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(
-        title: const Text('감정 꾸미기'),
+        backgroundColor: Color(0xfffffffff),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
+        excludeHeaderSemantics: true,
       ),
       body: Center(
         child: Column(
@@ -331,9 +333,17 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                   Container(
                     height: 380,
                     width: 280,
-                    decoration:
-                        BoxDecoration(color: _containerColor //컨테이너 색상 지정
-                            ),
+                    decoration: BoxDecoration(
+                      color: _containerColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1), // 그림자 색상
+                          offset: Offset(0, 4.61), // 그림자의 위치
+                          blurRadius: 6.15, // 그림자의 퍼짐 정도
+                          spreadRadius: 0, // 그림자의 확산 정도
+                        ),
+                      ],
+                    ),
                     child: isFront
                         ? Column(
                             children: [
@@ -392,8 +402,9 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                 ],
               ),
             ),
-            SizedBox(height: 10),
-            Spacer(),
+            SizedBox(
+              height: 40,
+            ),
             Container(
               height: 230,
               width: double.infinity,
@@ -416,27 +427,43 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
-                        children: List.generate(6, (index) {
-                          // 상태로 관리될 컨테이너 색상
-                          final List<Color> colors = [
-                            const Color(0xFFFFFFFF),
-                            const Color(0xFF555555),
-                            const Color(0xFFF0B8B2),
-                            const Color(0xFFF5DE99),
-                            const Color(0xFFA898C6),
-                            const Color(0xFF9FA9A1),
-                          ];
-                          return MaterialButton(
-                            height: 50,
-                            onPressed: () {
-                              setState(() {
-                                _containerColor = colors[index];
-                              });
-                            },
-                            color: colors[index],
-                            shape: const CircleBorder(),
-                          );
-                        }),
+                        children: List.generate(
+                          6,
+                          (index) {
+                            // 상태로 관리될 컨테이너 색상
+                            final List<Color> colors = [
+                              const Color(0xFFFFFFFF),
+                              const Color(0xFF555555),
+                              const Color(0xFFF0B8B2),
+                              const Color(0xFFF5DE99),
+                              const Color(0xFFA898C6),
+                              const Color(0xFF9FA9A1),
+                            ];
+
+                            return MaterialButton(
+                              height: 60,
+                              onPressed: () {
+                                setState(() {
+                                  _containerColor = colors[index];
+                                  _selectedIndex = index; // 선택된 버튼의 인덱스를 기록
+                                });
+                              },
+                              elevation: 0,
+                              color: colors[index],
+                              shape: CircleBorder(
+                                side: BorderSide(
+                                  color: _selectedIndex == index
+                                      ? Color(0xffFF516A)
+                                      : Color(0xffE9E9E9),
+
+                                  width: _selectedIndex == index
+                                      ? 2
+                                      : 1, // 선택된 버튼에만 보더 색상 변경
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -552,7 +579,7 @@ Future<List<DiaryEntry>> ViewDiary(String email) async {
 }
 
 class ViewAllDiaryPage extends StatefulWidget {
-  const ViewAllDiaryPage({Key? key}) : super(key: key);
+  const ViewAllDiaryPage({super.key});
 
   @override
   _ViewAllDiaryPageState createState() => _ViewAllDiaryPageState();
@@ -623,9 +650,7 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                                       emotion: entry.emotion,
                                     ),
                                   ));
-                              if (updatedEntry != null) {
-                                refreshDiaries(); // 데이터 갱신
-                              }
+                              refreshDiaries(); // 데이터 갱신
                             },
                             child: Card(
                               color: cardColor,

@@ -34,7 +34,7 @@ class MeditationVideoList extends StatelessWidget {
           'background': 'assets/images/meditationBackground3.jpg'
         },
         {
-          'title': '머리가 맑아지는\n 숲 속 치유음악',
+          'title': '머리가 맑아지는 숲 속 치유음악',
           'image': 'assets/images/meditationImage4.png',
           'video': 'assets/videos/video2.mp3',
           'background': 'assets/images/meditationBackground1.jpg'
@@ -45,13 +45,13 @@ class MeditationVideoList extends StatelessWidget {
       'section': '따듯한 장작타는 소리',
       'videos': [
         {
-          'title': '포근한 메리크리스마스\n수면 음악',
+          'title': '굳은 몸을 녹여주는 따뜻한 장작타는 소리',
           'image': 'assets/images/meditationImage5.png',
           'video': 'assets/videos/video3.mp3',
           'background': 'assets/images/meditationBackground6.jpg'
         },
         {
-          'title': '굳은 몸을 녹여주는\n따뜻한 장작타는 소리',
+          'title': '노곤노곤해지는 장작타는 소리',
           'image': 'assets/images/meditationImage6.png',
           'video': 'assets/videos/video3.mp3',
           'background': 'assets/images/meditationBackground5.jpg'
