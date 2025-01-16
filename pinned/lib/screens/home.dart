@@ -238,7 +238,8 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => EmotionPage()),
+                                      builder: (context) =>
+                                          EmotionPage(email: widget.email)),
                                 );
                               },
                               icon: Icon(Icons.add),

@@ -9,19 +9,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 void main() => runApp(const MyApp());
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const WriteGalleryPage(
-        email: "test@example.com",
-        emotion: 2,
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: const WriteGalleryPage(
+//         email: "test@example.com",
+//         emotion: 2,
+//       ),
+//     );
+//   }
+// }
 
 class WriteGalleryPage extends StatefulWidget {
   final int emotion;
@@ -35,11 +35,11 @@ class WriteGalleryPage extends StatefulWidget {
 }
 
 String getImagePath(int emotion) {
-  if (emotion <= 25) {
+  if (emotion == 1) {
     return 'assets/images/angryEmotionSticker.svg';
-  } else if (emotion <= 50) {
+  } else if (emotion == 2) {
     return 'assets/images/sadEmotionSticker.svg';
-  } else if (emotion <= 75) {
+  } else if (emotion == 3) {
     return 'assets/images/noneEmotionSticker.svg';
   } else {
     return 'assets/images/happyEmotionSticker.svg';
@@ -512,9 +512,9 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                               widget.title,
                               widget.content,
                               widget.image,
+                              widget.emotion,
                               nowDate: nowdate,
                               color: _containerColor,
-                              widget.emotion,
                             );
                             setState(() {
                               ViewDiary(widget.email);
@@ -522,7 +522,8 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ViewAllDiaryPage(),
+                                builder: (context) =>
+                                    ViewAllDiaryPage(email: widget.email),
                               ),
                             );
                           }
@@ -557,6 +558,7 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
 
 class DiaryEntry {
   final String id;
+  final String email;
   final String title;
   final String content;
   final String image;
@@ -566,6 +568,7 @@ class DiaryEntry {
 
   DiaryEntry(
       {required this.id,
+      required this.email,
       required this.title,
       required this.content,
       required this.image,
@@ -576,6 +579,7 @@ class DiaryEntry {
   factory DiaryEntry.fromJson(Map<String, dynamic> json) {
     return DiaryEntry(
       id: json['_id'] ?? '',
+      email: json['email'] ?? '',
       title: json['title'] ?? 'Untitled',
       content: json['diary'] ?? '',
       image: json['image'] ?? '',
@@ -587,7 +591,7 @@ class DiaryEntry {
 }
 
 Future<List<DiaryEntry>> ViewDiary(String email) async {
-  String apiUrl = 'http://localhost:3000/diary/get/test@example.com';
+  String apiUrl = 'http://localhost:3000/diary/get/$email';
   try {
     final response = await http.get(headers: {
       'Content-Type': 'application/json',
@@ -610,7 +614,9 @@ Future<List<DiaryEntry>> ViewDiary(String email) async {
 }
 
 class ViewAllDiaryPage extends StatefulWidget {
-  const ViewAllDiaryPage({super.key});
+  final String email;
+
+  const ViewAllDiaryPage({super.key, required this.email});
 
   @override
   _ViewAllDiaryPageState createState() => _ViewAllDiaryPageState();
@@ -620,12 +626,12 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
   @override
   void initState() {
     super.initState();
-    futureDiaries = ViewDiary('test@example.com');
+    futureDiaries = ViewDiary(widget.email);
   }
 
   void refreshDiaries() {
     setState(() {
-      futureDiaries = ViewDiary('test@example.com');
+      futureDiaries = ViewDiary(widget.email);
     });
   }
 
@@ -669,12 +675,12 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                               20, // 화면 너비에 따라 자동 조정
                           child: GestureDetector(
                             onTap: () {
-                              final updatedEntry = Navigator.push(
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => DiaryDetailPage(
                                       id: entry.id,
-                                      email: 'test@example.com',
+                                      email: entry.email,
                                       title: entry.title,
                                       content: entry.content,
                                       image: base64Decode(entry.image),
@@ -776,7 +782,7 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EmotionPage(),
+                      builder: (context) => EmotionPage(email: widget.email),
                     ),
                   );
                   print("Floating button clicked");

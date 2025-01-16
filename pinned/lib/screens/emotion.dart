@@ -10,13 +10,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: EmotionPage(),
+      home: EmotionPage(
+        email: "test@example.com",
+      ),
     );
   }
 }
 
 class EmotionPage extends StatefulWidget {
-  const EmotionPage({super.key}); // 기본 생성자 추가
+  final String email;
+  const EmotionPage({super.key, required this.email}); // 기본 생성자 추가
 
   @override
   State<EmotionPage> createState() => _EmotionPageState();

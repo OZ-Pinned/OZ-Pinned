@@ -28,7 +28,7 @@ const diarySchema = new Schema({
     required: true
   },
   emotion:{
-    type : String,
+    type : Number,
     required : true
   }
 });
