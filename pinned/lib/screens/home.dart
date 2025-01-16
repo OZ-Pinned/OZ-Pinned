@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:pinned/icon/custom_icon_icons.dart';
+import 'package:pinned/screens/chatbot.dart';
 import 'package:pinned/screens/emotion.dart';
 import 'package:pinned/screens/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -398,7 +399,11 @@ class _HomePageState extends State<HomePage> {
                                 // 아이콘을 가운데 배치
                                 child: IconButton(
                                   onPressed: () {
-                                    // 버튼 클릭 시 실행될 동작
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ChatBot()),
+                                    );
                                   },
                                   icon: Icon(CustomIcon.ChatAI),
                                   iconSize: 48, // 아이콘 크기
