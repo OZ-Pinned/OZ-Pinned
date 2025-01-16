@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pinned/icon/custom_icon_icons.dart';
 import 'package:video_player/video_player.dart';
 
 class MeditationVideoList extends StatelessWidget {
@@ -11,11 +14,13 @@ class MeditationVideoList extends StatelessWidget {
           'title': '생각을 비우는 방법',
           'image': 'assets/images/meditationImage1.png',
           'video': 'assets/videos/video1.mp3',
+          'background': 'assets/images/meditationBackground2.jpg'
         },
         {
           'title': '마음이 평온해지는\n스트레스 감소 명상',
           'image': 'assets/images/meditationImage2.png',
           'video': 'assets/videos/video1.mp3',
+          'background': 'assets/images/meditationBackground4.jpg'
         }
       ]
     },
@@ -26,11 +31,13 @@ class MeditationVideoList extends StatelessWidget {
           'title': '흥분된 마음을 진정시키는 물소리',
           'image': 'assets/images/meditationImage3.png',
           'video': 'assets/videos/video2.mp3',
+          'background': 'assets/images/meditationBackground3.jpg'
         },
         {
           'title': '머리가 맑아지는\n 숲 속 치유음악',
           'image': 'assets/images/meditationImage4.png',
           'video': 'assets/videos/video2.mp3',
+          'background': 'assets/images/meditationBackground1.jpg'
         }
       ]
     },
@@ -41,11 +48,13 @@ class MeditationVideoList extends StatelessWidget {
           'title': '포근한 메리크리스마스\n수면 음악',
           'image': 'assets/images/meditationImage5.png',
           'video': 'assets/videos/video3.mp3',
+          'background': 'assets/images/meditationBackground6.jpg'
         },
         {
           'title': '굳은 몸을 녹여주는\n따뜻한 장작타는 소리',
           'image': 'assets/images/meditationImage6.png',
           'video': 'assets/videos/video3.mp3',
+          'background': 'assets/images/meditationBackground5.jpg'
         }
       ]
     }
@@ -58,8 +67,7 @@ class MeditationVideoList extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -94,7 +102,8 @@ class MeditationVideoList extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => MeditationVideoPlayer(
-                                videoImage: video['image'],
+                                videoTitle: video['title'],
+                                videoImage: video['background'],
                                 videoPath: video['video'],
                               ),
                             ),
@@ -146,11 +155,15 @@ class MeditationVideoList extends StatelessWidget {
 }
 
 class MeditationVideoPlayer extends StatefulWidget {
+  final String videoTitle;
   final String videoImage;
   final String videoPath;
 
   const MeditationVideoPlayer(
-      {super.key, required this.videoImage, required this.videoPath});
+      {super.key,
+      required this.videoTitle,
+      required this.videoImage,
+      required this.videoPath});
 
   @override
   _MeditationVideoPlayerState createState() => _MeditationVideoPlayerState();
@@ -158,7 +171,9 @@ class MeditationVideoPlayer extends StatefulWidget {
 
 class _MeditationVideoPlayerState extends State<MeditationVideoPlayer> {
   late VideoPlayerController _controller;
+  late Timer _timer;
   bool play = true;
+  double _sliderValue = 0.0;
 
   @override
   void initState() {
@@ -167,11 +182,30 @@ class _MeditationVideoPlayerState extends State<MeditationVideoPlayer> {
       ..initialize().then((_) {
         setState(() {});
         _controller.play();
+        _startTimer();
+        _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+          if (_controller.value.isInitialized && mounted) {
+            setState(() {
+              _sliderValue = _controller.value.position.inSeconds.toDouble();
+            });
+          }
+        });
       });
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_controller.value.isInitialized && mounted) {
+        setState(() {
+          _sliderValue = _controller.value.position.inSeconds.toDouble();
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
+    _timer.cancel();
     _controller.dispose();
     super.dispose();
   }
@@ -180,73 +214,139 @@ class _MeditationVideoPlayerState extends State<MeditationVideoPlayer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('명상 영상 재생'),
-        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
       ),
+      extendBodyBehindAppBar: true,
       body: Container(
+        padding: EdgeInsets.only(
+          left: 20,
+          right: 20,
+        ),
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(widget.videoImage),
             fit: BoxFit.cover,
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _controller.value.isInitialized
-                  ? AspectRatio(
-                      aspectRatio: _controller.value.aspectRatio,
-                      child: VideoPlayer(_controller),
-                    )
-                  : const CircularProgressIndicator(),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (_controller.value.isInitialized)
+              Column(
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      _controller.seekTo(
-                          _controller.value.position - Duration(seconds: 10));
-                    },
-                    icon: SvgPicture.asset(
-                      'assets/images/beforeTenButton.svg',
-                      width: 40,
+                  AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: VideoPlayer(_controller),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      widget.videoTitle,
+                      style: TextStyle(
+                        color: Color(0xffFFFFFF),
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.start,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      play = !play;
-                      if (play) {
-                        _controller.play();
-                      } else {
-                        _controller.pause();
-                      }
-                      setState(() {});
-                    },
-                    icon: SvgPicture.asset(
-                      play
-                          ? 'assets/images/stopButton.svg'
-                          : 'assets/images/playButton.svg',
-                      width: 40,
+                  SizedBox(
+                    width: 350,
+                    child: SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: Color(0xffFF516A), // 슬라이더의 활성화된 트랙 색상
+                        inactiveTrackColor: Color(0xffFFF2F0),
+                        trackHeight: 2.0,
+                        thumbColor: Color(0xffFF516A),
+                      ),
+                      child: Slider(
+                        value: _sliderValue,
+                        min: 0.0,
+                        max: _controller.value.duration.inSeconds.toDouble(),
+                        onChanged: (value) {
+                          setState(() {
+                            _sliderValue = value;
+                          });
+                        },
+                        onChangeEnd: (value) {
+                          _controller.seekTo(Duration(seconds: value.toInt()));
+                        },
+                      ),
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      _controller.seekTo(
-                          _controller.value.position + Duration(seconds: 10));
-                    },
-                    icon: SvgPicture.asset(
-                      'assets/images/afterTenButton.svg',
-                      width: 40,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        _formatDuration(_controller.value.position),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        _formatDuration(_controller.value.duration),
+                        style: TextStyle(color: Colors.white),
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 28,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          _controller.seekTo(_controller.value.position -
+                              Duration(seconds: 10));
+                        },
+                        icon: SvgPicture.asset(
+                          'assets/images/beforeTenButton.svg',
+                          width: 28,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          play = !play;
+                          if (play) {
+                            _controller.play();
+                          } else {
+                            _controller.pause();
+                          }
+                          setState(() {});
+                        },
+                        icon: SvgPicture.asset(
+                          play
+                              ? 'assets/images/stopButton.svg'
+                              : 'assets/images/playButton.svg',
+                          width: 55,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          _controller.seekTo(_controller.value.position +
+                              Duration(seconds: 10));
+                        },
+                        icon: SvgPicture.asset(
+                          'assets/images/afterTenButton.svg',
+                          width: 28,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 50,
                   ),
                 ],
-              ),
-            ],
-          ),
+              )
+            else
+              const CircularProgressIndicator(),
+          ],
         ),
       ),
     );
+  }
+
+  String _formatDuration(Duration duration) {
+    final minutes = duration.inMinutes.toString().padLeft(2, '0');
+    final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
   }
 }
