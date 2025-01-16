@@ -32,16 +32,12 @@ else {
 
           const response = await model.generateContent(prompt);
           console.log(response.response.text())
-          res.send(response.response.text());
+          return res.status(201).json({success : true, res : response.response.text()});
 
       } catch (error) {
           console.log("error generating response : ", error)
           res.status(error.status || 500).send("an error occurred while generating the response")
-      } finally {
-          if(file){
-              fs.unlinkSync(file.path);
-          }
-      }
+      } 
   })
 }
 
