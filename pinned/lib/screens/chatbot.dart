@@ -24,6 +24,15 @@ class _ChatBotPageState extends State<ChatBot> {
 
   Future<String?> handleSubmitted() async {
     print(inputedMessage);
+    setState(() {
+      chatedMessage.add({'User': inputedMessage});
+      _controller.clear();
+    });
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent + 300,
+      duration: Duration(milliseconds: 800),
+      curve: Curves.easeOut,
+    );
     try {
       var response = await http.post(
         Uri.parse("http://localhost:3000/chatbot/get"),
@@ -45,9 +54,7 @@ class _ChatBotPageState extends State<ChatBot> {
 
         // AI의 응답과 유저의 메시지를 리스트에 추가
         setState(() {
-          chatedMessage.add({'User': inputedMessage});
           chatedMessage.add({'AI': data['res']});
-          _controller.clear();
           inputedMessage = "";
         });
 
@@ -56,8 +63,8 @@ class _ChatBotPageState extends State<ChatBot> {
 
         // 새로운 메시지가 추가된 후 스크롤을 맨 아래로 내리기
         _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent + 100,
-          duration: Duration(milliseconds: 300),
+          _scrollController.position.maxScrollExtent + 300,
+          duration: Duration(milliseconds: 800),
           curve: Curves.easeOut,
         );
       } else {
@@ -75,8 +82,9 @@ class _ChatBotPageState extends State<ChatBot> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffFFF9F8),
+        scrolledUnderElevation: 0,
       ),
-      extendBodyBehindAppBar: false,
+      extendBodyBehindAppBar: true,
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -84,7 +92,7 @@ class _ChatBotPageState extends State<ChatBot> {
             fit: BoxFit.cover,
           ),
         ),
-        padding: EdgeInsets.only(top: 40, right: 0, left: 0, bottom: 20),
+        padding: EdgeInsets.only(right: 0, left: 0, bottom: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -153,8 +161,7 @@ class _ChatBotPageState extends State<ChatBot> {
                                 Container(
                                   margin: EdgeInsets.only(left: 60),
                                   padding: EdgeInsets.only(
-                                    top: 7.5,
-                                    bottom: 7.5,
+                                    top: 15,
                                     left: 17,
                                     right: 17,
                                   ),

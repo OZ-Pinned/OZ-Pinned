@@ -70,6 +70,8 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
     return Scaffold(
       backgroundColor: Color(0xffF8F8F8),
       appBar: AppBar(
+        backgroundColor: Color(0xffFFFFFF),
+        scrolledUnderElevation: 0,
         title: const Text('감정 갤러리'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -316,6 +318,7 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
     return Scaffold(
       backgroundColor: Color(0xffF8F8F8),
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: Color(0xffF8F8F8),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -642,6 +645,8 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(
+        backgroundColor: Color(0xffFFFFFF),
+        scrolledUnderElevation: 0,
         title: const Text('감정 갤러리'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
