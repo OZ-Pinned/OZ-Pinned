@@ -309,11 +309,22 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
 
   bool isFront = true; // true면 이미지가 보이고, false면 빈 화면이 보임
 
+  List<Color> colors = [
+    Color(0xFFFFFFFF),
+    Color(0xFF555555),
+    Color(0xFFF0B8B2),
+    Color(0xFFF5DE99),
+    Color(0xFFA898C6),
+    Color(0xFF9FA9A1)
+  ];
+
   @override
   void initState() {
     super.initState();
     // widget.color 초기화
     _containerColor = Color(int.parse(widget.color.replaceFirst('#', '0xff')));
+
+    _selectedIndex = colors.indexOf(_containerColor);
   }
 
   void _flipCard() {
