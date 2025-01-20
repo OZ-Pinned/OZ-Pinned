@@ -50,6 +50,7 @@ dependencies:
   package_info_plus: ^8.1.2
   ios_utsname_ext: ^2.3.0
   video_player: ^2.7.2
+  easy_localization: ^3.0.4
   
 dev_dependencies:
   flutter_test:
@@ -105,12 +106,7 @@ flutter:
   assets:
     - assets/videos/
     - assets/images/
-    - assets/images/meditationImage1.svg
-    - assets/images/meditationImage2.svg
-    - assets/images/meditationImage3.svg
-    - assets/images/meditationImage4.svg
-    - assets/images/meditationImage5.svg
-    - assets/images/meditationImage6.svg
+    - assets/translations/
 
 
   #
