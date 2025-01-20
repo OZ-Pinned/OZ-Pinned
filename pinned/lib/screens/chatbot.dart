@@ -161,9 +161,10 @@ class _ChatBotPageState extends State<ChatBot> {
                                 Container(
                                   margin: EdgeInsets.only(left: 60),
                                   padding: EdgeInsets.only(
-                                    top: 15,
+                                    top: 10,
                                     left: 17,
                                     right: 17,
+                                    bottom: 8,
                                   ),
                                   decoration: BoxDecoration(
                                     color: Color(0xffFFFFFF),
