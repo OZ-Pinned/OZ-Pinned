@@ -168,71 +168,86 @@ class _MyPageState extends State<MyPage> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return AlertDialog(
-                          backgroundColor: Color(0xffFFFFFF),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          content: Container(
-                            padding: EdgeInsets.only(
-                              top: 8,
-                              right: 10,
-                              left: 10,
-                              bottom: 0,
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  "로그아웃 하시겠습니까?",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                        return Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            AlertDialog(
+                              backgroundColor: Color(0xffFFFFFF),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              content: Container(
+                                padding: EdgeInsets.only(
+                                  top: 20,
+                                  right: 10,
+                                  left: 10,
+                                  bottom: 0,
                                 ),
-                                SizedBox(
-                                  height: 16,
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color(0xffFF516A),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    fixedSize: Size(250, 31),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SelectPage(),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      "로그아웃 하시겠습니까?",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                    );
-                                  },
-                                  child: Text(
-                                    '확인',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text(
-                                    "다시 보지 않기",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
                                     ),
-                                  ),
+                                    SizedBox(
+                                      height: 16,
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color(0xffFF516A),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        fixedSize: Size(250, 31),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => SelectPage(),
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        '확인',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        "아니요",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                            Positioned.fill(
+                              top: -265,
+                              child: SvgPicture.asset(
+                                'assets/images/dialogKoKo.svg',
+                                fit: BoxFit.none,
+                                width: 50,
+                                height: 50,
+                              ),
+                            ),
+                          ],
                         );
                       },
                     );
