@@ -98,6 +98,9 @@ flutter:
     - family:  CustomIcon
       fonts:
       - asset: assets/fonts/CustomIcon.ttf
+    - family: Pretendard
+      fonts:
+      - asset: assets/fonts/Pretendard.ttf
 
   assets:
     - assets/videos/
