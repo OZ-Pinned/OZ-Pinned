@@ -9,7 +9,7 @@ router.use(cors());
 router.use(bodyParser.json());
 
 router.post('/upload', async (req, res) => {
-    const { email, title, diary, image, createdAt, color  } = req.body;
+    const { email, title, diary, image, createdAt, color, emotion  } = req.body;
     
     try {
       // 다이어리 생성
@@ -19,12 +19,13 @@ router.post('/upload', async (req, res) => {
         diary,
         image,
         createdAt,
-        color
+        color,
+        emotion
       });
   
       return res.status(201).json({ success: true, diary: createdDiary });
     } catch (error) {
-      return res.status(401).json({ success: false, errorMessage: 'Invalid or expired token' });
+      return res.status(401).json({ success: false, error: error.message });
     }
 });
   
