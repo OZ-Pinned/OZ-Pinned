@@ -68,9 +68,9 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffF8F8F8),
+      backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(
-        title: const Text('감정 갤러리'),
+        backgroundColor: Color(0xffFFFFFF),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -85,11 +85,27 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
               onTap: pickImage,
               child: Container(
                 height: 200,
-                color: Color(0x0fffffff),
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.all(0),
+                decoration: BoxDecoration(
+                  color: Color(0xffF4F4F4),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                // color: Color(0x0fffffff),
                 alignment: Alignment.center,
                 child: _pickedImage == null
                     ? const Icon(Icons.add_a_photo, size: 30)
-                    : Image.memory(_pickedImage!, fit: BoxFit.cover),
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(10), // 모서리 둥글게 처리
+                        child: Image.memory(
+                          _pickedImage!,
+                          width: double.infinity, // 이미지의 너비를 꽉 채우도록 설정
+                          height: 200, // 부모 높이와 맞춤
+                          fit: BoxFit.cover, // 이미지를 부모 영역에 맞게 크기 조정
+                        ),
+                      ),
               ),
             ),
             const SizedBox(height: 20),
@@ -103,13 +119,39 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
               decoration: const InputDecoration(
                 filled: true,
                 fillColor: Color(0xffF4F4F4),
-                labelText: '제목을 작성해주세요.',
+                hintText: '제목을 작성해 주세요.',
                 labelStyle: TextStyle(
                   fontFamily: 'LeeSeoYun', // 폰트 패밀리 설정
                   color: Color(0xff888888), // 라벨 색상
                   fontSize: 18, // 라벨 글자 크기
                 ),
-                enabledBorder: InputBorder.none,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  borderSide: BorderSide(
+                    color: Color(0xffDADADA), // 외부 테두리 색상
+                    width: 0, // 외부 테두리 두께
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  borderSide: BorderSide(
+                    color: Color(0xffFF516A), // 포커스 시 동일한 색상 유지
+                    width: 0, // 외부 테두리 두께
+                  ),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  borderSide: BorderSide(
+                    color: Color(0xffDADADA), // 기본 테두리 투명
+                    width: 0, // 두께 0
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -123,13 +165,39 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
               decoration: const InputDecoration(
                 filled: true,
                 fillColor: Color(0xffF4F4F4),
-                labelText: '본문을 작성해주세요.',
+                hintText: '본문을 작성해주세요.',
                 labelStyle: TextStyle(
                   fontFamily: 'LeeSeoYun', // 폰트 패밀리 설정
                   color: Color(0xff888888), // 라벨 색상
                   fontSize: 18, // 라벨 글자 크기
                 ),
-                enabledBorder: InputBorder.none,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  borderSide: BorderSide(
+                    color: Color(0xffDADADA), // 외부 테두리 색상
+                    width: 0, // 외부 테두리 두께
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  borderSide: BorderSide(
+                    color: Color(0xffFF516A), // 포커스 시 동일한 색상 유지
+                    width: 0, // 외부 테두리 두께
+                  ),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  borderSide: BorderSide(
+                    color: Color(0xffDADADA), // 기본 테두리 투명
+                    width: 0, // 두께 0
+                  ),
+                ),
               ),
               maxLines: 6, // 텍스트 필드 세로
               keyboardType: TextInputType.multiline,
@@ -172,7 +240,6 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                 child: const Text(
                   '다음',
                   style: TextStyle(
-                    fontFamily: 'LeeSeoYun',
                     fontSize: 20,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -697,7 +764,7 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(
-        title: const Text('감정 갤러리'),
+        backgroundColor: Color(0xffffffff),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: _navigateToHomePage,
