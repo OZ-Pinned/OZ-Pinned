@@ -68,9 +68,9 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffF8F8F8),
+      backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(
-        title: const Text('감정 갤러리'),
+        backgroundColor: Color(0xffFFFFFF),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -85,11 +85,27 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
               onTap: pickImage,
               child: Container(
                 height: 200,
-                color: Color(0x0fffffff),
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.all(0),
+                decoration: BoxDecoration(
+                  color: Color(0xffF4F4F4),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                // color: Color(0x0fffffff),
                 alignment: Alignment.center,
                 child: _pickedImage == null
                     ? const Icon(Icons.add_a_photo, size: 30)
-                    : Image.memory(_pickedImage!, fit: BoxFit.cover),
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(10), // 모서리 둥글게 처리
+                        child: Image.memory(
+                          _pickedImage!,
+                          width: double.infinity, // 이미지의 너비를 꽉 채우도록 설정
+                          height: 200, // 부모 높이와 맞춤
+                          fit: BoxFit.cover, // 이미지를 부모 영역에 맞게 크기 조정
+                        ),
+                      ),
               ),
             ),
             const SizedBox(height: 20),
@@ -103,13 +119,39 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
               decoration: const InputDecoration(
                 filled: true,
                 fillColor: Color(0xffF4F4F4),
-                labelText: '제목을 작성해주세요.',
+                hintText: '제목을 작성해 주세요.',
                 labelStyle: TextStyle(
                   fontFamily: 'LeeSeoYun', // 폰트 패밀리 설정
                   color: Color(0xff888888), // 라벨 색상
                   fontSize: 18, // 라벨 글자 크기
                 ),
-                enabledBorder: InputBorder.none,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  borderSide: BorderSide(
+                    color: Color(0xffDADADA), // 외부 테두리 색상
+                    width: 0, // 외부 테두리 두께
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  borderSide: BorderSide(
+                    color: Color(0xffFF516A), // 포커스 시 동일한 색상 유지
+                    width: 0, // 외부 테두리 두께
+                  ),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  borderSide: BorderSide(
+                    color: Color(0xffDADADA), // 기본 테두리 투명
+                    width: 0, // 두께 0
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -123,13 +165,39 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
               decoration: const InputDecoration(
                 filled: true,
                 fillColor: Color(0xffF4F4F4),
-                labelText: '본문을 작성해주세요.',
+                hintText: '본문을 작성해주세요.',
                 labelStyle: TextStyle(
                   fontFamily: 'LeeSeoYun', // 폰트 패밀리 설정
                   color: Color(0xff888888), // 라벨 색상
                   fontSize: 18, // 라벨 글자 크기
                 ),
-                enabledBorder: InputBorder.none,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  borderSide: BorderSide(
+                    color: Color(0xffDADADA), // 외부 테두리 색상
+                    width: 0, // 외부 테두리 두께
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  borderSide: BorderSide(
+                    color: Color(0xffFF516A), // 포커스 시 동일한 색상 유지
+                    width: 0, // 외부 테두리 두께
+                  ),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  borderSide: BorderSide(
+                    color: Color(0xffDADADA), // 기본 테두리 투명
+                    width: 0, // 두께 0
+                  ),
+                ),
               ),
               maxLines: 6, // 텍스트 필드 세로
               keyboardType: TextInputType.multiline,
@@ -172,7 +240,6 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                 child: const Text(
                   '다음',
                   style: TextStyle(
-                    fontFamily: 'LeeSeoYun',
                     fontSize: 20,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -309,11 +376,22 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
 
   bool isFront = true; // true면 이미지가 보이고, false면 빈 화면이 보임
 
+  List<Color> colors = [
+    Color(0xFFFFFFFF),
+    Color(0xFF555555),
+    Color(0xFFF0B8B2),
+    Color(0xFFF5DE99),
+    Color(0xFFA898C6),
+    Color(0xFF9FA9A1)
+  ];
+
   @override
   void initState() {
     super.initState();
     // widget.color 초기화
     _containerColor = Color(int.parse(widget.color.replaceFirst('#', '0xff')));
+
+    _selectedIndex = colors.indexOf(_containerColor);
   }
 
   void _flipCard() {
@@ -686,157 +764,160 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(
-        title: const Text('감정 갤러리'),
+        backgroundColor: Color(0xffffffff),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: _navigateToHomePage,
         ),
       ),
-      body: Stack(
-        children: [
-          FutureBuilder<List<DiaryEntry>>(
-            future: futureDiaries,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else {
-                return SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Wrap(
-                      spacing: 10, // 카드 간 가로 간격
-                      runSpacing: 13, // 카드 간 세로 간격
-                      children: List.generate(snapshot.data!.length, (index) {
-                        DiaryEntry entry = snapshot.data![index];
-                        Color cardColor = Color(
-                          int.parse(entry.color
-                              .replaceFirst('#', '0xff')), // #을 0xff로 변경
-                        );
-                        return SizedBox(
-                          width: MediaQuery.of(context).size.width / 2 -
-                              20, // 화면 너비에 따라 자동 조정
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DiaryDetailPage(
-                                      id: entry.id,
-                                      email: entry.email,
-                                      title: entry.title,
-                                      content: entry.content,
-                                      image: base64Decode(entry.image),
-                                      emotion: entry.emotion,
-                                      color: entry.color,
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Stack(
+          children: [
+            FutureBuilder<List<DiaryEntry>>(
+              future: futureDiaries,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Wrap(
+                        spacing: 10, // 카드 간 가로 간격
+                        runSpacing: 13, // 카드 간 세로 간격
+                        children: List.generate(snapshot.data!.length, (index) {
+                          DiaryEntry entry = snapshot.data![index];
+                          Color cardColor = Color(
+                            int.parse(entry.color
+                                .replaceFirst('#', '0xff')), // #을 0xff로 변경
+                          );
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width / 2 -
+                                20, // 화면 너비에 따라 자동 조정
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DiaryDetailPage(
+                                        id: entry.id,
+                                        email: entry.email,
+                                        title: entry.title,
+                                        content: entry.content,
+                                        image: base64Decode(entry.image),
+                                        emotion: entry.emotion,
+                                        color: entry.color,
+                                      ),
+                                    ));
+                                refreshDiaries(); // 데이터 갱신
+                              },
+                              child: Card(
+                                color: cardColor,
+                                shape: RoundedRectangleBorder(
+                                    // 카드 모서리 둥글게
                                     ),
-                                  ));
-                              refreshDiaries(); // 데이터 갱신
-                            },
-                            child: Card(
-                              color: cardColor,
-                              shape: RoundedRectangleBorder(
-                                  // 카드 모서리 둥글게
-                                  ),
-                              elevation: 3,
-                              child: Stack(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(height: 10),
-                                      Center(
-                                        child: Image.memory(
-                                          base64Decode(entry.image),
-                                          width: 150,
-                                          height: 150,
-                                          fit: BoxFit.cover,
+                                elevation: 3,
+                                child: Stack(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: 10),
+                                        Center(
+                                          child: Image.memory(
+                                            base64Decode(entry.image),
+                                            width: 150,
+                                            height: 150,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              10, 10, 10, 10),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                entry.title,
+                                                style: const TextStyle(
+                                                  fontFamily: 'LeeSeoYun',
+                                                  fontSize: 15, // 제목 폰트 크기
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              const SizedBox(height: 5),
+                                              Text(
+                                                DateFormat('yyyy.MM.dd').format(
+                                                    DateTime.parse(
+                                                        entry.createdAt)),
+                                                style: const TextStyle(
+                                                  fontFamily: 'LeeSeoYun',
+                                                  fontSize: 10, // 날짜 폰트 크기
+                                                  color: Color(0xff888888),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Positioned(
+                                      bottom: 15,
+                                      right: 10,
+                                      child: SizedBox(
+                                        width: 34,
+                                        height: 34,
+                                        child: SvgPicture.asset(
+                                          getImagePath(entry.emotion),
+                                          fit: BoxFit.contain,
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10, 10, 10, 10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              entry.title,
-                                              style: const TextStyle(
-                                                fontFamily: 'LeeSeoYun',
-                                                fontSize: 15, // 제목 폰트 크기
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            const SizedBox(height: 5),
-                                            Text(
-                                              DateFormat('yyyy.MM.dd').format(
-                                                  DateTime.parse(
-                                                      entry.createdAt)),
-                                              style: const TextStyle(
-                                                fontFamily: 'LeeSeoYun',
-                                                fontSize: 10, // 날짜 폰트 크기
-                                                color: Color(0xff888888),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Positioned(
-                                    bottom: 15,
-                                    right: 10,
-                                    child: SizedBox(
-                                      width: 34,
-                                      height: 34,
-                                      child: SvgPicture.asset(
-                                        getImagePath(entry.emotion),
-                                        fit: BoxFit.contain,
-                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                );
-              }
-            },
-          ),
-          Positioned(
-            bottom: 40, // 화면 아래에서부터의 거리
-            right: 20, // 화면 오른쪽에서부터의 거리
-            child: Container(
-              width: 58,
-              height: 58,
-              decoration: const BoxDecoration(
-                color: Color(0xffFF516A), // 원형 배경색
-                shape: BoxShape.circle, // 원형 모양
-              ),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EmotionPage(email: widget.email),
+                          );
+                        }),
+                      ),
                     ),
                   );
-                  print("Floating button clicked");
-                },
-                icon: const Icon(Icons.add, size: 30, color: Colors.white),
+                }
+              },
+            ),
+            Positioned(
+              bottom: 40, // 화면 아래에서부터의 거리
+              right: 20, // 화면 오른쪽에서부터의 거리
+              child: Container(
+                width: 58,
+                height: 58,
+                decoration: const BoxDecoration(
+                  color: Color(0xffFF516A), // 원형 배경색
+                  shape: BoxShape.circle, // 원형 모양
+                ),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EmotionPage(email: widget.email),
+                      ),
+                    );
+                    print("Floating button clicked");
+                  },
+                  icon: const Icon(Icons.add, size: 30, color: Colors.white),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
