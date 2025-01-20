@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'emotion.dart';
 import 'home.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(const MyApp());
 
@@ -636,7 +637,36 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
   @override
   void initState() {
     super.initState();
+    _loadUserData();
     futureDiaries = ViewDiary(widget.email);
+  }
+
+  Future<void> _loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      email = prefs.getString('email');
+      character = prefs.getInt('character');
+      name = prefs.getString('name');
+    });
+  }
+
+  void _navigateToHomePage() {
+    if (email != null && character != null && name != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(
+            email: email!,
+            character: character!,
+            name: name!,
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('User data not available')),
+      );
+    }
   }
 
   void refreshDiaries() {
@@ -647,6 +677,10 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
 
   late Future<List<DiaryEntry>> futureDiaries;
 
+  String? email;
+  int? character;
+  String? name;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -655,8 +689,7 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
         title: const Text('감정 갤러리'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          // Todo : home 이동으로 수정하기
-          onPressed: () => Navigator.pop(context),
+          onPressed: _navigateToHomePage,
         ),
       ),
       body: Stack(
