@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pinned/main.dart';
 
 class MyPage extends StatefulWidget {
   final String email;
@@ -17,6 +18,7 @@ class _MyPageState extends State<MyPage> {
   List<double> scores = []; // 점수 데이터를 double로 저장
   List<String> dates = [];
   int selectedChar = 0;
+  String userName = "";
 
   @override
   void initState() {
@@ -57,6 +59,7 @@ class _MyPageState extends State<MyPage> {
             );
             dates = dates.sublist((dates.length > 5) ? dates.length - 5 : 0);
             selectedChar = data['user']['character'];
+            userName = data['user']['name'];
           },
         );
       } else {
@@ -140,6 +143,8 @@ class _MyPageState extends State<MyPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
       ),
+      extendBody: true,
+      extendBodyBehindAppBar: false,
       body: Container(
         decoration: BoxDecoration(
           color: Color(0xFFFFFFFF),
@@ -149,21 +154,116 @@ class _MyPageState extends State<MyPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Text(
+                  '$userName아 안녕!',
+                  style: TextStyle(
+                    fontFamily: 'LeeSeoYun',
+                    fontSize: 24,
+                  ),
+                ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            AlertDialog(
+                              backgroundColor: Color(0xffFFFFFF),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              content: Container(
+                                padding: EdgeInsets.only(
+                                  top: 20,
+                                  right: 10,
+                                  left: 10,
+                                  bottom: 0,
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      "로그아웃 하시겠습니까?",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 16,
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color(0xffFF516A),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        fixedSize: Size(250, 31),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => SelectPage(),
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        '확인',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        "아니요",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Positioned.fill(
+                              top: -265,
+                              child: SvgPicture.asset(
+                                'assets/images/dialogKoKo.svg',
+                                fit: BoxFit.none,
+                                width: 50,
+                                height: 50,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
-                    fixedSize: Size(67, 35),
+                    minimumSize: Size.zero,
                     backgroundColor: Color(0xffE9E9E9),
-                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(7),
                     ),
+                    shadowColor: Colors.transparent,
                   ),
                   child: Text(
                     '로그아웃',
-                    style: TextStyle(color: Color(0xff333333)),
+                    style: TextStyle(color: Color(0xff333333), fontSize: 16),
                   ),
                 ),
               ],

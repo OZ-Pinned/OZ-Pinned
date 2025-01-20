@@ -38,8 +38,8 @@ class _HomePageState extends State<HomePage> {
   ];
 
   List buttonImageList = [
-    'meditationButton.svg',
-    'selfTestButton.svg',
+    'meditationButtonBackground.svg',
+    'selfTestButtonBackground.svg',
   ];
 
   String getImage(int value) {
@@ -264,21 +264,13 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             for (int i = 0; i < 4; i++) ...[
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(7),
-                                  ),
-                                  padding: EdgeInsets.all(0),
-                                ),
-                                child: SvgPicture.asset(
-                                  'assets/images/${getImage(i)}',
-                                  fit: BoxFit.cover,
-                                  width: 62,
-                                  height: 65,
-                                ),
+                              SvgPicture.asset(
+                                'assets/images/${getImage(i)}',
+                                fit: BoxFit.cover,
+                                width: 62,
+                                height: 65,
                               ),
+
                               if (i < 3) const SizedBox(width: 7), // 버튼 간 간격
                             ],
                           ],
@@ -292,41 +284,55 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       for (int i = 0; i < 2; i++) ...[
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(7),
+                        Stack(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/${getButtonImage(i)}',
+                              width: 160,
+                              height: 142,
+                              fit: BoxFit.fill,
+                            ),
+                            Positioned.fill(
+                              top: 40,
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(7),
+                                  onTap: () {
+                                    if (i == 0) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              MeditationVideoList(),
+                                        ),
+                                      );
+                                    } else {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              TestPage(lang: true),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      i == 0 ? '명상하러 가기' : '자가진단하러 가기',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontFamily: 'LeeSeoYun',
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                              padding: EdgeInsets.all(0),
-                              fixedSize: Size(
-                                153,
-                                135,
-                              )),
-                          onPressed: () {
-                            if (i == 0) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MeditationVideoList(),
-                                ),
-                              );
-                            } else {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TestPage(lang: true),
-                                ),
-                              );
-                            }
-                          },
-                          child: SvgPicture.asset(
-                            'assets/images/${getButtonImage(i)}',
-                            width: 153,
-                            height: 135,
-                            fit: BoxFit.fill,
-                          ),
+                            ),
+                          ],
                         ),
-                        if (i < 1) const SizedBox(width: 13),
+                        if (i < 1) const SizedBox(width: 5),
                       ],
                     ],
                   ),
