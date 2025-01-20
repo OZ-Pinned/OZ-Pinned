@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'meditation.dart';
+import 'chatbot.dart';
 
 void main() => runApp(MyApp());
 
@@ -362,13 +363,20 @@ class _ResultPageState extends State<ResultPage> {
   }
 
   // 날짜를 가져오는 함수
-  void getToday() {
+  String getToday() {
     DateTime now = DateTime.now();
-    DateFormat formatter = DateFormat('yyyy-MM-dd');
+    DateFormat formatter = DateFormat('yyyy.MM.dd');
     String strToday = formatter.format(now);
-    setState(() {
-      today = strToday; // 날짜를 상태에 저장
-    });
+
+    return strToday;
+  }
+
+  String getTime() {
+    DateTime now = DateTime.now();
+    DateFormat formatter = DateFormat('H:m');
+    String strToday = formatter.format(now);
+
+    return strToday;
   }
 
   // 이메일을 비동기적으로 가져오는 함수
@@ -390,6 +398,20 @@ class _ResultPageState extends State<ResultPage> {
       return "경미";
     } else
       return "정상";
+  }
+
+  String getReseultContent(int totalScore) {
+    save(totalScore); // 이메일을 받아오고 점수를 저장
+    if (totalScore >= 20) {
+      return "광범위한 우을 증상을 매우 자주, 심한 수준에서 경험하는 것으로 보고하였습니다.\n일상생활의 다양한 영역에서 어려움이 초래될 경우 정신건강 전문가의 도움을 받는 것을 권해드립니다.";
+    } else if (totalScore >= 15) {
+      return "약간 심한 수준의 우울감을 자주 경험하는 것으로 보고하였습니다.\n직업적/사회적 적응에 일부 영향을 미칠 경우 정신건강 전문가의 도움을 받아 보시기를 권해 드립니다.";
+    } else if (totalScore >= 10) {
+      return "중간 수준의 우울감을 비교적 자주 경험하는 것으로 보고하였습니다.\n직업적/사회적 적응에 일부 영향을 미칠 수 있어 주의 깊은 관찰과 관심이 필요합니다.";
+    } else if (totalScore >= 5) {
+      return "경미한 수준의 우울감이 있으나 일상생활에 지장을 줄 정도는 아닙니다.";
+    } else
+      return "적응상의 지장을 초래할만한 우울 관련 증상을 거의 보고하지 않았습니다.";
   }
 
   // 점수와 이메일을 서버에 저장하는 함수
@@ -425,8 +447,8 @@ class _ResultPageState extends State<ResultPage> {
   }
 
   List buttonImageList = [
-    'meditationButton.svg',
-    'selfTestButton.svg',
+    'testMeditationButtonBackground.svg',
+    'testChatbotButtonBackground.svg',
   ];
 
   String getButtonImage(int value) {
@@ -439,25 +461,14 @@ class _ResultPageState extends State<ResultPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('결과'),
+        backgroundColor: Color(0xffFF516A),
       ),
       body: Container(
         padding: EdgeInsets.only(top: 73),
         color: Color(0xffFF516A), // 핑크색 배경
         child: Stack(
+          clipBehavior: Clip.none,
           children: [
-            Positioned(
-              left: 20, // 왼쪽 여백
-              top: 20, // 상단 여백
-              child: Text(
-                today,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ),
             Container(
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
@@ -508,9 +519,10 @@ class _ResultPageState extends State<ResultPage> {
                       decoration: BoxDecoration(
                           color: Color(0xffF4F4F4),
                           borderRadius: BorderRadius.circular(10)),
-                      child: Text('중간수준 어찌구.. 저찌구...',
-                          style:
-                              TextStyle(fontFamily: 'LeeSeoYun', fontSize: 17)),
+                      child: Text(
+                        getReseultContent(totalScore),
+                        style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 17),
+                      ),
                     ),
                   ),
                   SizedBox(height: 25),
@@ -518,37 +530,54 @@ class _ResultPageState extends State<ResultPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       for (int i = 0; i < 2; i++) ...[
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7),
+                        Stack(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/${getButtonImage(i)}',
+                              width: 143,
+                              height: 122,
+                              fit: BoxFit.fill,
                             ),
-                            padding: EdgeInsets.all(0),
-                          ),
-                          child: SvgPicture.asset(
-                            'assets/images/${getButtonImage(i)}',
-                            width: 153,
-                            height: 135,
-                          ),
-                          onPressed: () {
-                            if (i == 0) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MeditationVideoList(),
+                            Positioned.fill(
+                              top: 40,
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(7),
+                                  onTap: () {
+                                    if (i == 0) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              MeditationVideoList(),
+                                        ),
+                                      );
+                                    } else {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatBot(),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      i == 0 ? '명상하러 가기' : '코코와 대화하기',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontFamily: 'LeeSeoYun',
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              );
-                            } else {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TestPage(lang: true),
-                                ),
-                              );
-                            }
-                          },
+                              ),
+                            ),
+                          ],
                         ),
-                        if (i < 1) const SizedBox(width: 13),
+                        if (i < 1) const SizedBox(width: 10),
                       ],
                     ],
                   ),
@@ -556,6 +585,27 @@ class _ResultPageState extends State<ResultPage> {
                 ],
               ),
             ),
+            Positioned(
+                left: 20, // 왼쪽 여백
+                top: -35, // 상단 여백
+                child: Row(
+                  children: [
+                    Text(
+                      '${getToday()}  ',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      getTime(),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                )),
           ],
         ),
       ),
