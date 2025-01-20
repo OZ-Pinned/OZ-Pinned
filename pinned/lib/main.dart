@@ -92,7 +92,7 @@ class _SelectPageState extends State<SelectPage> {
                   ),
                 ),
                 child: Text(
-                  "사용해봤어요",
+                  "시작하기",
                   style: TextStyle(
                     color: Color(0xffFFFFFF),
                     fontSize: 18,
