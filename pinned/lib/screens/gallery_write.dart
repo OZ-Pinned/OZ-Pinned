@@ -36,11 +36,11 @@ class WriteGalleryPage extends StatefulWidget {
 }
 
 String getImagePath(int emotion) {
-  if (emotion == 1) {
+  if (emotion == 0) {
     return 'assets/images/angryEmotionSticker.svg';
-  } else if (emotion == 2) {
+  } else if (emotion == 1) {
     return 'assets/images/sadEmotionSticker.svg';
-  } else if (emotion == 3) {
+  } else if (emotion == 2) {
     return 'assets/images/noneEmotionSticker.svg';
   } else {
     return 'assets/images/happyEmotionSticker.svg';
@@ -66,8 +66,6 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
 
   @override
   Widget build(BuildContext context) {
-    String nowdate = DateFormat('yyyy.MM.dd').format(DateTime.now());
-
     return Scaffold(
       backgroundColor: Color(0xffF8F8F8),
       appBar: AppBar(
@@ -154,6 +152,7 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                           image: _pickedImage!,
                           email: widget.email,
                           emotion: widget.emotion,
+                          color: "#E9E9E9",
                         ),
                       ),
                     );
@@ -201,6 +200,7 @@ class DiaryDetailPage extends StatefulWidget {
   final Uint8List image;
   final String email;
   final int emotion;
+  final String color;
 
   const DiaryDetailPage({
     super.key,
@@ -210,6 +210,7 @@ class DiaryDetailPage extends StatefulWidget {
     required this.content,
     required this.image,
     required this.emotion,
+    required this.color,
   });
 
   @override
@@ -303,8 +304,16 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
 
   // 상태로 관리될 컨테이너 색상
   String nowdate = DateFormat('yyyy.MM.dd').format(DateTime.now());
-  Color _containerColor = const Color(0xffF5DE99);
+  late Color _containerColor;
+
   bool isFront = true; // true면 이미지가 보이고, false면 빈 화면이 보임
+
+  @override
+  void initState() {
+    super.initState();
+    // widget.color 초기화
+    _containerColor = Color(int.parse(widget.color.replaceFirst('#', '0xff')));
+  }
 
   void _flipCard() {
     setState(() {
@@ -687,6 +696,7 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                                       content: entry.content,
                                       image: base64Decode(entry.image),
                                       emotion: entry.emotion,
+                                      color: entry.color,
                                     ),
                                   ));
                               refreshDiaries(); // 데이터 갱신
