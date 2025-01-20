@@ -105,8 +105,16 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    storeUserData(widget.email, widget.character, widget.name);
     getUser(); // 서버에서 데이터 가져오기
     selectedChar = widget.character;
+  }
+
+  Future<void> storeUserData(String email, int character, String name) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('character', character);
+    await prefs.setString('name', name);
+    print("User data saved: $email, $character, $name");
   }
 
   Future<void> getUser() async {
