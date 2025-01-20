@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'gallery_write.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(MyApp());
 
@@ -74,6 +75,12 @@ class _EmotionPageState extends State<EmotionPage> {
     } else {
       return Color(0xffFAD19B); // 슬라이더 값이 76~100일 때
     }
+  }
+
+// 이메일을 비동기적으로 가져오는 함수
+  Future<String?> getEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('email'); // 'email' 키에 저장된 값 반환
   }
 
   @override
@@ -157,12 +164,13 @@ class _EmotionPageState extends State<EmotionPage> {
               height: 78,
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                String? email = await getEmail();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => WriteGalleryPage(
-                      email: "test@example.com",
+                      email: email ?? widget.email,
                       emotion: (currentValue / 25).toInt(),
                     ),
                   ),
