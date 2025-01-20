@@ -1,0 +1,12 @@
+{
+    "start": "Start",
+    "confirm": "Next",
+    "enter_name": "What is your name?",
+    "enter_email": "tell me your email",
+    "verification_code": "Get verification code",
+    "enter_verification_code": "Please enter the verification code",
+    "choose_character":"Please select a character!",
+    "can_change_character":"You can change your character later.",
+    "greeting": "안녕! 난 {name}야\n앞으로 잘 부탁해!"
+  }
+  
