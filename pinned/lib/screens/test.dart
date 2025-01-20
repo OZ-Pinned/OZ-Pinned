@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'meditation.dart';
 
 void main() => runApp(MyApp());
 
@@ -28,19 +29,111 @@ class TestPage extends StatefulWidget {
   State<TestPage> createState() => _TestPageState();
 }
 
-class _TestPageState extends State<TestPage> {
+class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
   late List<Map<String, dynamic>> testList;
 
   int testNum = 0; // 현재 질문 번호
   int totalScore = 0; // 총 점수
   Map<String, dynamic>? selectedAnswer; // 현재 선택된 답변
   List<Map<String, dynamic>> selectedAnswers = []; // 선택된 답변 리스트 추가
+  bool _isPopupShown = false;
 
   @override
   void initState() {
     super.initState();
     // 초기화: testList에 초기값 설정
     testList = widget.lang ? englishList : koreanList;
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_isPopupShown) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showPopup();
+        _isPopupShown = true; // 팝업 표시 상태 업데이트
+      });
+    }
+  }
+
+// 팝업 표시 함수
+  void showPopup() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasSeenPopup = prefs.getBool('hasSeenPopup') ?? false;
+
+    // 팝업이 이전에 표시되지 않았을 때만 실행
+    if (!hasSeenPopup) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)),
+            content: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "지난 2주 이내의 감정을\n바탕으로 선택해주세요!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: "Pretendard",
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xffFF516A),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      fixedSize: Size(201, 31),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      '확인',
+                      style: TextStyle(fontSize: 13, color: Colors.white),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  TextButton(
+                    onPressed: () {
+                      prefs.setBool('hasSeenPopup', true); // 팝업 본 상태 저장
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      "다시 보지 않기",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -442,7 +535,7 @@ class _ResultPageState extends State<ResultPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => TestPage(lang: false),
+                                  builder: (context) => MeditationVideoList(),
                                 ),
                               );
                             } else {
