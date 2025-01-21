@@ -26,6 +26,12 @@
     "next" : "next",
     "emotion_start" : "How are you feeling today?",
     "chatbot_hello" : "Hello, I'm Coco!\nHow are you feeling today?",
-    "chatbot_hintText" : "Please enter your message"
+    "chatbot_hintText" : "Please enter your message",
+    "gallery_title_hintText" : "Please write a title",
+    "gallery_diary_hintText" : "Please write the text",
+    "gallery_snackbar" : "Please write every photo, title and diary",
+    "next" : "next",
+    "color" : "color", 
+    "complete" : "Complete"
   }
   
