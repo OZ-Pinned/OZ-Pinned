@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pinned/main.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class MyPage extends StatefulWidget {
   final String email;
@@ -120,11 +121,11 @@ class _MyPageState extends State<MyPage> {
 
   String getName(int value) {
     if (value == 0) {
-      return "코코";
+      return tr("coco");
     } else if (value == 1) {
-      return "루루";
+      return tr("ruru");
     } else {
-      return "키키";
+      return tr("kiki");
     }
   }
 
@@ -157,7 +158,10 @@ class _MyPageState extends State<MyPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '$userName아 안녕!',
+                  tr(
+                    "greeting", // JSON 키
+                    args: [userName], // userName을 동적으로 전달
+                  ),
                   style: TextStyle(
                     fontFamily: 'LeeSeoYun',
                     fontSize: 24,
@@ -187,13 +191,13 @@ class _MyPageState extends State<MyPage> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      "로그아웃 하시겠습니까?",
+                                      "logout",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                       ),
-                                    ),
+                                    ).tr(),
                                     SizedBox(
                                       height: 16,
                                     ),
@@ -215,24 +219,24 @@ class _MyPageState extends State<MyPage> {
                                         );
                                       },
                                       child: Text(
-                                        '확인',
+                                        'confirm',
                                         style: TextStyle(
                                             fontSize: 14,
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),
-                                      ),
+                                      ).tr(),
                                     ),
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
                                       child: Text(
-                                        "아니요",
+                                        "No",
                                         style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.grey,
                                         ),
-                                      ),
+                                      ).tr(),
                                     ),
                                   ],
                                 ),
@@ -262,9 +266,9 @@ class _MyPageState extends State<MyPage> {
                     shadowColor: Colors.transparent,
                   ),
                   child: Text(
-                    '로그아웃',
+                    'logout',
                     style: TextStyle(color: Color(0xff333333), fontSize: 16),
-                  ),
+                  ).tr(),
                 ),
               ],
             ),
@@ -285,15 +289,15 @@ class _MyPageState extends State<MyPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '감정 그래프',
+                      'emotion_graph',
                       style: TextStyle(
                         fontFamily: 'LeeSeoYun',
                         fontSize: 18,
                       ),
-                    ),
+                    ).tr(),
                     Expanded(
                       child: scores.isEmpty
-                          ? Center(child: Text("데이터를 불러오는 중입니다..."))
+                          ? Center(child: Text("loading_data").tr())
                           : Center(
                               child: Padding(
                                 padding: EdgeInsets.only(top: 36),
@@ -405,12 +409,12 @@ class _MyPageState extends State<MyPage> {
               height: 30,
             ),
             Text(
-              '캐릭터 바꾸기',
+              'change_character',
               style: TextStyle(
                 fontFamily: 'LeeSeoYun',
                 fontSize: 18,
               ),
-            ),
+            ).tr(),
             SizedBox(
               height: 21,
             ),
@@ -448,7 +452,7 @@ class _MyPageState extends State<MyPage> {
                         getName(i),
                         style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 25),
                         textAlign: TextAlign.center,
-                      ),
+                      ).tr(),
                     ],
                   ),
                   if (i < 2) const SizedBox(width: 19), // 버튼 간 간격

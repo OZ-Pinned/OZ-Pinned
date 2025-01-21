@@ -40,17 +40,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Login',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      // home: const NamePage(title: 'Input Name'),
-      home: SelectPage(),
-    );
+        title: 'Login',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
+        // // home: const NamePage(title: 'Input Name'),
+        // home:
+        // HomePage(email: "test@example.com", character: 1, name: "hyewon"));
+        home: SelectPage());
   }
 }
 
@@ -731,11 +732,11 @@ class _CharacterPageState extends State<CharacterPage> {
 
   String getName(int value) {
     if (value == 0) {
-      return "코코";
+      return tr("coco");
     } else if (value == 1) {
-      return "루루";
+      return tr("ruru");
     } else {
-      return "키키";
+      return tr("kiki");
     }
   }
 
@@ -809,7 +810,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         getName(i),
                         style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 25),
                         textAlign: TextAlign.center,
-                      ),
+                      ).tr(),
                     ],
                   ),
                   if (i < 2) const SizedBox(width: 6), // 버튼 간 간격
@@ -869,11 +870,11 @@ class HelloPage extends StatefulWidget {
 class _HelloPageState extends State<HelloPage> {
   String getName(int value) {
     if (value == 0) {
-      return "코코";
+      return tr("coco");
     } else if (value == 1) {
-      return "루루";
+      return tr("ruru");
     } else {
-      return "키키";
+      return tr("kiki");
     }
   }
 
@@ -916,7 +917,8 @@ class _HelloPageState extends State<HelloPage> {
                 ),
               ),
               child: Text(
-                '안녕! 난 ${getName(widget.character)}야\n앞으로 잘 부탁해!',
+                tr("greeting_message",
+                    namedArgs: {'character': getName(widget.character)}),
                 style: TextStyle(
                   fontFamily: 'LeeSeoYun',
                   fontSize: 27,
