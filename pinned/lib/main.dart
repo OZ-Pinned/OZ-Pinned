@@ -3,7 +3,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:pinned/screens/chatbot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pinned/screens/home.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -54,7 +53,10 @@ class MyApp extends StatelessWidget {
         // home:
         // HomePage(email: "test@example.com", character: 1, name: "hyewon"));
         // home: SelectPage());
-        home: ChatBot());
+        home: MyPage(
+          email: "test@example.com",
+          character: 1,
+        ));
   }
 }
 
