@@ -10,7 +10,7 @@ import 'dart:math';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:pinned/screens/mypage.dart';
+import 'package:pinned/screens/emotion.dart';
 
 final supportedLocales = [Locale('en', 'US'), Locale('ko', 'KR')];
 
@@ -52,11 +52,7 @@ class MyApp extends StatelessWidget {
         // // home: const NamePage(title: 'Input Name'),
         // home:
         // HomePage(email: "test@example.com", character: 1, name: "hyewon"));
-        // home: SelectPage());
-        home: MyPage(
-          email: "test@example.com",
-          character: 1,
-        ));
+        home: SelectPage());
   }
 }
 

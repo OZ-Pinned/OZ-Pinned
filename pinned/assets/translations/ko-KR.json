@@ -22,6 +22,17 @@
     "emotion_graph":"감정 그래프",
     "loading_data":"데이터를 불러오는 중입니다...",
     "change_character":"캐릭터 바꾸기",
-    "greeting":"{0}아 안녕!"
+    "greeting":"아 안녕!",
+    "meditation_guide": "명상 가이드",
+  "how_to_clear_thoughts": "생각을 비우는 방법",
+  "peaceful_mind": "마음이 평온해지는\n스트레스 감소 명상",
+  "healing_nature_sounds": "힐링 자연의 소리",
+  "water_sounds": "흥분된 마음을 진정시키는\n물소리",
+  "forest_music": "머리가 맑아지는 숲 속\n치유음악",
+  "fire_sounds": "따듯한 장작타는 소리",
+  "warm_fire": "굳은 몸을 녹여주는 따뜻한\n장작타는 소리",
+  "relaxing_fire": "노곤노곤해지는 장작타는 소리",
+  "loading": "로딩 중...",
+  "today_feeling":"오늘의 기분은 어떤가요?"
   }
   

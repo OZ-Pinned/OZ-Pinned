@@ -22,6 +22,17 @@
     "emotion_graph":"Emotion Graph",
     "loading_data":"loading data...",
     "change_character":"Change Character",
-    "greeting":"{0}, Hello!"
+    "greeting":", Hello!",
+    "meditation_guide": "Meditation Guide",
+    "how_to_clear_thoughts": "Self-Forgiveness",
+    "peaceful_mind": "Meditation for Overthinkers",
+    "healing_nature_sounds": "Healing sounds of nature",
+    "water_sounds": "water calming one's excitement",
+    "forest_music": "Healing music in the forest",
+    "fire_sounds": "The warm sound of burning firewood",
+    "warm_fire": "burning wood that warms your body",
+    "relaxing_fire": "burning wood in the drowsiness",
+    "loading": "Loading...",
+    "today_feeling":"How are you feeling today?"
   }
   
