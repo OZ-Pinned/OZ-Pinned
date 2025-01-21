@@ -386,7 +386,7 @@ class _ResultPageState extends State<ResultPage> {
   }
 
   // 점수에 따른 결과 반환하는 함수
-  String getReseult(int totalScore) {
+  String getResult(int totalScore) {
     save(totalScore); // 이메일을 받아오고 점수를 저장
     if (totalScore >= 20) {
       return "매우 심함";
@@ -400,7 +400,7 @@ class _ResultPageState extends State<ResultPage> {
       return "정상";
   }
 
-  String getReseultContent(int totalScore) {
+  String getResultContent(int totalScore) {
     save(totalScore); // 이메일을 받아오고 점수를 저장
     if (totalScore >= 20) {
       return "광범위한 우을 증상을 매우 자주, 심한 수준에서 경험하는 것으로 보고하였습니다.\n일상생활의 다양한 영역에서 어려움이 초래될 경우 정신건강 전문가의 도움을 받는 것을 권해드립니다.";
@@ -462,9 +462,12 @@ class _ResultPageState extends State<ResultPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffFF516A),
+        iconTheme: IconThemeData(
+          color: Color(0xffFFFFFF), //색변경
+        ),
       ),
       body: Container(
-        padding: EdgeInsets.only(top: 73),
+        padding: EdgeInsets.only(top: 60),
         color: Color(0xffFF516A), // 핑크색 배경
         child: Stack(
           clipBehavior: Clip.none,
@@ -500,7 +503,7 @@ class _ResultPageState extends State<ResultPage> {
                           borderRadius: BorderRadius.circular(50),
                           color: Color(0xffFFEEF0)),
                       child: Text(
-                        getReseult(totalScore),
+                        getResult(totalScore),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 17,
@@ -513,15 +516,15 @@ class _ResultPageState extends State<ResultPage> {
                   SizedBox(height: 42),
                   Align(
                     child: Container(
-                      padding: EdgeInsets.all(26),
+                      padding: EdgeInsets.all(16),
                       width: 320,
                       height: 146,
                       decoration: BoxDecoration(
                           color: Color(0xffF4F4F4),
                           borderRadius: BorderRadius.circular(10)),
                       child: Text(
-                        getReseultContent(totalScore),
-                        style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 17),
+                        getResultContent(totalScore),
+                        style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 16),
                       ),
                     ),
                   ),
