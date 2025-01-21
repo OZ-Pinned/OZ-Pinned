@@ -46,6 +46,7 @@
     "result" : "View results",
     "before" : "Before",
     "test_meditation" : "Go Meditation",
-    "test_chat" : "Talk with CoCo"
+    "test_chat" : "Talk with CoCo",
+    "logout_check" : "Do you want to log out?"
   }
   

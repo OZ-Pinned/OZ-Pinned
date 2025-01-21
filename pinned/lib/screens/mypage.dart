@@ -158,7 +158,7 @@ class _MyPageState extends State<MyPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${userName}${'greeting'.tr()}',
+                  '$userName${'greeting'.tr()}',
                   style: TextStyle(
                     fontFamily: 'LeeSeoYun',
                     fontSize: 24,
@@ -188,7 +188,7 @@ class _MyPageState extends State<MyPage> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      "logout",
+                                      tr("logout_check"),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: 18,
@@ -216,7 +216,7 @@ class _MyPageState extends State<MyPage> {
                                         );
                                       },
                                       child: Text(
-                                        'confirm',
+                                        tr("confirm"),
                                         style: TextStyle(
                                             fontSize: 14,
                                             color: Colors.white,
@@ -228,7 +228,7 @@ class _MyPageState extends State<MyPage> {
                                         Navigator.of(context).pop();
                                       },
                                       child: Text(
-                                        "No",
+                                        tr("No"),
                                         style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.grey,
