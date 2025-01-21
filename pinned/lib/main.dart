@@ -11,7 +11,6 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:pinned/screens/mypage.dart';
-import 'package:pinned/screens/gallery_write.dart';
 
 final supportedLocales = [Locale('en', 'US'), Locale('ko', 'KR')];
 
@@ -54,7 +53,10 @@ class MyApp extends StatelessWidget {
         // home:
         // HomePage(email: "test@example.com", character: 1, name: "hyewon"));
         // home: SelectPage());
-        home: WriteGalleryPage(email: 'test@example.com', emotion: 2));
+        home: MyPage(
+          email: "test@example.com",
+          character: 1,
+        ));
   }
 }
 
