@@ -22,6 +22,10 @@
     "emotion_graph":"Emotion Graph",
     "loading_data":"loading data...",
     "change_character":"Change Character",
-    "greeting":"{0}, Hello!"
+    "greeting":"{0}, Hello!",
+    "next" : "next",
+    "emotion_start" : "How are you feeling today?",
+    "chatbot_hello" : "Hello, I'm Coco!\nHow are you feeling today?",
+    "chatbot_hintText" : "Please enter your message"
   }
   

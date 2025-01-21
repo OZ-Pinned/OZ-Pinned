@@ -22,6 +22,8 @@
     "emotion_graph":"감정 그래프",
     "loading_data":"데이터를 불러오는 중입니다...",
     "change_character":"캐릭터 바꾸기",
-    "greeting":"{0}아 안녕!"
+    "greeting":"{0}아 안녕!",
+    "chatbot_hello" : "안녕 나는 코코야!\n오늘 너의 기분은 어때?",
+    "chatbot_hintText" : "메시지를 입력해주세요."
   }
   
