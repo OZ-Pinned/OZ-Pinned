@@ -158,10 +158,7 @@ class _MyPageState extends State<MyPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  tr(
-                    "greeting", // JSON 키
-                    args: [userName], // userName을 동적으로 전달
-                  ),
+                  '${userName} ${'cheer_ment'.tr()}',
                   style: TextStyle(
                     fontFamily: 'LeeSeoYun',
                     fontSize: 24,
