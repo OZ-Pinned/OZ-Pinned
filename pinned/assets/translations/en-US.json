@@ -44,7 +44,10 @@
     "color" : "color", 
     "complete" : "Complete",
     "result" : "View results",
+    "choose_dialog":"Choose based on the\npast four weeks' feelings!",
+    "never_see":"Don't see it again",
     "before" : "Before",
+    "score":"p",
     "test_meditation" : "Go Meditation",
     "test_chat" : "Talk with CoCo",
     "logout_check" : "Do you want to log out?"
