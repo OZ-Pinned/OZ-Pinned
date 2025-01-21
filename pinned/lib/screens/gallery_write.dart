@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
@@ -11,19 +12,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(const MyApp());
 
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: const WriteGalleryPage(
-//         email: "test@example.com",
-//         emotion: 2,
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: const WriteGalleryPage(
+        email: "test@example.com",
+        emotion: 2,
+      ),
+    );
+  }
+}
 
 class WriteGalleryPage extends StatefulWidget {
   final int emotion;
@@ -108,7 +109,7 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                       ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             TextField(
               controller: _titleController,
               style: TextStyle(
@@ -116,10 +117,10 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                 fontSize: 18,
                 color: Colors.black,
               ),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 filled: true,
                 fillColor: Color(0xffF4F4F4),
-                hintText: '제목을 작성해 주세요.',
+                hintText: tr("gallery_title_hintText"),
                 labelStyle: TextStyle(
                   fontFamily: 'LeeSeoYun', // 폰트 패밀리 설정
                   color: Color(0xff888888), // 라벨 색상
@@ -154,7 +155,7 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             TextField(
               controller: _contentController,
               style: TextStyle(
@@ -162,10 +163,10 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                 fontSize: 18,
                 color: Colors.black,
               ),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 filled: true,
                 fillColor: Color(0xffF4F4F4),
-                hintText: '본문을 작성해주세요.',
+                hintText: tr("gallery_diary_hintText"),
                 labelStyle: TextStyle(
                   fontFamily: 'LeeSeoYun', // 폰트 패밀리 설정
                   color: Color(0xff888888), // 라벨 색상
@@ -227,7 +228,7 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('이미지와 제목, 본문을 모두 입력해주세요.')),
+                      SnackBar(content: Text(tr("gallery_snackbar"))),
                     );
                   }
                 },
@@ -237,8 +238,8 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
                     borderRadius: BorderRadius.all(Radius.circular(7)), // 테두리
                   ),
                 ),
-                child: const Text(
-                  '다음',
+                child: Text(
+                  tr("next"),
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.white,
@@ -531,7 +532,7 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                           height: 20,
                         ),
                         Text(
-                          "컬러",
+                          tr("color"),
                           style: TextStyle(
                             fontFamily: 'Pretendard',
                             fontSize: 14,
@@ -623,8 +624,8 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                             borderRadius: BorderRadius.all(Radius.circular(7)),
                           ),
                         ),
-                        child: const Text(
-                          '완료',
+                        child: Text(
+                          tr("complete"),
                           style: TextStyle(
                             fontFamily: 'LeeSeoYun',
                             fontSize: 20,

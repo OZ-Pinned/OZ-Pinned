@@ -8,19 +8,20 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'meditation.dart';
 import 'chatbot.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-void main() => runApp(MyApp());
+// void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: TestPage(lang: true),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: TestPage(lang: true),
+//     );
+//   }
+// }
 
 class TestPage extends StatefulWidget {
   final bool lang;
@@ -42,8 +43,6 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    // 초기화: testList에 초기값 설정
-    testList = widget.lang ? englishList : koreanList;
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -56,6 +55,10 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    testList = Localizations.localeOf(context).languageCode == 'en'
+        ? englishList
+        : koreanList;
 
     if (!_isPopupShown) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -311,7 +314,7 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
                     ),
                   ), // 이전 버튼
                   child: Text(
-                    '이전',
+                    tr("before"),
                     style: TextStyle(fontSize: 18, color: Color(0xffFF516A)),
                   ),
                 ),
@@ -330,7 +333,7 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
                     ),
                   ), // 다음 버튼
                   child: Text(
-                    testNum < testList.length - 1 ? '다음' : '결과 보기',
+                    testNum < testList.length - 1 ? tr("next") : tr("result"),
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
@@ -355,11 +358,20 @@ class ResultPage extends StatefulWidget {
 
 class _ResultPageState extends State<ResultPage> {
   String today = "";
+  String lan = "";
 
   @override
   void initState() {
     super.initState();
     getToday(); // 화면 초기화 시 날짜 설정
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    lan = Localizations.localeOf(context).languageCode;
+    print(lan);
   }
 
   // 날짜를 가져오는 함수
@@ -388,30 +400,56 @@ class _ResultPageState extends State<ResultPage> {
   // 점수에 따른 결과 반환하는 함수
   String getResult(int totalScore) {
     save(totalScore); // 이메일을 받아오고 점수를 저장
-    if (totalScore >= 20) {
-      return "매우 심함";
-    } else if (totalScore >= 15) {
-      return "약간 심함";
-    } else if (totalScore >= 10) {
-      return "중간";
-    } else if (totalScore >= 5) {
-      return "경미";
-    } else
-      return "정상";
+    if (lan != "en") {
+      if (totalScore >= 20) {
+        return "매우 심함";
+      } else if (totalScore >= 15) {
+        return "약간 심함";
+      } else if (totalScore >= 10) {
+        return "중간";
+      } else if (totalScore >= 5) {
+        return "경미";
+      } else
+        return "정상";
+    } else {
+      if (totalScore >= 20) {
+        return "Severe Level";
+      } else if (totalScore >= 15) {
+        return "Mildly Severe Level";
+      } else if (totalScore >= 10) {
+        return "Moderate Level";
+      } else if (totalScore >= 5) {
+        return "Mild Leve";
+      } else
+        return "Normal";
+    }
   }
 
   String getResultContent(int totalScore) {
     save(totalScore); // 이메일을 받아오고 점수를 저장
-    if (totalScore >= 20) {
-      return "광범위한 우을 증상을 매우 자주, 심한 수준에서 경험하는 것으로 보고하였습니다.\n일상생활의 다양한 영역에서 어려움이 초래될 경우 정신건강 전문가의 도움을 받는 것을 권해드립니다.";
-    } else if (totalScore >= 15) {
-      return "약간 심한 수준의 우울감을 자주 경험하는 것으로 보고하였습니다.\n직업적/사회적 적응에 일부 영향을 미칠 경우 정신건강 전문가의 도움을 받아 보시기를 권해 드립니다.";
-    } else if (totalScore >= 10) {
-      return "중간 수준의 우울감을 비교적 자주 경험하는 것으로 보고하였습니다.\n직업적/사회적 적응에 일부 영향을 미칠 수 있어 주의 깊은 관찰과 관심이 필요합니다.";
-    } else if (totalScore >= 5) {
-      return "경미한 수준의 우울감이 있으나 일상생활에 지장을 줄 정도는 아닙니다.";
-    } else
-      return "적응상의 지장을 초래할만한 우울 관련 증상을 거의 보고하지 않았습니다.";
+    if (lan != "en") {
+      if (totalScore >= 20) {
+        return "광범위한 우을 증상을 매우 자주, 심한 수준에서 경험하는 것으로 보고하였습니다.\n일상생활의 다양한 영역에서 어려움이 초래될 경우 정신건강 전문가의 도움을 받는 것을 권해드립니다.";
+      } else if (totalScore >= 15) {
+        return "약간 심한 수준의 우울감을 자주 경험하는 것으로 보고하였습니다.\n직업적/사회적 적응에 일부 영향을 미칠 경우 정신건강 전문가의 도움을 받아 보시기를 권해 드립니다.";
+      } else if (totalScore >= 10) {
+        return "중간 수준의 우울감을 비교적 자주 경험하는 것으로 보고하였습니다.\n직업적/사회적 적응에 일부 영향을 미칠 수 있어 주의 깊은 관찰과 관심이 필요합니다.";
+      } else if (totalScore >= 5) {
+        return "경미한 수준의 우울감이 있으나 일상생활에 지장을 줄 정도는 아닙니다.";
+      } else
+        return "적응상의 지장을 초래할만한 우울 관련 증상을 거의 보고하지 않았습니다.";
+    } else {
+      if (totalScore >= 20) {
+        return "You experience severe symptoms of depression very frequently. If difficulties persist across various areas of daily life, additional evaluation and assistance from a mental health professional are strongly advised.";
+      } else if (totalScore >= 15) {
+        return "You frequently experience mildly severe levels of depression, which may affect your professional and social functioning. It is recommended to seek help from a mental health professional.";
+      } else if (totalScore >= 10) {
+        return "You frequently experience moderate levels of depression. It may have some impact on your professional or social life, so careful attention and interest are required.";
+      } else if (totalScore >= 5) {
+        return "You experience mild levels of depression, but it does not significantly interfere with daily life.";
+      } else
+        return "You have reported almost no symptoms of depression exceeding normal adjustment levels.";
+    }
   }
 
   // 점수와 이메일을 서버에 저장하는 함수
@@ -495,21 +533,24 @@ class _ResultPageState extends State<ResultPage> {
                   ),
                   SizedBox(height: 19),
                   Align(
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 123,
-                      height: 34,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Color(0xffFFEEF0)),
-                      child: Text(
-                        getResult(totalScore),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xffFF516A),
-                            backgroundColor: Color(0xffFFEEF0)),
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Container(
+                        padding: EdgeInsets.only(right: 20, left: 20),
+                        alignment: Alignment.center,
+                        height: 34,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Color(0xffFFEEF0)),
+                        child: Text(
+                          getResult(totalScore),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xffFF516A),
+                              backgroundColor: Color(0xffFFEEF0)),
+                        ),
                       ),
                     ),
                   ),
@@ -567,7 +608,9 @@ class _ResultPageState extends State<ResultPage> {
                                   },
                                   child: Center(
                                     child: Text(
-                                      i == 0 ? '명상하러 가기' : '코코와 대화하기',
+                                      i == 0
+                                          ? tr("test_meditation")
+                                          : tr("test_chat"),
                                       style: TextStyle(
                                         fontSize: 18,
                                         color: Colors.white,

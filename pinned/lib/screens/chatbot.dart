@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ChatBot extends StatefulWidget {
   const ChatBot({super.key});
@@ -16,7 +17,7 @@ class _ChatBotPageState extends State<ChatBot> {
   final TextEditingController _controller = TextEditingController();
   List<Map<String, String>> chatedMessage = [
     // 첫 메시지를 추가하여 처음 화면에서 보여줄 수 있도록 설정
-    {'AI': '안녕 나는 코코야!\n오늘 너의 기분은 어때?'}
+    {'AI': tr("chatbot_hello")}
   ];
 
   final ScrollController _scrollController =
@@ -150,7 +151,7 @@ class _ChatBotPageState extends State<ChatBot> {
                                       height: 45,
                                     ),
                                     Text(
-                                      '코코',
+                                      tr("coco"),
                                       style: TextStyle(
                                         fontFamily: 'LeeSeoYun',
                                         fontSize: 18,
@@ -217,7 +218,7 @@ class _ChatBotPageState extends State<ChatBot> {
                       child: TextField(
                         controller: _controller,
                         decoration: InputDecoration.collapsed(
-                          hintText: "메시지를 입력해주세요.",
+                          hintText: tr("chatbot_hintText"),
                         ),
                         onChanged: (val) {
                           setState(() {
