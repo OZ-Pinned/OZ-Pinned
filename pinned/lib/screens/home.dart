@@ -146,8 +146,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xffFF516A),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(20),
+        child: AppBar(
+          backgroundColor: Color(0xffFF516A),
+          iconTheme: IconThemeData(
+            color: Color(0xffFF516A), //색변경
+          ),
+        ),
       ),
       body: Stack(
         children: [
@@ -203,7 +209,8 @@ class _HomePageState extends State<HomePage> {
                             icon: Icon(
                               CustomIcon.MyPage,
                             ),
-                            iconSize: 32, // 아이콘 크기
+                            padding: EdgeInsets.only(right: 0),
+                            iconSize: 26, // 아이콘 크기
                             color: Color(0xffFF516A), // 아이콘 색상
                           ),
                         ),
@@ -212,7 +219,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 40,
                 ),
                 Text(
                   '${widget.name}${'cheer_ment'.tr()}',
