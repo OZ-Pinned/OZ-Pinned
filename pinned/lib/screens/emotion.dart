@@ -28,6 +28,13 @@ class EmotionPage extends StatefulWidget {
 
 class _EmotionPageState extends State<EmotionPage> {
   double currentValue = 0.0;
+  String lan = "";
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    lan = Localizations.localeOf(context).languageCode;
+  }
 
   String getImagePath(double value) {
     if (value <= 25) {
@@ -101,7 +108,7 @@ class _EmotionPageState extends State<EmotionPage> {
               height: 75,
             ),
             Text(
-              '오늘의 기분은 어떤가요?',
+              lan == "en" ? "How are you today?" : '오늘의 기분은 어떤가요?',
               style: TextStyle(
                   fontFamily: 'LeeSeoYun', color: Colors.white, fontSize: 26),
             ),
