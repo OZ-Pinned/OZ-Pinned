@@ -6,7 +6,22 @@
     "verification_code": "Get verification code",
     "enter_verification_code": "Please enter the verification code",
     "choose_character":"Please select a character!",
+    "coco":"coco",
+    "ruru":"ruru",
+    "kiki":"kiki",
     "can_change_character":"You can change your character later.",
-    "greeting": "안녕! 난 {name}야\n앞으로 잘 부탁해!"
+    "greeting_message": "Hi! I'm {character}\nNice to meet you!",
+    "today_emotion":"Record your emotions today",
+    "Go Meditation":"Go Meditation",
+    "Self-diagnosis":"Self-diagnosis",
+    "how_was_your_day": ", How was your day today?",
+    "cheer_ment":", Good job today too!",
+    "want_logout":"Do you want to log out?",
+    "logout":"logout",
+    "No":"No",
+    "emotion_graph":"Emotion Graph",
+    "loading_data":"loading data...",
+    "change_character":"Change Character",
+    "greeting":"{0}, Hello!"
   }
   

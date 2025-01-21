@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'mypage.dart';
 import 'package:http/http.dart' as http;
 import 'meditation.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class HomePage extends StatefulWidget {
   final String email;
@@ -221,7 +222,7 @@ class _HomePageState extends State<HomePage> {
                   height: 40,
                 ),
                 Text(
-                  '${widget.name}아, 수고했어!',
+                  '${widget.name}${'cheer_ment'.tr()}',
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontFamily: 'LeeSeoYun',
@@ -265,7 +266,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         SizedBox(height: 5),
                         Text(
-                          "오늘의 감정 기록하기",
+                          "today_emotion".tr(),
                           style: TextStyle(
                             fontFamily: 'LeeSeoYun',
                             fontSize: 20,
@@ -334,13 +335,15 @@ class _HomePageState extends State<HomePage> {
                                   },
                                   child: Center(
                                     child: Text(
-                                      i == 0 ? '명상하러 가기' : '자가진단하러 가기',
+                                      i == 0
+                                          ? 'Go Meditation'
+                                          : 'Self-diagnosis',
                                       style: TextStyle(
                                         fontSize: 18,
                                         color: Colors.white,
                                         fontFamily: 'LeeSeoYun',
                                       ),
-                                    ),
+                                    ).tr(),
                                   ),
                                 ),
                               ),
@@ -393,7 +396,7 @@ class _HomePageState extends State<HomePage> {
                                   child: Center(
                                     child: Text(
                                       textAlign: TextAlign.center,
-                                      '${widget.name}아!\n오늘 하루는 어땠어?',
+                                      '${widget.name}${"how_was_your_day".tr()}',
                                       style: TextStyle(
                                         fontFamily: 'LeeSeoYun',
                                         fontSize: 18,
