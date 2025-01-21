@@ -89,14 +89,14 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
                     height: 10,
                   ),
                   Text(
-                    "지난 2주 이내의 감정을\n바탕으로 선택해주세요!",
+                    "choose_dialog",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: "Pretendard",
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
-                  ),
+                  ).tr(),
                   SizedBox(
                     height: 25,
                   ),
@@ -112,9 +112,9 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
                       Navigator.of(context).pop();
                     },
                     child: Text(
-                      '확인',
+                      'confirm',
                       style: TextStyle(fontSize: 13, color: Colors.white),
-                    ),
+                    ).tr(),
                   ),
                   SizedBox(height: 10),
                   TextButton(
@@ -123,13 +123,13 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
                       Navigator.of(context).pop();
                     },
                     child: Text(
-                      "다시 보지 않기",
+                      "never_see",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                         decoration: TextDecoration.underline,
                       ),
-                    ),
+                    ).tr(),
                   ),
                 ],
               ),
@@ -748,7 +748,7 @@ class _PieChartViewState extends State<PieChartView>
                           ]),
                       child: Center(
                         child: Text(
-                          '${widget.totalScore}점',
+                          '${widget.totalScore}${tr("score")}',
                           style: const TextStyle(
                             fontSize: 37,
                             fontWeight: FontWeight.bold,
