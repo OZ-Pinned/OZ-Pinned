@@ -9,9 +9,30 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:pinned/screens/mypage.dart';
 
-void main() {
-  runApp(const MyApp());
+final supportedLocales = [Locale('en', 'US'), Locale('ko', 'KR')];
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // easylocalization 초기화!
+  await EasyLocalization.ensureInitialized();
+
+  runApp(
+    EasyLocalization(
+        // 지원 언어 리스트
+        supportedLocales: supportedLocales,
+        //path: 언어 파일 경로
+        path: 'assets/translations',
+        //fallbackLocale supportedLocales에 설정한 언어가 없는 경우 설정되는 언어
+        fallbackLocale: Locale('en', 'US'),
+
+        //startLocale을 지정하면 초기 언어가 설정한 언어로 변경됨
+        //만일 이 설정을 하지 않으면 OS 언어를 따라 기본 언어가 설정됨
+        startLocale: Locale('en', 'US'),
+        child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -31,7 +52,11 @@ class MyApp extends StatelessWidget {
         // // home: const NamePage(title: 'Input Name'),
         // home:
         // HomePage(email: "test@example.com", character: 1, name: "hyewon"));
-        home: SelectPage());
+        // home: SelectPage());
+        home: MyPage(
+          email: "test@example.com",
+          character: 1,
+        ));
   }
 }
 
@@ -63,9 +88,6 @@ class _SelectPageState extends State<SelectPage> {
       backgroundColor: Color(0xffffffff),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        iconTheme: IconThemeData(
-          color: Colors.white, //색변경
-        ),
       ),
       body: Center(
         child: Column(
@@ -99,7 +121,7 @@ class _SelectPageState extends State<SelectPage> {
                   ),
                 ),
                 child: Text(
-                  "시작하기",
+                  tr('start'),
                   style: TextStyle(
                     color: Color(0xffFFFFFF),
                     fontSize: 18,
@@ -229,9 +251,6 @@ class _EmailPageState extends State<EmailPage> {
       backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(
         backgroundColor: Color(0xfffffffff),
-        iconTheme: IconThemeData(
-          color: Colors.white, //색변경
-        ),
       ),
       body: Center(
         child: Padding(
@@ -326,13 +345,13 @@ class _EmailPageState extends State<EmailPage> {
                                     width: 204,
                                     height: 43,
                                     child: Text(
-                                      '이메일을 알려줘',
+                                      "enter_email",
                                       style: TextStyle(
                                         fontFamily: 'LeeSeoYun',
                                         fontSize: 24,
                                       ),
                                       textAlign: TextAlign.center,
-                                    ),
+                                    ).tr(),
                                   ),
                                 ),
                                 SizedBox(
@@ -373,13 +392,13 @@ class _EmailPageState extends State<EmailPage> {
                     ),
                   ),
                   child: Text(
-                    "인증번호 받기",
+                    "verification_code",
                     style: TextStyle(
                       color: Color(0xffFFFFFF),
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
-                  ),
+                  ).tr(),
                 ),
               ),
             ],
@@ -502,9 +521,6 @@ class _CertificationPageState extends State<CertificationPage> {
       backgroundColor: Color(0xffffffff),
       appBar: AppBar(
         backgroundColor: Color(0xfffffffff),
-        iconTheme: IconThemeData(
-          color: Colors.white, //색변경
-        ),
       ),
       body: Center(
         child: Padding(
@@ -603,13 +619,13 @@ class _CertificationPageState extends State<CertificationPage> {
                                 width: 204,
                                 height: 43,
                                 child: Text(
-                                  '인증번호를 입력해줘',
+                                  "enter_verification_code",
                                   style: TextStyle(
                                     fontFamily: 'LeeSeoYun',
                                     fontSize: 24,
                                   ),
                                   textAlign: TextAlign.center,
-                                ),
+                                ).tr(),
                               ),
                             ),
                             SizedBox(
@@ -666,13 +682,13 @@ class _CertificationPageState extends State<CertificationPage> {
                         ),
                       ),
                       child: Text(
-                        "확인",
+                        "confirm",
                         style: TextStyle(
                           color: Color(0xffFFFFFF),
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                      ),
+                      ).tr(),
                     ),
                   )
                 ],
@@ -741,9 +757,6 @@ class _CharacterPageState extends State<CharacterPage> {
       backgroundColor: const Color(0xffFFFFFF),
       appBar: AppBar(
         backgroundColor: Color(0xfffffffff),
-        iconTheme: IconThemeData(
-          color: Colors.white, //색변경
-        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -753,19 +766,19 @@ class _CharacterPageState extends State<CharacterPage> {
           children: [
             const SizedBox(height: 20),
             const Text(
-              "캐릭터를 선택해주세요!",
+              "choose_character",
               style: TextStyle(
                 fontFamily: 'LeeSeoYun',
                 fontSize: 24,
               ),
-            ),
+            ).tr(),
             const Text(
-              "이후에 캐릭터를 바꿀 수 있습니다.",
+              "can_change_character",
               style: TextStyle(
                   fontFamily: 'LeeSeoYun',
                   fontSize: 14,
                   color: Color(0xff888888)),
-            ),
+            ).tr(),
             const SizedBox(height: 35),
             // 캐릭터 선택 버튼
             Row(
@@ -833,13 +846,13 @@ class _CharacterPageState extends State<CharacterPage> {
                   );
                 },
                 child: const Text(
-                  '확인',
+                  "confirm",
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
-                ),
+                ).tr(),
               ),
             ),
           ],
@@ -886,9 +899,6 @@ class _HelloPageState extends State<HelloPage> {
       backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(
         backgroundColor: Color(0xfffffffff),
-        iconTheme: IconThemeData(
-          color: Colors.white, //색변경
-        ),
       ),
       body: Center(
         child: Column(
@@ -971,13 +981,13 @@ class _HelloPageState extends State<HelloPage> {
                     );
                   },
                   child: Text(
-                    '확인',
+                    'confirm',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
-                  )),
+                  ).tr()),
             ),
           ],
         ),
@@ -1051,9 +1061,6 @@ class _NamePageState extends State<NamePage> {
       backgroundColor: Color(0xffFFFFFF),
       appBar: AppBar(
         backgroundColor: Color(0xfffffffff),
-        iconTheme: IconThemeData(
-          color: Colors.white, //색변경
-        ),
       ),
       body: Center(
         child: Padding(
@@ -1135,13 +1142,13 @@ class _NamePageState extends State<NamePage> {
                                     width: 204,
                                     height: 43,
                                     child: Text(
-                                      '너의 이름은 뭐야?',
+                                      "enter_name",
                                       style: TextStyle(
                                         fontFamily: 'LeeSeoYun',
                                         fontSize: 24,
                                       ),
                                       textAlign: TextAlign.center,
-                                    ),
+                                    ).tr(),
                                   ),
                                 ),
                                 SizedBox(
@@ -1193,13 +1200,13 @@ class _NamePageState extends State<NamePage> {
                     ),
                   ),
                   child: Text(
-                    "확인",
+                    "confirm",
                     style: TextStyle(
                       color: Color(0xffFFFFFF),
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
-                  ),
+                  ).tr(),
                 ),
               ),
             ],
