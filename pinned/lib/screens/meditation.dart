@@ -4,20 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pinned/icon/custom_icon_icons.dart';
 import 'package:video_player/video_player.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class MeditationVideoList extends StatelessWidget {
   final List<Map<String, dynamic>> videoList = [
     {
-      'section': '명상 가이드',
+      'section': 'meditation_guide'.tr(),
       'videos': [
         {
-          'title': '생각을 비우는 방법',
+          'title': 'how_to_clear_thoughts'.tr(),
           'image': 'assets/images/meditationImage1.png',
           'video': 'assets/videos/video1.mp3',
           'background': 'assets/images/meditationBackground2.jpg'
         },
         {
-          'title': '마음이 평온해지는\n스트레스 감소 명상',
+          'title': "peaceful_mind".tr(),
           'image': 'assets/images/meditationImage2.png',
           'video': 'assets/videos/video1.mp3',
           'background': 'assets/images/meditationBackground4.jpg'
@@ -25,16 +26,16 @@ class MeditationVideoList extends StatelessWidget {
       ]
     },
     {
-      'section': '힐링 자연의 소리',
+      'section': "healing_nature_sounds".tr(),
       'videos': [
         {
-          'title': '흥분된 마음을 진정시키는 물소리',
+          'title': "water_sounds".tr(),
           'image': 'assets/images/meditationImage3.png',
           'video': 'assets/videos/video2.mp3',
           'background': 'assets/images/meditationBackground3.jpg'
         },
         {
-          'title': '머리가 맑아지는 숲 속 치유음악',
+          'title': "forest_music".tr(),
           'image': 'assets/images/meditationImage4.png',
           'video': 'assets/videos/video2.mp3',
           'background': 'assets/images/meditationBackground1.jpg'
@@ -42,16 +43,16 @@ class MeditationVideoList extends StatelessWidget {
       ]
     },
     {
-      'section': '따듯한 장작타는 소리',
+      'section': "fire_sounds".tr(),
       'videos': [
         {
-          'title': '굳은 몸을 녹여주는 따뜻한 장작타는 소리',
+          'title': "warm_fire".tr(),
           'image': 'assets/images/meditationImage5.png',
           'video': 'assets/videos/video3.mp3',
           'background': 'assets/images/meditationBackground6.jpg'
         },
         {
-          'title': '노곤노곤해지는 장작타는 소리',
+          'title': "relaxing_fire".tr(),
           'image': 'assets/images/meditationImage6.png',
           'video': 'assets/videos/video3.mp3',
           'background': 'assets/images/meditationBackground5.jpg'
