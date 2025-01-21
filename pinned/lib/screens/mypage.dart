@@ -158,7 +158,7 @@ class _MyPageState extends State<MyPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${userName} ${'cheer_ment'.tr()}',
+                  '${userName}${'greeting'.tr()}',
                   style: TextStyle(
                     fontFamily: 'LeeSeoYun',
                     fontSize: 24,
