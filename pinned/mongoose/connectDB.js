@@ -1,5 +1,4 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
-require('dotenv').config({ path : '../.env'});
 
 const uri = "mongodb+srv://pinned:pinneddatabase123@pinned.zae3y.mongodb.net/pinned?retryWrites=true&w=majority&appName=pinned"
 
