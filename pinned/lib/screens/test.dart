@@ -24,8 +24,9 @@ import 'package:easy_localization/easy_localization.dart';
 // }
 
 class TestPage extends StatefulWidget {
-  final bool lang;
-  const TestPage({super.key, required this.lang});
+  final String email;
+  final String name;
+  const TestPage({super.key, required this.email, required this.name});
 
   @override
   State<TestPage> createState() => _TestPageState();
@@ -39,6 +40,7 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
   Map<String, dynamic>? selectedAnswer; // 현재 선택된 답변
   List<Map<String, dynamic>> selectedAnswers = []; // 선택된 답변 리스트 추가
   bool _isPopupShown = false;
+  String lan = "";
 
   @override
   void initState() {
@@ -56,6 +58,7 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    lan = Localizations.localeOf(context).languageCode;
     testList = Localizations.localeOf(context).languageCode == 'en'
         ? englishList
         : koreanList;
@@ -89,14 +92,14 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
                     height: 10,
                   ),
                   Text(
-                    "choose_dialog",
+                    "지난 2주 이내의 감정을\n바탕으로 선택해주세요!",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: "Pretendard",
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
-                  ).tr(),
+                  ),
                   SizedBox(
                     height: 25,
                   ),
@@ -112,9 +115,9 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
                       Navigator.of(context).pop();
                     },
                     child: Text(
-                      'confirm',
+                      '확인',
                       style: TextStyle(fontSize: 13, color: Colors.white),
-                    ).tr(),
+                    ),
                   ),
                   SizedBox(height: 10),
                   TextButton(
@@ -123,13 +126,13 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
                       Navigator.of(context).pop();
                     },
                     child: Text(
-                      "never_see",
+                      "다시 보지 않기",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                         decoration: TextDecoration.underline,
                       ),
-                    ).tr(),
+                    ),
                   ),
                 ],
               ),
@@ -145,7 +148,7 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
     super.setState(fn); // 부모의 setState 호출
 
     // 조건에 따라 testList 초기화 (setState 내부에서 초기화하는 것이 아닌, 이미 초기화된 상태에서 업데이트 필요)
-    if (widget.lang == true) {
+    if (lan == 'en') {
       testList = englishList;
     } else {
       testList = koreanList;
@@ -178,6 +181,8 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
               builder: (context) => ResultPage(
                 totalScore: totalScore,
                 selectedAnswers: selectedAnswers,
+                email: widget.email,
+                name: widget.name,
               ),
             ),
           );
@@ -349,8 +354,15 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
 class ResultPage extends StatefulWidget {
   final int totalScore;
   final List selectedAnswers;
-  const ResultPage(
-      {super.key, required this.totalScore, required this.selectedAnswers});
+  final String email;
+  final String name;
+  const ResultPage({
+    super.key,
+    required this.totalScore,
+    required this.selectedAnswers,
+    required this.email,
+    required this.name,
+  });
 
   @override
   _ResultPageState createState() => _ResultPageState();
@@ -601,7 +613,10 @@ class _ResultPageState extends State<ResultPage> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => ChatBot(),
+                                          builder: (context) => ChatBot(
+                                            email: widget.email,
+                                            name: widget.name,
+                                          ),
                                         ),
                                       );
                                     }
