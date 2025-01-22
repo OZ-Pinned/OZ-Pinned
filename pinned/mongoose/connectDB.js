@@ -1,4 +1,5 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
+require('dotenv').config();
 
 const uri = "mongodb+srv://pinned:pinneddatabase123@pinned.zae3y.mongodb.net/pinned?retryWrites=true&w=majority&appName=pinned"
 
@@ -31,4 +32,4 @@ const connectDB = async () => {
 module.exports = connectDB;
 
 
-connectDB().catch(console.error);s
+connectDB().catch(console.error)
