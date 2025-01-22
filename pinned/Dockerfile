@@ -11,6 +11,6 @@ RUN npm install
  
 COPY ./pinned .
 
-EXPOSE 3000
+EXPOSE 42069
  
 CMD ["npm", "start"]
