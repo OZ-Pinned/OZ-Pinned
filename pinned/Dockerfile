@@ -13,6 +13,8 @@ COPY ./pinned .
 
 RUN echo "MONGODB_URI=mongodb+srv://pinned:pinneddatabase123@pinned.zae3y.mongodb.net/pinned?retryWrites=true&w=majority&appName=pinned" > .env
 
+RUN ls -la && cat .env
+
 EXPOSE 42069
  
 CMD ["npm", "start"]
