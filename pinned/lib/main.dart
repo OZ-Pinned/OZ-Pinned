@@ -596,37 +596,37 @@ class _CertificationPageState extends State<CertificationPage> {
                         child: Row(
                           children: [
                             Container(
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                  top: 2,
-                                  bottom: 0,
+                              padding: EdgeInsets.only(top: 2, bottom: 0),
+                              decoration: BoxDecoration(
+                                color: Color(0xffEDEDED),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(19.5),
+                                  topRight: Radius.circular(19.5),
+                                  bottomRight: Radius.circular(0),
+                                  bottomLeft: Radius.circular(19.5),
                                 ),
-                                decoration: BoxDecoration(
-                                  color: Color(0xffEDEDED),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(19.5),
-                                    topRight: Radius.circular(19.5),
-                                    bottomRight: Radius.circular(0),
-                                    bottomLeft: Radius.circular(19.5),
-                                  ),
-                                  border: Border.all(
-                                    color: Color(0xffDADADA),
-                                  ),
+                                border: Border.all(
+                                  color: Color(0xffDADADA),
                                 ),
-                                width: 204,
-                                height: 43,
+                              ),
+                              width: 250, // 너비 확장
+                              height: 70, // 높이를 늘려 두 줄이 표시되도록 설정
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
                                 child: Text(
-                                  "enter_verification_code",
+                                  context.locale.languageCode == 'en'
+                                      ? "please enter the \n verification code"
+                                      : "enter_verification_code",
                                   style: TextStyle(
                                     fontFamily: 'LeeSeoYun',
                                     fontSize: 24,
                                   ),
                                   textAlign: TextAlign.center,
-                                ).tr(),
+                                ).tr(), // 다국어 텍스트 번역
                               ),
                             ),
                             SizedBox(
-                              width: 50,
+                              width: 15,
                             ),
                             Column(
                               children: [
