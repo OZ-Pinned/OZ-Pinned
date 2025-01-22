@@ -96,33 +96,37 @@ class _SelectPageState extends State<SelectPage> {
             SizedBox(
               height: 370,
             ),
-            SizedBox(
-              width: 320,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  toggleSelect(true);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EmailPage(
-                        logined: true,
+            Spacer(),
+            Padding(
+              padding: EdgeInsets.only(bottom: 50), // 버튼을 바닥에서 50 픽셀 띄움
+              child: SizedBox(
+                width: 320,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    toggleSelect(true);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EmailPage(
+                          logined: true,
+                        ),
                       ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xffFF516A),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
                     ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xffFF516A),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
                   ),
-                ),
-                child: Text(
-                  tr('start'),
-                  style: TextStyle(
-                    color: Color(0xffFFFFFF),
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                  child: Text(
+                    tr('start'),
+                    style: TextStyle(
+                      color: Color(0xffFFFFFF),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -372,30 +376,31 @@ class _EmailPageState extends State<EmailPage> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 300,
-              ),
-              SizedBox(
-                width: 350,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    login(inputedEmail);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffFF516A),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(7)),
+              Spacer(),
+              Padding(
+                padding: EdgeInsets.only(bottom: 50),
+                child: SizedBox(
+                  width: 350,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      login(inputedEmail);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xffFF516A),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
+                      ),
                     ),
+                    child: Text(
+                      "verification_code",
+                      style: TextStyle(
+                        color: Color(0xffFFFFFF),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ).tr(),
                   ),
-                  child: Text(
-                    "verification_code",
-                    style: TextStyle(
-                      color: Color(0xffFFFFFF),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ).tr(),
                 ),
               ),
             ],
@@ -661,33 +666,35 @@ class _CertificationPageState extends State<CertificationPage> {
                     ],
                   ),
                   SizedBox(
-                    height: 350,
+                    height: 420,
                   ),
-                  SizedBox(
-                    width: 350,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        // login()과 storeEmail()이 완료될 때까지 기다림
-                        await login(widget.email); // 로그인 처리 후
-                        await storeEmail(widget.email); // 이메일 저장
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xffFF516A),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(7)),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 50), // 하단에서 50픽셀 위로 띄움
+                    child: SizedBox(
+                      width: 350,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          await login(widget.email);
+                          await storeEmail(widget.email);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xffFF516A),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(7)),
+                          ),
                         ),
+                        child: Text(
+                          "confirm",
+                          style: TextStyle(
+                            color: Color(0xffFFFFFF),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ).tr(),
                       ),
-                      child: Text(
-                        "confirm",
-                        style: TextStyle(
-                          color: Color(0xffFFFFFF),
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ).tr(),
                     ),
-                  )
+                  ),
                 ],
               ),
             ],
@@ -819,39 +826,42 @@ class _CharacterPageState extends State<CharacterPage> {
                 ],
               ],
             ),
-            SizedBox(height: 270),
+            Spacer(),
             // 다음 버튼
-            SizedBox(
-              width: 350,
-              height: 52,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xffFF516A),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HelloPage(
-                        email: widget.email,
-                        character: selectedChar,
-                      ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 50),
+              child: SizedBox(
+                width: 350,
+                height: 52,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xffFF516A),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
                     ),
-                  );
-                },
-                child: const Text(
-                  "confirm",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
                   ),
-                ).tr(),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HelloPage(
+                          email: widget.email,
+                          character: selectedChar,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    "confirm",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ).tr(),
+                ),
               ),
-            ),
+            )
           ],
         ),
       ),
@@ -954,38 +964,39 @@ class _HelloPageState extends State<HelloPage> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 160,
-            ),
-            SizedBox(
-              width: 320,
-              height: 52,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffFF516A),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(7))),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NamePage(
-                          email: widget.email,
-                          character: widget.character,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'confirm',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+            Spacer(),
+            Padding(
+              padding: EdgeInsets.only(bottom: 50),
+              child: SizedBox(
+                width: 320,
+                height: 52,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xffFF516A),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(7))),
                     ),
-                  ).tr()),
-            ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NamePage(
+                            email: widget.email,
+                            character: widget.character,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'confirm',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ).tr()),
+              ),
+            )
           ],
         ),
       ),
@@ -1138,14 +1149,18 @@ class _NamePageState extends State<NamePage> {
                                     ),
                                     width: 204,
                                     height: 43,
-                                    child: Text(
-                                      "enter_name",
-                                      style: TextStyle(
-                                        fontFamily: 'LeeSeoYun',
-                                        fontSize: 24,
+                                    child: FittedBox(
+                                      fit: BoxFit
+                                          .scaleDown, // 텍스트가 공간에 맞게 줄어들도록 설정
+                                      child: Text(
+                                        tr("enter_name"),
+                                        style: TextStyle(
+                                          fontFamily: 'LeeSeoYun',
+                                          fontSize: 24,
+                                        ),
+                                        textAlign: TextAlign.center,
                                       ),
-                                      textAlign: TextAlign.center,
-                                    ).tr(),
+                                    ),
                                   ),
                                 ),
                                 SizedBox(
@@ -1169,43 +1184,44 @@ class _NamePageState extends State<NamePage> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 300,
-              ),
-              SizedBox(
-                width: 350,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    storeEmail(widget.email);
-                    signup(widget.email, widget.character, inputedName);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomePage(
-                          email: widget.email,
-                          character: widget.character,
-                          name: inputedName,
+              Spacer(),
+              Padding(
+                padding: EdgeInsets.only(bottom: 50),
+                child: SizedBox(
+                  width: 350,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      storeEmail(widget.email);
+                      signup(widget.email, widget.character, inputedName);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomePage(
+                            email: widget.email,
+                            character: widget.character,
+                            name: inputedName,
+                          ),
                         ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xffFF516A),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffFF516A),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(7)),
                     ),
+                    child: Text(
+                      "confirm",
+                      style: TextStyle(
+                        color: Color(0xffFFFFFF),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ).tr(),
                   ),
-                  child: Text(
-                    "confirm",
-                    style: TextStyle(
-                      color: Color(0xffFFFFFF),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ).tr(),
                 ),
-              ),
+              )
             ],
           ),
         ),
