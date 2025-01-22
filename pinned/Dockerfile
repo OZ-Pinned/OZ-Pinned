@@ -11,7 +11,7 @@ RUN npm install
  
 COPY ./pinned .
 
-COPY ./pinned/.env .
+RUN echo "MONGODB_URI=mongodb+srv://pinned:pinneddatabase123@pinned.zae3y.mongodb.net/pinned?retryWrites=true&w=majority&appName=pinned" > .env
 
 EXPOSE 42069
  
