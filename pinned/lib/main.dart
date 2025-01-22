@@ -93,9 +93,6 @@ class _SelectPageState extends State<SelectPage> {
               height: 200,
             ),
             Image.asset('assets/images/logo.png'),
-            SizedBox(
-              height: 370,
-            ),
             Spacer(),
             Padding(
               padding: EdgeInsets.only(bottom: 50), // 버튼을 바닥에서 50 픽셀 띄움
@@ -651,9 +648,6 @@ class _CertificationPageState extends State<CertificationPage> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -665,37 +659,35 @@ class _CertificationPageState extends State<CertificationPage> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 420,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 50), // 하단에서 50픽셀 위로 띄움
-                    child: SizedBox(
-                      width: 350,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          await login(widget.email);
-                          await storeEmail(widget.email);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xffFF516A),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(7)),
-                          ),
-                        ),
-                        child: Text(
-                          "confirm",
-                          style: TextStyle(
-                            color: Color(0xffFFFFFF),
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ).tr(),
+                ],
+              ),
+              Spacer(),
+              Padding(
+                padding: EdgeInsets.only(bottom: 50), // 하단에서 50픽셀 위로 띄움
+                child: SizedBox(
+                  width: 350,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await login(widget.email);
+                      await storeEmail(widget.email);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xffFF516A),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
                       ),
                     ),
+                    child: Text(
+                      "confirm",
+                      style: TextStyle(
+                        color: Color(0xffFFFFFF),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ).tr(),
                   ),
-                ],
+                ),
               ),
             ],
           ),

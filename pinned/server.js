@@ -30,7 +30,7 @@ app.use('/diary',diaryRoutes);
 app.use('/home', homeRoutes);
 
 // 서버 포트 설정
-const PORT = 42069;
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`서버가 http://localhost:${PORT}에서 실행 중입니다.`);
 });
