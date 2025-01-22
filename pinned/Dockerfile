@@ -11,6 +11,8 @@ RUN npm install
  
 COPY ./pinned .
 
+COPY ./pinned/.env .
+
 EXPOSE 42069
  
 CMD ["npm", "start"]
