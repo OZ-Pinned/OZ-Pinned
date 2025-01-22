@@ -4,6 +4,10 @@ const router = express.Router();
 const path = require("path");
 const cors = require('cors');
 const bodyParser = require('body-parser');
+<<<<<<< HEAD
+=======
+require('dotenv').config();
+>>>>>>> parent of c1f8fdb (path 추가)
 
 const chatbotDBModel = require('../lib/models/chatbot_model'); // 모델 경로에 맞게 수정
 
