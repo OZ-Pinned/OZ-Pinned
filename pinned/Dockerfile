@@ -6,12 +6,4 @@ RUN npm install
 COPY ./pinned .
 RUN echo "MONGODB_URI=mongodb+srv://pinned:pinneddatabase123@pinned.zae3y.mongodb.net/pinned?retryWrites=true&w=majority&appName=pinned" > .env
  
-# Add debugging before start
-CMD node -e "console.log('Current directory:', process.cwd()); \
-    console.log('Directory contents:', require('fs').readdirSync('.')); \
-    console.log('Parent directory contents:', require('fs').readdirSync('..')); \
-    console.log('Env file exists?', require('fs').existsSync('.env')); \
-    console.log('Mongoose dir contents:', require('fs').readdirSync('./mongoose')); \
-    require('dotenv').config(); \
-    console.log('Environment variables:', process.env)" \
-    && npm start
+CMD ls -la && pwd && echo "ENV contents:" && cat .env && echo "Starting server..." && NODE_DEBUG=* npm start
