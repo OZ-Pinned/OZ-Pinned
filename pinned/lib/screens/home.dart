@@ -327,8 +327,10 @@ class _HomePageState extends State<HomePage> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              TestPage(lang: true),
+                                          builder: (context) => TestPage(
+                                            email: widget.email,
+                                            name: widget.name,
+                                          ),
                                         ),
                                       );
                                     }
@@ -427,7 +429,11 @@ class _HomePageState extends State<HomePage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => ChatBot()),
+                                        builder: (context) => ChatBot(
+                                          email: widget.email,
+                                          name: widget.name,
+                                        ),
+                                      ),
                                     );
                                   },
                                   icon: Icon(CustomIcon.ChatAI),

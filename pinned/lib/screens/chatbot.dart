@@ -6,7 +6,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ChatBot extends StatefulWidget {
-  const ChatBot({super.key});
+  final String email;
+  final String name;
+  const ChatBot({super.key, required this.email, required this.name});
 
   @override
   _ChatBotPageState createState() => _ChatBotPageState();
@@ -43,7 +45,9 @@ class _ChatBotPageState extends State<ChatBot> {
         },
         body: jsonEncode(
           {
+            'email': widget.email,
             'msg': inputedMessage,
+            'name': widget.name,
           },
         ),
       );
@@ -113,8 +117,8 @@ class _ChatBotPageState extends State<ChatBot> {
                           ? Container(
                               margin: EdgeInsets.only(left: 60),
                               padding: EdgeInsets.only(
-                                top: 7.5,
-                                bottom: 7.5,
+                                top: 10,
+                                bottom: 10,
                                 left: 17,
                                 right: 17,
                               ),
@@ -165,7 +169,7 @@ class _ChatBotPageState extends State<ChatBot> {
                                     top: 10,
                                     left: 17,
                                     right: 17,
-                                    bottom: 8,
+                                    bottom: 10,
                                   ),
                                   decoration: BoxDecoration(
                                     color: Color(0xffFFFFFF),
@@ -183,7 +187,7 @@ class _ChatBotPageState extends State<ChatBot> {
                                     message.values.first,
                                     style: TextStyle(
                                       fontSize: 16,
-                                      height: 1.2,
+                                      height: 1.3,
                                     ),
                                   ),
                                 ),
@@ -229,17 +233,29 @@ class _ChatBotPageState extends State<ChatBot> {
                     ),
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 8),
-                      child: IconButton(
-                        icon: SvgPicture.asset(
-                          'assets/images/sendButton.svg',
-                          width: 36,
-                        ),
-                        onPressed: () async {
-                          if (inputedMessage.trim() != 0) {
-                            await handleSubmitted();
-                          }
-                        },
-                      ),
+                      child: inputedMessage.isEmpty
+                          ? IconButton(
+                              icon: SvgPicture.asset(
+                                'assets/images/sendButtonNo.svg',
+                                width: 36,
+                              ),
+                              onPressed: () async {
+                                if (inputedMessage.trim() != 0) {
+                                  await handleSubmitted();
+                                }
+                              },
+                            )
+                          : IconButton(
+                              icon: SvgPicture.asset(
+                                'assets/images/sendButtonYes.svg',
+                                width: 36,
+                              ),
+                              onPressed: () async {
+                                if (inputedMessage.trim() != 0) {
+                                  await handleSubmitted();
+                                }
+                              },
+                            ),
                     ),
                   ],
                 ),
