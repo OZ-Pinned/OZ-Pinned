@@ -376,30 +376,31 @@ class _EmailPageState extends State<EmailPage> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 300,
-              ),
-              SizedBox(
-                width: 350,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    login(inputedEmail);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffFF516A),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(7)),
+              Spacer(),
+              Padding(
+                padding: EdgeInsets.only(bottom: 50),
+                child: SizedBox(
+                  width: 350,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      login(inputedEmail);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xffFF516A),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
+                      ),
                     ),
+                    child: Text(
+                      "verification_code",
+                      style: TextStyle(
+                        color: Color(0xffFFFFFF),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ).tr(),
                   ),
-                  child: Text(
-                    "verification_code",
-                    style: TextStyle(
-                      color: Color(0xffFFFFFF),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ).tr(),
                 ),
               ),
             ],
