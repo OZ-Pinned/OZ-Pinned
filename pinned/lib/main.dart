@@ -96,33 +96,37 @@ class _SelectPageState extends State<SelectPage> {
             SizedBox(
               height: 370,
             ),
-            SizedBox(
-              width: 320,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  toggleSelect(true);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EmailPage(
-                        logined: true,
+            Spacer(),
+            Padding(
+              padding: EdgeInsets.only(bottom: 50), // 버튼을 바닥에서 50 픽셀 띄움
+              child: SizedBox(
+                width: 320,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    toggleSelect(true);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EmailPage(
+                          logined: true,
+                        ),
                       ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xffFF516A),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
                     ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xffFF516A),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
                   ),
-                ),
-                child: Text(
-                  tr('start'),
-                  style: TextStyle(
-                    color: Color(0xffFFFFFF),
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                  child: Text(
+                    tr('start'),
+                    style: TextStyle(
+                      color: Color(0xffFFFFFF),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
