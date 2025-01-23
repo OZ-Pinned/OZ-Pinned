@@ -216,7 +216,7 @@ class _EmailPageState extends State<EmailPage> {
   void _sendEmail(String recipientEmail) async {
     emailBody = await _getEmailBody();
     String username = 'jieyn7@naver.com'; // 본인의 네이버 이메일
-    String password = '2BGMWYJPRJNN'; // 앱 비밀번호
+    String password = 'NRRZDBB9MXPZ'; // 앱 비밀번호
 
     final smtpServer = SmtpServer(
       'smtp.naver.com',
@@ -617,7 +617,7 @@ class _CertificationPageState extends State<CertificationPage> {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   context.locale.languageCode == 'en'
-                                      ? "please enter the \n verification code"
+                                      ? "please enter the\nverification code"
                                       : "enter_verification_code",
                                   style: TextStyle(
                                     fontFamily: 'LeeSeoYun',

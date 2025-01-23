@@ -32,8 +32,8 @@ class _ChatBotPageState extends State<ChatBot> {
       _controller.clear();
     });
     _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent + 300,
-      duration: Duration(milliseconds: 800),
+      _scrollController.position.maxScrollExtent,
+      duration: Duration(milliseconds: 1000),
       curve: Curves.easeOut,
     );
     try {
@@ -62,6 +62,11 @@ class _ChatBotPageState extends State<ChatBot> {
           chatedMessage.add({'AI': data['res']});
           inputedMessage = "";
         });
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 1000),
+          curve: Curves.easeOut,
+        );
 
         print(chatedMessage);
         inputedMessage = ""; // 메시지 입력란 초기화
