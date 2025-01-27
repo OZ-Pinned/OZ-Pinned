@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'meditation.dart';
-import 'chatbot.dart';
+import '../pages/chatbot/chatbot.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 // void main() => runApp(MyApp());

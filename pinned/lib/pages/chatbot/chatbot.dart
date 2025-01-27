@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:pinned/widgets/chatMessage.dart';
 import 'package:pinned/apis/chatbotAPI.dart';
-import 'package:http/http.dart' as http;
 
 class ChatBot extends StatefulWidget {
   final String email;
@@ -55,7 +54,6 @@ class _ChatBotPageState extends State<ChatBot> {
       );
     } catch (e) {
       print('Error loading series: $e');
-      setState(() {});
     }
   }
 

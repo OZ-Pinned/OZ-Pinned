@@ -5,6 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pinned/main.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:pinned/apis/mypageAPI.dart';
 
 class MyPage extends StatefulWidget {
   final String email;
@@ -25,75 +26,45 @@ class _MyPageState extends State<MyPage> {
   void initState() {
     super.initState();
     // 위젯이 초기화될 때 getTest 호출
-    getTest();
+    _getUserData();
   }
 
-  Future<void> getTest() async {
+  Future<void> _getUserData() async {
     try {
-      final response = await http.get(
-        Uri.parse(
-            'http://localhost:3000/mypage/get/${widget.email}'), // Node.js 서버의 IP 주소 사용
-        headers: {
-          'Content-Type': 'application/json',
+      final response = await Mypageapi.getTest(widget.email);
+      final data = json.decode(response!.body);
+
+      setState(
+        () {
+          scores = List<double>.from(
+            data['test']['scores'].map(
+              (e) => e['score'].toDouble(),
+            ),
+          );
+          scores = scores.sublist((scores.length > 5) ? scores.length - 5 : 0);
+          dates = List<String>.from(
+            data['test']['scores'].map(
+              (e) => e['createdAt'].substring(
+                5,
+              ),
+            ),
+          );
+          dates = dates.sublist((dates.length > 5) ? dates.length - 5 : 0);
+          selectedChar = data['user']['character'];
+          userName = data['user']['name'];
         },
       );
-
-      final data = json.decode(response.body);
-      print(data);
-      if (data['success']) {
-        // 데이터 변환
-        setState(
-          () {
-            scores = List<double>.from(
-              data['test']['scores'].map(
-                (e) => e['score'].toDouble(),
-              ),
-            );
-            scores =
-                scores.sublist((scores.length > 5) ? scores.length - 5 : 0);
-            dates = List<String>.from(
-              data['test']['scores'].map(
-                (e) => e['createdAt'].substring(
-                  5,
-                ),
-              ),
-            );
-            dates = dates.sublist((dates.length > 5) ? dates.length - 5 : 0);
-            selectedChar = data['user']['character'];
-            userName = data['user']['name'];
-          },
-        );
-      } else {
-        print('Error: ${data['message']}');
-      }
-    } catch (error) {
-      print('Error fetching test: $error');
+    } catch (e) {
+      print('Error loading data : $e');
     }
   }
 
-  Future<void> changeCharacter(int character) async {
+  Future<void> _changeCharacter(int value) async {
     try {
-      final response = await http.post(
-        Uri.parse(
-            'http://localhost:3000/mypage/change/${widget.email}'), // Node.js 서버의 IP 주소 사용
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'character': character,
-        }),
-      );
-
-      final data = jsonDecode(response.body);
-      print('Response body: ${response.body}');
-
-      if (data['success']) {
-        print(data);
-      } else {
-        print('Error: ${data['message']}');
-      }
-    } catch (error) {
-      print('Error fetching diary: $error');
+      final response = await Mypageapi.changeCharacter(widget.email, value);
+      final data = json.decode(response!.body);
+    } catch (e) {
+      print('Error change character : $e');
     }
   }
 
@@ -133,7 +104,7 @@ class _MyPageState extends State<MyPage> {
     setState(() {
       selectedChar = value;
       print(value);
-      changeCharacter(value); // 선택된 캐릭터의 인덱스 업데이트
+      _changeCharacter(value); // 선택된 캐릭터의 인덱스 업데이트
     });
   }
 

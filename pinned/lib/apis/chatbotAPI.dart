@@ -22,6 +22,8 @@ class chatbotAPI {
 
       if (response.statusCode == 200) {
         return response;
+      } else {
+        return null;
       }
     } catch (error) {
       print('AI error: $error');
