@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:pinned/widgets/chatMessage.dart';
 
 class ChatBot extends StatefulWidget {
   final String email;
@@ -119,96 +120,10 @@ class _ChatBotPageState extends State<ChatBot> {
                           ? Alignment.centerRight
                           : Alignment.centerLeft,
                       child: isUserMessage
-                          ? Container(
-                              margin: EdgeInsets.only(left: 60),
-                              padding: EdgeInsets.only(
-                                top: 10,
-                                bottom: 10,
-                                left: 17,
-                                right: 17,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Color(0xffFF516A),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(14),
-                                  topRight: Radius.circular(0),
-                                  bottomRight: Radius.circular(14),
-                                  bottomLeft: Radius.circular(14),
-                                ),
-                                border: Border.all(
-                                  color: Color(0xffDADADA),
-                                ),
-                              ),
-                              child: Text(
-                                message.values.first,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  height: 1.2,
-                                  color: Color(0xffFFFFFF),
-                                ),
-                              ),
-                            )
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  spacing: 7,
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/images/chatBotKoKo.svg',
-                                      width: 45,
-                                      height: 45,
-                                    ),
-                                    Text(
-                                      tr("coco"),
-                                      style: TextStyle(
-                                        fontFamily: 'LeeSeoYun',
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(left: 60),
-                                  padding: EdgeInsets.only(
-                                    top: 10,
-                                    left: 17,
-                                    right: 17,
-                                    bottom: 10,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffFFFFFF),
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(0),
-                                      topRight: Radius.circular(14),
-                                      bottomRight: Radius.circular(14),
-                                      bottomLeft: Radius.circular(14),
-                                    ),
-                                    border: Border.all(
-                                      color: Color(0xffDADADA),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    message.values.first,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      height: 1.3,
-                                    ),
-                                  ),
-                                ),
-                                if (index == 0)
-                                  Container(
-                                    margin: EdgeInsets.only(top: 10, left: 60),
-                                    padding: EdgeInsets.only(
-                                      top: 7.5,
-                                      bottom: 7.5,
-                                      left: 17,
-                                      right: 17,
-                                    ),
-                                    child: SvgPicture.asset(
-                                        'assets/images/chatBotKoKoChar.svg'),
-                                  ),
-                              ],
+                          ? UserMessage(textMessage: message.values.first)
+                          : AIMessage(
+                              textMessage: message.values.first,
+                              index: index,
                             ),
                     ),
                   );
