@@ -73,8 +73,16 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
       Color color) async {
     try {
       final response = await Diaryapi.saveOrUpdateDiary(
-          email, id, title, content, imageBytes, emotion,
-          nowDate: nowDate, color: color);
+        email ?? '',
+        id ?? '',
+        title,
+        content,
+        imageBytes,
+        emotion,
+        nowDate: nowDate,
+        color: color,
+      );
+
       final data = json.decode(response!.body);
 
       print(data);

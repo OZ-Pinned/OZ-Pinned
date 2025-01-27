@@ -29,50 +29,28 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
   @override
   void initState() {
     super.initState();
-    _getAllDiary(widget.email);
+    futureDiaries = _getAllDiary(widget.email); // 초기화
   }
 
-  Future<void> _getAllDiary(String email) async {
+  Future<List> _getAllDiary(String email) async {
     try {
-      final response = await Diaryapi.ViewDiary(widget.email);
+      final response = await Diaryapi.ViewDiary(email);
       final data = json.decode(response!.body);
 
       print(data);
 
-      futureDiaries = data['res'];
+      return data['diary']; // 서버 응답의 'res'를 반환
     } catch (e) {
-      print('Error get all diary : $e');
-    }
-  }
-
-  void _navigateToHomePage() {
-    if (email != null && character != null && name != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(
-            email: email!,
-            character: character!,
-            name: name!,
-          ),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('User data not available')),
-      );
+      print('Error get all diary: $e');
+      return []; // 에러 발생 시 빈 리스트 반환
     }
   }
 
   void refreshDiaries() {
     setState(() {
-      _getAllDiary(widget.email);
+      futureDiaries = _getAllDiary(widget.email); // 데이터 갱신
     });
   }
-
-  String? email;
-  int? character;
-  String? name;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +60,9 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
         backgroundColor: Color(0xffffffff),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: _navigateToHomePage,
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: SizedBox(
@@ -101,41 +81,39 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(15),
                       child: Wrap(
-                        spacing: 10, // 카드 간 가로 간격
-                        runSpacing: 13, // 카드 간 세로 간격
+                        spacing: 10,
+                        runSpacing: 13,
                         children: List.generate(snapshot.data!.length, (index) {
                           var entry = snapshot.data![index];
                           Color cardColor = Color(
-                            int.parse(entry.color
+                            int.parse(entry['color']
                                 .replaceFirst('#', '0xff')), // #을 0xff로 변경
                           );
                           return SizedBox(
-                            width: MediaQuery.of(context).size.width / 2 -
-                                20, // 화면 너비에 따라 자동 조정
+                            width: MediaQuery.of(context).size.width / 2 - 20,
                             child: GestureDetector(
                               onTap: () {
+                                print(widget.character);
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => DiaryDetailPage(
-                                        id: entry.id,
-                                        email: entry.email,
-                                        title: entry.title,
-                                        content: entry.content,
-                                        image: base64Decode(entry.image),
-                                        emotion: entry.emotion,
-                                        color: entry.color,
-                                        character: widget.character,
-                                        name: widget.name,
-                                      ),
-                                    ));
-                                refreshDiaries(); // 데이터 갱신
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DiaryDetailPage(
+                                      id: entry['_id'],
+                                      email: entry['email'],
+                                      title: entry['title'],
+                                      content: entry['content'],
+                                      image: base64Decode(entry['image']),
+                                      emotion: entry['emotion'],
+                                      color: entry['color'],
+                                      character: widget.character,
+                                      name: widget.name,
+                                    ),
+                                  ),
+                                ).then((_) => refreshDiaries()); // 데이터 갱신
                               },
                               child: Card(
                                 color: cardColor,
-                                shape: RoundedRectangleBorder(
-                                    // 카드 모서리 둥글게
-                                    ),
+                                shape: RoundedRectangleBorder(),
                                 elevation: 3,
                                 child: Stack(
                                   children: [
@@ -146,7 +124,7 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                                         SizedBox(height: 10),
                                         Center(
                                           child: Image.memory(
-                                            base64Decode(entry.image),
+                                            base64Decode(entry['image']),
                                             width: 150,
                                             height: 150,
                                             fit: BoxFit.cover,
@@ -160,10 +138,10 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                entry.title,
+                                                entry['title'],
                                                 style: const TextStyle(
                                                   fontFamily: 'LeeSeoYun',
-                                                  fontSize: 15, // 제목 폰트 크기
+                                                  fontSize: 15,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                                 maxLines: 1,
@@ -173,10 +151,10 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                                               Text(
                                                 DateFormat('yyyy.MM.dd').format(
                                                     DateTime.parse(
-                                                        entry.createdAt)),
+                                                        entry['createdAt'])),
                                                 style: const TextStyle(
                                                   fontFamily: 'LeeSeoYun',
-                                                  fontSize: 10, // 날짜 폰트 크기
+                                                  fontSize: 10,
                                                   color: Color(0xff888888),
                                                 ),
                                               ),
@@ -192,7 +170,8 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                                         width: 34,
                                         height: 34,
                                         child: SvgPicture.asset(
-                                          Diaryapi.getImagePath(entry.emotion),
+                                          Diaryapi.getImagePath(
+                                              (entry['emotion']).toDouble()),
                                           fit: BoxFit.contain,
                                         ),
                                       ),
@@ -208,34 +187,6 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                   );
                 }
               },
-            ),
-            Positioned(
-              bottom: 40, // 화면 아래에서부터의 거리
-              right: 20, // 화면 오른쪽에서부터의 거리
-              child: Container(
-                width: 58,
-                height: 58,
-                decoration: const BoxDecoration(
-                  color: Color(0xffFF516A), // 원형 배경색
-                  shape: BoxShape.circle, // 원형 모양
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EmotionPage(
-                          email: widget.email,
-                          character: widget.character,
-                          name: widget.name,
-                        ),
-                      ),
-                    );
-                    print("Floating button clicked");
-                  },
-                  icon: const Icon(Icons.add, size: 30, color: Colors.white),
-                ),
-              ),
             ),
           ],
         ),

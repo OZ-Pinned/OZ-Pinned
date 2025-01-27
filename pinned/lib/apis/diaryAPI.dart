@@ -98,16 +98,43 @@ class Diaryapi {
     return null;
   }
 
-  static Future<http.Response?> saveOrUpdateDiary(String email, String id,
-      String title, String content, Uint8List? imageBytes, int emotion,
-      {required String nowDate, required Color color}) async {
-    if (id == null && imageBytes != null) {
-      await uploadDiary(
-          email, title, content, imageBytes, nowDate, color, emotion);
-    } else
-      await updateDiary(email, id, color);
-
-    return null;
+  static Future<http.Response?> saveOrUpdateDiary(
+    String email,
+    String id,
+    String title,
+    String content,
+    Uint8List? imageBytes,
+    int emotion, {
+    required String nowDate,
+    required Color color,
+  }) async {
+    try {
+      // id가 null일 경우 업로드(새로운 일기 저장)
+      if (id.isEmpty && imageBytes != null) {
+        return await uploadDiary(
+          email,
+          title,
+          content,
+          imageBytes,
+          nowDate,
+          color,
+          emotion,
+        );
+      }
+      // id가 존재하면 업데이트(기존 일기 수정)
+      else if (id.isNotEmpty) {
+        return await updateDiary(
+          email,
+          id,
+          color,
+        );
+      } else {
+        throw Exception("Invalid parameters: id and imageBytes are required.");
+      }
+    } catch (e) {
+      print("Error in saveOrUpdateDiary: $e");
+      return null;
+    }
   }
 
   static String getImagePath(double value) {
