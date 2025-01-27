@@ -1,10 +1,10 @@
 import 'dart:convert';
-
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:pinned/widgets/chatMessage.dart';
+import 'package:pinned/apis/chatbotAPI.dart';
+import 'package:http/http.dart' as http;
 
 class ChatBot extends StatefulWidget {
   final String email;
@@ -26,66 +26,37 @@ class _ChatBotPageState extends State<ChatBot> {
   final ScrollController _scrollController =
       ScrollController(); // ScrollController 추가
 
-  Future<String?> handleSubmitted() async {
-    print(inputedMessage);
+  Future<void> _getMessage() async {
     setState(() {
       chatedMessage.add({'User': inputedMessage});
       _controller.clear();
     });
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: Duration(milliseconds: 1000),
-      curve: Curves.easeOut,
-    );
     try {
-      var response = await http.post(
-        Uri.parse("http://localhost:3000/chatbot/get"),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: jsonEncode(
-          {
-            'email': widget.email,
-            'msg': inputedMessage,
-            'name': widget.name,
-          },
-        ),
+      final response = await chatbotAPI.handleSubmitted(
+          widget.email, inputedMessage, widget.name);
+      final data = json.decode(response!.body);
+
+      print(data);
+
+      setState(() {
+        chatedMessage.add({'AI': data['res']});
+        inputedMessage = "";
+      });
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 1000),
+        curve: Curves.easeOut,
       );
 
-      final data = json.decode(response.body);
-
-      if (response.statusCode == 201) {
-        print("data['res'], $inputedMessage");
-
-        // AI의 응답과 유저의 메시지를 리스트에 추가
-        setState(() {
-          chatedMessage.add({'AI': data['res']});
-          inputedMessage = "";
-        });
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 1000),
-          curve: Curves.easeOut,
-        );
-
-        print(chatedMessage);
-        inputedMessage = ""; // 메시지 입력란 초기화
-
-        // 새로운 메시지가 추가된 후 스크롤을 맨 아래로 내리기
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent + 300,
-          duration: Duration(milliseconds: 800),
-          curve: Curves.easeOut,
-        );
-      } else {
-        print('Failed to upload diary: ${response.body}');
-      }
-    } catch (error) {
-      print('AI error: $error');
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 1000),
+        curve: Curves.easeOut,
+      );
+    } catch (e) {
+      print('Error loading series: $e');
+      setState(() {});
     }
-
-    return null;
   }
 
   @override
@@ -153,29 +124,22 @@ class _ChatBotPageState extends State<ChatBot> {
                     ),
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 8),
-                      child: inputedMessage.isEmpty
-                          ? IconButton(
-                              icon: SvgPicture.asset(
+                      child: IconButton(
+                        icon: inputedMessage.isEmpty
+                            ? SvgPicture.asset(
                                 'assets/images/sendButtonNo.svg',
                                 width: 36,
-                              ),
-                              onPressed: () async {
-                                if (inputedMessage.trim() != 0) {
-                                  await handleSubmitted();
-                                }
-                              },
-                            )
-                          : IconButton(
-                              icon: SvgPicture.asset(
+                              )
+                            : SvgPicture.asset(
                                 'assets/images/sendButtonYes.svg',
                                 width: 36,
                               ),
-                              onPressed: () async {
-                                if (inputedMessage.trim() != 0) {
-                                  await handleSubmitted();
-                                }
-                              },
-                            ),
+                        onPressed: () async {
+                          if (inputedMessage.trim() != 0) {
+                            await _getMessage();
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),
