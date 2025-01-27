@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class chatbotAPI {
+class Chatbotapi {
   static Future<http.Response?> handleSubmitted(
       String email, String inputedMessage, String name) async {
     try {
@@ -20,7 +20,9 @@ class chatbotAPI {
         ),
       );
 
-      if (response.statusCode == 200) {
+      print(response.statusCode);
+
+      if (response.statusCode == 201) {
         return response;
       } else {
         return null;

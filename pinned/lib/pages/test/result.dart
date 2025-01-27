@@ -58,7 +58,6 @@ class _ResultPageState extends State<ResultPage> {
   }
 
   String getResult(int totalScore) {
-    _saveScore(widget.email, totalScore);
     if (lan != "en") {
       if (totalScore >= 20) {
         return "매우 심함";

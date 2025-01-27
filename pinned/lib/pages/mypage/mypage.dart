@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pinned/main.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:pinned/apis/mypageAPI.dart';
+import 'package:pinned/pages/main/selectPage.dart';
 
 class MyPage extends StatefulWidget {
   final String email;

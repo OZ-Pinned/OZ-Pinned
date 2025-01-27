@@ -6,6 +6,38 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 
+class DiaryEntry {
+  final String id;
+  final String email;
+  final String title;
+  final String content;
+  final String image;
+  final String createdAt;
+  final String color;
+  final int emotion;
+  DiaryEntry(
+      {required this.id,
+      required this.email,
+      required this.title,
+      required this.content,
+      required this.image,
+      required this.createdAt,
+      required this.color,
+      required this.emotion});
+  factory DiaryEntry.fromJson(Map<String, dynamic> json) {
+    return DiaryEntry(
+      id: json['_id'] ?? '',
+      email: json['email'] ?? '',
+      title: json['title'] ?? 'Untitled',
+      content: json['diary'] ?? '',
+      image: json['image'] ?? '',
+      createdAt: json['createdAt'] ?? '',
+      color: json['color'] ?? '#F5DE99',
+      emotion: int.tryParse(json['emotion'].toString()) ?? 0,
+    );
+  }
+}
+
 class Diaryapi {
   static Future<http.Response?> ViewDiary(String email) async {
     String apiUrl = 'http://localhost:3000/diary/get/$email';
@@ -23,6 +55,7 @@ class Diaryapi {
       print('Error: $e');
       rethrow;
     }
+    return null;
   }
 
   static Future<http.Response?> uploadDiary(
@@ -96,45 +129,6 @@ class Diaryapi {
       print('Error updating diary: $e');
     }
     return null;
-  }
-
-  static Future<http.Response?> saveOrUpdateDiary(
-    String email,
-    String id,
-    String title,
-    String content,
-    Uint8List? imageBytes,
-    int emotion, {
-    required String nowDate,
-    required Color color,
-  }) async {
-    try {
-      // id가 null일 경우 업로드(새로운 일기 저장)
-      if (id.isEmpty && imageBytes != null) {
-        return await uploadDiary(
-          email,
-          title,
-          content,
-          imageBytes,
-          nowDate,
-          color,
-          emotion,
-        );
-      }
-      // id가 존재하면 업데이트(기존 일기 수정)
-      else if (id.isNotEmpty) {
-        return await updateDiary(
-          email,
-          id,
-          color,
-        );
-      } else {
-        throw Exception("Invalid parameters: id and imageBytes are required.");
-      }
-    } catch (e) {
-      print("Error in saveOrUpdateDiary: $e");
-      return null;
-    }
   }
 
   static String getImagePath(double value) {

@@ -293,6 +293,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  get:
+    dependency: "direct main"
+    description:
+      name: get
+      sha256: e4e7335ede17452b391ed3b2ede016545706c01a02292a6c97619705e7d2a85e
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.6.6"
   html:
     dependency: transitive
     description:
@@ -565,6 +573,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  route_manager:
+    dependency: "direct main"
+    description:
+      name: route_manager
+      sha256: "73fe5c3f8b4a8402ebf58fb31c581eeeab9586c79b003bcc56f79dbfe186d440"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2+1"
   shared_preferences:
     dependency: "direct main"
     description:

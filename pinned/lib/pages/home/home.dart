@@ -236,8 +236,8 @@ class _HomePageState extends State<HomePage> {
                                   MaterialPageRoute(
                                     builder: (context) => EmotionPage(
                                       email: widget.email,
-                                      character: widget.character,
-                                      name: widget.name,
+                                      // character: widget.character,
+                                      // name: widget.name,
                                     ),
                                   ),
                                 );

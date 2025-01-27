@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pinned/icon/custom_icon_icons.dart';
 import 'package:video_player/video_player.dart';
 import 'package:easy_localization/easy_localization.dart';
 

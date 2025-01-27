@@ -25,27 +25,21 @@ class _ChatBotPageState extends State<ChatBot> {
   final ScrollController _scrollController =
       ScrollController(); // ScrollController 추가
 
-  Future<void> _getMessage() async {
-    setState(() {
-      chatedMessage.add({'User': inputedMessage});
-      _controller.clear();
-    });
+  Future<void> _getMessage(
+      String email, String inputedMessage, String name) async {
     try {
-      final response = await chatbotAPI.handleSubmitted(
-          widget.email, inputedMessage, widget.name);
+      setState(() {
+        chatedMessage.add({'User': inputedMessage});
+        _controller.clear();
+      });
+      final response =
+          await Chatbotapi.handleSubmitted(email, inputedMessage, name);
       final data = json.decode(response!.body);
-
-      print(data);
 
       setState(() {
         chatedMessage.add({'AI': data['res']});
         inputedMessage = "";
       });
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: Duration(milliseconds: 1000),
-        curve: Curves.easeOut,
-      );
 
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
@@ -53,7 +47,7 @@ class _ChatBotPageState extends State<ChatBot> {
         curve: Curves.easeOut,
       );
     } catch (e) {
-      print('Error loading series: $e');
+      print('Error loading : $e');
     }
   }
 
@@ -134,7 +128,8 @@ class _ChatBotPageState extends State<ChatBot> {
                               ),
                         onPressed: () async {
                           if (inputedMessage.trim() != 0) {
-                            await _getMessage();
+                            await _getMessage(
+                                widget.email, inputedMessage, widget.name);
                           }
                         },
                       ),

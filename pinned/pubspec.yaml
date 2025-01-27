@@ -51,6 +51,8 @@ dependencies:
   ios_utsname_ext: ^2.3.0
   video_player: ^2.7.2
   easy_localization: ^3.0.4
+  route_manager: ^2.0.2+1
+  get: ^4.6.6
   
 dev_dependencies:
   flutter_test:
