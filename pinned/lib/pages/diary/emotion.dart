@@ -1,26 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'gallery_write.dart';
+import 'writeGallery.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: EmotionPage(
-        email: "test@example.com",
-      ),
-    );
-  }
-}
 
 class EmotionPage extends StatefulWidget {
   final String email;
-  const EmotionPage({super.key, required this.email}); // 기본 생성자 추가
+  final int character;
+  final String name;
+  const EmotionPage(
+      {super.key,
+      required this.email,
+      required this.character,
+      required this.name}); // 기본 생성자 추가
 
   @override
   State<EmotionPage> createState() => _EmotionPageState();
@@ -82,12 +73,6 @@ class _EmotionPageState extends State<EmotionPage> {
     } else {
       return Color(0xffFAD19B); // 슬라이더 값이 76~100일 때
     }
-  }
-
-// 이메일을 비동기적으로 가져오는 함수
-  Future<String?> getEmail() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('email'); // 'email' 키에 저장된 값 반환
   }
 
   @override
@@ -172,13 +157,14 @@ class _EmotionPageState extends State<EmotionPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                String? email = await getEmail();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => WriteGalleryPage(
-                      email: email ?? widget.email,
+                      email: widget.email,
                       emotion: (currentValue / 25).toInt(),
+                      character: widget.character,
+                      name: widget.name,
                     ),
                   ),
                 );

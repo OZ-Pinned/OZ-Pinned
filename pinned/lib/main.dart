@@ -5,13 +5,13 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:pinned/pages/test/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pinned/screens/home.dart';
+import 'package:pinned/pages/home/home.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:pinned/screens/emotion.dart';
+import 'package:pinned/pages/diary/emotion.dart';
 
 final supportedLocales = [Locale('en', 'US'), Locale('ko', 'KR')];
 

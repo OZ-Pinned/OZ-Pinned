@@ -1,17 +1,14 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:pinned/icon/custom_icon_icons.dart';
 import 'package:pinned/pages/chatbot/chatbot.dart';
-import 'package:pinned/screens/emotion.dart';
+import 'package:pinned/pages/diary/emotion.dart';
 import 'package:pinned/pages/test/test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../pages/mypage/mypage.dart';
-import 'package:http/http.dart' as http;
-import '../pages/meditation/meditation.dart';
+import '../mypage/mypage.dart';
+import '../meditation/meditation.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:pinned/apis/homeAPI.dart';
 
 class HomePage extends StatefulWidget {
   final String email;
@@ -49,11 +46,6 @@ class _HomePageState extends State<HomePage> {
 
   String getButtonImage(int value) {
     return buttonImageList[value];
-  }
-
-  Future<String?> getEmail() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('email'); // 'email' 키에 저장된 값 반환
   }
 
   SvgPicture getCharacter(int value) {
@@ -106,41 +98,28 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    storeUserData(widget.email, widget.character, widget.name);
-    getUser(); // 서버에서 데이터 가져오기
+    _getUser(); // 서버에서 데이터 가져오기
     selectedChar = widget.character;
   }
 
-  Future<void> storeUserData(String email, int character, String name) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('character', character);
-    await prefs.setString('name', name);
-    print("User data saved: $email, $character, $name");
-  }
-
-  Future<void> getUser() async {
+  Future<void> _getUser() async {
     try {
-      final response = await http.get(
-        Uri.parse('http://localhost:3000/home/get/${widget.email}'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      );
+      final response = await Homeapi.getUser(widget.email);
+      final data = json.decode(response!.body);
 
-      final data = json.decode(response.body);
-      if (data['success']) {
-        setState(() {
-          // 서버에서 가져온 캐릭터 값을 업데이트
-          selectedChar = data['user']['character'];
-        });
-      } else {}
-    } catch (error) {}
+      setState(() {
+        // 서버에서 가져온 캐릭터 값을 업데이트
+        selectedChar = data['user']['character'];
+      });
+    } catch (e) {
+      print('Error get user : $e');
+    }
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    getUser();
+    _getUser();
   }
 
   @override
@@ -202,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ).then(
                                 (_) {
-                                  getUser();
+                                  _getUser();
                                 },
                               );
                             },
@@ -255,8 +234,12 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          EmotionPage(email: widget.email)),
+                                    builder: (context) => EmotionPage(
+                                      email: widget.email,
+                                      character: widget.character,
+                                      name: widget.name,
+                                    ),
+                                  ),
                                 );
                               },
                               icon: Icon(Icons.add),

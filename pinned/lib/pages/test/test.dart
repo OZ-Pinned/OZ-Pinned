@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../screens/KoreanList.dart';
-import '../../screens/EnglishList.dart';
+import 'testList/KoreanList.dart';
+import 'testList/EnglishList.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:pinned/pages/test/result.dart';
