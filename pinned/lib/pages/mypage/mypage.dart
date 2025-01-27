@@ -390,39 +390,7 @@ class _MyPageState extends State<MyPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 for (int i = 0; i < 3; i++) ...[
-                  Column(
-                    children: [
-                      SizedBox(
-                        width: 103,
-                        height: 142,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xffFFFFFF),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7),
-                            ),
-                            side: BorderSide(
-                              color: selectedChar == i
-                                  ? const Color(0xffFB5D6F)
-                                  : const Color(0xffDADADA),
-                              width: 2.0,
-                            ),
-                            padding: const EdgeInsets.all(6),
-                          ),
-                          onPressed: () => {toggleSelect(i)},
-                          child: getImage(i),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 17,
-                      ),
-                      Text(
-                        getName(i),
-                        style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 25),
-                        textAlign: TextAlign.center,
-                      ).tr(),
-                    ],
-                  ),
+                  _getCharacterButton(i),
                   if (i < 2) const SizedBox(width: 19), // 버튼 간 간격
                 ],
               ],
@@ -430,6 +398,42 @@ class _MyPageState extends State<MyPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _getCharacterButton(int i) {
+    return Column(
+      children: [
+        SizedBox(
+          width: 103,
+          height: 142,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xffFFFFFF),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(7),
+              ),
+              side: BorderSide(
+                color: selectedChar == i
+                    ? const Color(0xffFB5D6F)
+                    : const Color(0xffDADADA),
+                width: 2.0,
+              ),
+              padding: const EdgeInsets.all(6),
+            ),
+            onPressed: () => {toggleSelect(i)},
+            child: getImage(i),
+          ),
+        ),
+        SizedBox(
+          height: 17,
+        ),
+        Text(
+          getName(i),
+          style: TextStyle(fontFamily: 'LeeSeoYun', fontSize: 25),
+          textAlign: TextAlign.center,
+        ).tr(),
+      ],
     );
   }
 }

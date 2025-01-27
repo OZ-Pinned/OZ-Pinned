@@ -3,7 +3,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:pinned/screens/test.dart';
+import 'package:pinned/pages/test/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pinned/screens/home.dart';
 import 'package:flutter_svg/flutter_svg.dart';

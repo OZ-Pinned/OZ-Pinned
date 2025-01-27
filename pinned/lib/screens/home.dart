@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:pinned/icon/custom_icon_icons.dart';
 import 'package:pinned/pages/chatbot/chatbot.dart';
 import 'package:pinned/screens/emotion.dart';
-import 'package:pinned/screens/test.dart';
+import 'package:pinned/pages/test/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/mypage/mypage.dart';
 import 'package:http/http.dart' as http;
-import 'meditation.dart';
+import '../pages/meditation/meditation.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class HomePage extends StatefulWidget {
