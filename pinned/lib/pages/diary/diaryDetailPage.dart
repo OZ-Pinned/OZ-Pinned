@@ -11,7 +11,7 @@ class DiaryDetailPage extends StatefulWidget {
   final String? id;
   final String title;
   final String content;
-  final Uint8List image;
+  final String image; // 이미지 URL로 변경
   final String email;
   final int emotion;
   final String color;
@@ -21,7 +21,7 @@ class DiaryDetailPage extends StatefulWidget {
     required this.email,
     required this.title,
     required this.content,
-    required this.image,
+    required this.image, // 이미지 URL로 변경
     required this.emotion,
     required this.color,
   });
@@ -45,26 +45,28 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
   }
 
   Future<void> uploadDiary(String email, String title, String content,
-      Uint8List imageBytes, String nowDate, Color color, int emotion) async {
-    final apiUrl = 'http://localhost:3000/diary/upload'; // 업로드 URL
+      String image, String nowDate, Color color, int emotion) async {
     // 요청 데이터 생성
-    String base64Image = base64Encode(imageBytes);
     String hexColor = '#${color.value.toRadixString(16).substring(2)}';
-    Map<String, dynamic> body = {
-      'email': email,
-      'title': title,
-      'diary': content,
-      'image': base64Image,
-      'createdAt': nowDate,
-      'color': hexColor,
-      'emotion': emotion,
-    };
+    print("이미지 주소$image");
     try {
       final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(body),
+        Uri.parse('http://localhost:3000/diary/upload'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: json.encode({
+          'email': email,
+          'title': title,
+          'diary': content,
+          'image': image, // 이미지 URL 전달
+          'createdAt': nowDate,
+          'color': hexColor,
+          'emotion': emotion,
+        }),
       );
+      print(response.body);
       if (response.statusCode == 201) {
         print('Diary uploaded successfully');
         Navigator.pop(context);
@@ -103,18 +105,18 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
     }
   }
 
-  Future<void> saveOrUpdateDiary(String email, String title, String content,
-      Uint8List? imageBytes, int emotion,
+  Future<void> saveOrUpdateDiary(
+      String email, String title, String content, String image, int emotion,
       {required String nowDate, required Color color}) async {
-    if (widget.id == null && imageBytes != null) {
+    if (widget.id == null) {
+      print("null id");
       // 업로드
-      await uploadDiary(
-          email, title, content, imageBytes, nowDate, color, emotion);
+      await uploadDiary(email, title, content, image, nowDate, color, emotion);
     } else if (widget.id != null) {
       // 수정
       await updateDiary(email, widget.id!, color);
     } else {
-      print('Invalid operation: Either id or imageBytes must be provided.');
+      print('Invalid operation: Either id or imageUrl must be provided.');
     }
   }
 
@@ -132,6 +134,7 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
   ];
   @override
   void initState() {
+    print("이미지 : ${widget.image}");
     super.initState();
     // widget.color 초기화
     _containerColor = Color(int.parse(widget.color.replaceFirst('#', '0xff')));
@@ -171,10 +174,10 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                       color: _containerColor,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1), // 그림자 색상
-                          offset: Offset(0, 4.61), // 그림자의 위치
-                          blurRadius: 6.15, // 그림자의 퍼짐 정도
-                          spreadRadius: 0, // 그림자의 확산 정도
+                          color: Colors.black.withValues(alpha: 0.1),
+                          offset: Offset(0, 4.61),
+                          blurRadius: 6.15,
+                          spreadRadius: 0,
                         ),
                       ],
                     ),
@@ -188,9 +191,9 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                                 SizedBox(
                                   width: 249,
                                   height: 253,
-                                  child: Image.memory(
-                                    widget.image,
-                                    fit: BoxFit.fill, // 또는 BoxFit.fill로 테스트
+                                  child: Image.network(
+                                    widget.image, // 이미지 URL 사용
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
                                 SizedBox(height: 10),
@@ -221,7 +224,6 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                         : Center(
                             child: SingleChildScrollView(
                               padding: EdgeInsets.all(15),
-                              // 뒷면: 본문을 보여줍니다.
                               child: Text(
                                 widget.content,
                                 style: TextStyle(
@@ -336,28 +338,25 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                       height: 52,
                       child: ElevatedButton(
                         onPressed: () async {
-                          if (widget.title.isNotEmpty &&
-                              widget.content.isNotEmpty) {
-                            await saveOrUpdateDiary(
-                              widget.email,
-                              widget.title,
-                              widget.content,
-                              widget.image,
-                              widget.emotion,
-                              nowDate: nowdate,
-                              color: _containerColor,
-                            );
-                            setState(() {
-                              ViewDiary(widget.email);
-                            });
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ViewAllDiaryPage(email: widget.email),
-                              ),
-                            );
-                          }
+                          await saveOrUpdateDiary(
+                            widget.email,
+                            widget.title,
+                            widget.content,
+                            widget.image, // 이미지 URL 전달
+                            widget.emotion,
+                            nowDate: nowdate,
+                            color: _containerColor,
+                          );
+                          setState(() {
+                            ViewDiary(widget.email);
+                          });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ViewAllDiaryPage(email: widget.email),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xffFF516A),

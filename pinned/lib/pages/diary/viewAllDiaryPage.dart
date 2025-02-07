@@ -42,13 +42,17 @@ class DiaryEntry {
 }
 
 Future<List<DiaryEntry>> ViewDiary(String email) async {
-  String apiUrl = 'http://localhost:3000/diary/get/$email';
   try {
-    final response = await http.get(headers: {
-      'Content-Type': 'application/json',
-    }, Uri.parse(apiUrl));
+    final response = await http.get(
+      Uri.parse('http://localhost:3000/diary/get/$email'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+      print(data['success']);
       if (data['success'] == true && data['diary'] != null) {
         return (data['diary'] as List)
             .map((diary) =>
@@ -176,7 +180,7 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                                         email: entry.email,
                                         title: entry.title,
                                         content: entry.content,
-                                        image: base64Decode(entry.image),
+                                        image: entry.image,
                                         emotion: entry.emotion,
                                         color: entry.color,
                                       ),
@@ -197,8 +201,8 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                                       children: [
                                         SizedBox(height: 10),
                                         Center(
-                                          child: Image.memory(
-                                            base64Decode(entry.image),
+                                          child: Image.network(
+                                            entry.image,
                                             width: 150,
                                             height: 150,
                                             fit: BoxFit.cover,

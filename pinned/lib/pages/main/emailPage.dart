@@ -29,7 +29,7 @@ class _EmailPageState extends State<EmailPage> {
   void inputEmail(value) {
     setState(() {
       inputedEmail = value;
-      // print(inputedEmail);
+      print(inputedEmail);
     });
   }
 

@@ -53,6 +53,7 @@ dependencies:
   easy_localization: ^3.0.4
   route_manager: ^2.0.2+1
   get: ^4.6.6
+  path_provider: ^2.1.5
   
 dev_dependencies:
   flutter_test:
