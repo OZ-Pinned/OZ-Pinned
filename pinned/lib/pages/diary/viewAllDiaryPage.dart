@@ -8,6 +8,7 @@ import 'package:pinned/pages/home/home.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'diaryDetailPage.dart';
+import 'package:pinned/class/storageService.dart';
 
 class DiaryEntry {
   final String id;
@@ -52,7 +53,6 @@ Future<List<DiaryEntry>> ViewDiary(String email) async {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print(data['success']);
       if (data['success'] == true && data['diary'] != null) {
         return (data['diary'] as List)
             .map((diary) =>
@@ -62,7 +62,6 @@ Future<List<DiaryEntry>> ViewDiary(String email) async {
     }
     throw Exception('Failed to fetch diaries. Status: ${response.statusCode}');
   } catch (e) {
-    print('Error: $e');
     rethrow;
   }
 }
@@ -75,6 +74,7 @@ class ViewAllDiaryPage extends StatefulWidget {
 }
 
 class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
+  final StorageService storage = StorageService();
   @override
   void initState() {
     super.initState();
@@ -95,11 +95,14 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
   }
 
   Future<void> _loadUserData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String savedEmail = await storage.getData('email') ?? '';
+    String savedCharacter = await storage.getData('character') ?? '';
+    String savedName = await storage.getData('name') ?? '';
+
     setState(() {
-      email = prefs.getString('email');
-      character = prefs.getInt('character');
-      name = prefs.getString('name');
+      email = savedEmail;
+      character = int.tryParse(savedCharacter);
+      name = savedName;
     });
   }
 

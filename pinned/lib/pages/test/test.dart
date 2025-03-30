@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pinned/class/storageService.dart';
 import 'testList/KoreanList.dart';
 import 'testList/EnglishList.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +17,7 @@ class TestPage extends StatefulWidget {
 
 class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
   late List<Map<String, dynamic>> testList;
+  final StorageService storage = StorageService();
 
   int testNum = 0; // 현재 질문 번호
   int totalScore = 0; // 총 점수
@@ -55,8 +57,8 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
 
 // 팝업 표시 함수
   void showPopup() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool hasSeenPopup = prefs.getBool('hasSeenPopup') ?? false;
+    String savedHasSeenPopup = await storage.getData('hasSeenPopup') ?? 'true';
+    bool hasSeenPopup = bool.tryParse(savedHasSeenPopup) ?? false;
 
     // 팝업이 이전에 표시되지 않았을 때만 실행
     if (!hasSeenPopup) {
@@ -104,7 +106,7 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
                   SizedBox(height: 10),
                   TextButton(
                     onPressed: () {
-                      prefs.setBool('hasSeenPopup', true); // 팝업 본 상태 저장
+                      storage.saveData('hasSeenPopup', 'true');
                       Navigator.of(context).pop();
                     },
                     child: Text(
