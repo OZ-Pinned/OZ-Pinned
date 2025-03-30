@@ -18,15 +18,9 @@ class _NamePageState extends State<NamePage> {
 // 회원가입 함수
   Future<void> signup(String email, int character, String inputedName) async {
     try {
-      final response = await Mainapi.signup(email, character, inputedName);
-      final data = json.decode(response!.body);
-      if (data['success']) {
-        print('Signup successful: $data'); // 이메일 저장
-      } else {
-        print('Signup failed: ${data['errorMessage']}');
-      }
+      await Mainapi.signup(email, character, inputedName);
     } catch (e) {
-      print('Error sign up : $e');
+      return;
     }
   }
 
@@ -41,7 +35,6 @@ class _NamePageState extends State<NamePage> {
   void inputName(value) {
     setState(() {
       inputedName = value;
-      // print(inputedName);
     });
   }
 

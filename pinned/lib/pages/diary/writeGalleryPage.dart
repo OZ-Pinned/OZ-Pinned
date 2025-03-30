@@ -53,11 +53,9 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
         var data = json.decode(response.body);
         return data['imageUrl']; // S3에서 반환된 이미지 URL
       } else {
-        print('이미지 업로드 실패: ${response.body}');
         return null;
       }
     } catch (e) {
-      print('이미지 업로드 오류: $e');
       return null;
     }
   }

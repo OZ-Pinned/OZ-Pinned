@@ -49,8 +49,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   SvgPicture getCharacter(int value) {
-    // ignore: avoid_print
-    print(value);
     if (value == 0) {
       return SvgPicture.asset(
         'assets/images/KoKoChar.svg',
@@ -112,7 +110,7 @@ class _HomePageState extends State<HomePage> {
         selectedChar = data['user']['character'];
       });
     } catch (e) {
-      print('Error get user : $e');
+      return;
     }
   }
 

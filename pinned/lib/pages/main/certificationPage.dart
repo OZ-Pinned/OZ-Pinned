@@ -99,7 +99,7 @@ class _CertificationPageState extends State<CertificationPage> {
         }
       }
     } catch (e) {
-      print('Error login : $e');
+      return;
     }
   }
 

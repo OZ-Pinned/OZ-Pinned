@@ -38,7 +38,6 @@ class _ResultPageState extends State<ResultPage> {
     super.didChangeDependencies();
 
     lan = Localizations.localeOf(context).languageCode;
-    print(lan);
   }
 
   String getToday() {
@@ -114,10 +113,9 @@ class _ResultPageState extends State<ResultPage> {
 
   Future<void> _saveScore(String email, int value) async {
     try {
-      final response = await Testapi.saveTestScore(email, value);
-      final data = json.decode(response!.body);
+      await Testapi.saveTestScore(email, value);
     } catch (e) {
-      print('Error save score : $e');
+      return;
     }
   }
 

@@ -286,7 +286,6 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
                         builder: (context) => EmotionPage(email: widget.email),
                       ),
                     );
-                    print("Floating button clicked");
                   },
                   icon: const Icon(Icons.add, size: 30, color: Colors.white),
                 ),

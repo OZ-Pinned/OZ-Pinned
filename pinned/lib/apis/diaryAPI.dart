@@ -52,10 +52,8 @@ class Diaryapi {
         return null;
       }
     } catch (e) {
-      print('Error: $e');
       rethrow;
     }
-    return null;
   }
 
   static Future<http.Response?> uploadDiary(
@@ -91,11 +89,9 @@ class Diaryapi {
 
       if (response.statusCode == 201) {
         return response;
-      } else {
-        return null;
       }
     } catch (e) {
-      print('Error uploading diary: $e');
+      return null;
     }
     return null;
   }
@@ -122,11 +118,9 @@ class Diaryapi {
 
       if (response.statusCode == 200) {
         return response;
-      } else {
-        print('Failed to update diary: ${response.body}');
       }
     } catch (e) {
-      print('Error updating diary: $e');
+      return null;
     }
     return null;
   }

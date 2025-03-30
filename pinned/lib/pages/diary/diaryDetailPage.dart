@@ -48,7 +48,6 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
       String image, String nowDate, Color color, int emotion) async {
     // 요청 데이터 생성
     String hexColor = '#${color.value.toRadixString(16).substring(2)}';
-    print("이미지 주소$image");
     try {
       final response = await http.post(
         Uri.parse('http://localhost:3000/diary/upload'),
@@ -66,15 +65,11 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
           'emotion': emotion,
         }),
       );
-      print(response.body);
       if (response.statusCode == 201) {
-        print('Diary uploaded successfully');
         Navigator.pop(context);
-      } else {
-        print('Failed to upload diary: ${response.body}');
       }
     } catch (e) {
-      print('Error uploading diary: $e');
+      return;
     }
   }
 
@@ -94,14 +89,11 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
         body: json.encode(body),
       );
       if (response.statusCode == 200) {
-        print('Diary updated successfully');
         final updatedEntry = DiaryEntry.fromJson(jsonDecode(response.body));
         Navigator.pop(context, updatedEntry); // 수정된 데이터 반환
-      } else {
-        print('Failed to update diary: ${response.body}');
       }
     } catch (e) {
-      print('Error updating diary: $e');
+      return;
     }
   }
 
@@ -109,14 +101,11 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
       String email, String title, String content, String image, int emotion,
       {required String nowDate, required Color color}) async {
     if (widget.id == null) {
-      print("null id");
       // 업로드
       await uploadDiary(email, title, content, image, nowDate, color, emotion);
     } else if (widget.id != null) {
       // 수정
       await updateDiary(email, widget.id!, color);
-    } else {
-      print('Invalid operation: Either id or imageUrl must be provided.');
     }
   }
 
@@ -134,7 +123,6 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
   ];
   @override
   void initState() {
-    print("이미지 : ${widget.image}");
     super.initState();
     // widget.color 초기화
     _containerColor = Color(int.parse(widget.color.replaceFirst('#', '0xff')));

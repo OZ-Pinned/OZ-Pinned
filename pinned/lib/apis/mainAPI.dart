@@ -24,9 +24,8 @@ class Mainapi {
         return null;
       }
     } catch (error) {
-      print('Error during signup: $error');
+      return null;
     }
-    return null;
   }
 
   static Future<http.Response?> sendEmail(String email) async {
@@ -46,9 +45,8 @@ class Mainapi {
         return null;
       }
     } catch (error) {
-      print(error);
+      return null;
     }
-    return null;
   }
 
   static Future<http.Response?> login(String email) async {
@@ -68,8 +66,7 @@ class Mainapi {
         return null;
       }
     } catch (error) {
-      print(error);
+      return null;
     }
-    return null;
   }
 }

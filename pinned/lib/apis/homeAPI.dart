@@ -16,8 +16,7 @@ class Homeapi {
         return null;
       }
     } catch (e) {
-      print('Error get user : $e');
+      return null;
     }
-    return null;
   }
 }

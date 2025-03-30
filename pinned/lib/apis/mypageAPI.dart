@@ -18,9 +18,8 @@ class Mypageapi {
         return null;
       }
     } catch (error) {
-      print('Error fetching test: $error');
+      return null;
     }
-    return null;
   }
 
   static Future<http.Response?> changeCharacter(
@@ -43,8 +42,7 @@ class Mypageapi {
         return null;
       }
     } catch (error) {
-      print('Error fetching diary: $error');
+      return null;
     }
-    return null;
   }
 }

@@ -22,8 +22,7 @@ class Testapi {
         return null;
       }
     } catch (error) {
-      print('Error during save: $error');
+      return null;
     }
-    return null;
   }
 }

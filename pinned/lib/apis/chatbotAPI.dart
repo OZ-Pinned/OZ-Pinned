@@ -20,17 +20,13 @@ class Chatbotapi {
         ),
       );
 
-      print(response.statusCode);
-
       if (response.statusCode == 201) {
         return response;
       } else {
         return null;
       }
     } catch (error) {
-      print('AI error: $error');
+      return null;
     }
-
-    return null;
   }
 }

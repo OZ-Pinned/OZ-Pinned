@@ -29,7 +29,6 @@ class _EmailPageState extends State<EmailPage> {
   void inputEmail(value) {
     setState(() {
       inputedEmail = value;
-      print(inputedEmail);
     });
   }
 
@@ -37,8 +36,7 @@ class _EmailPageState extends State<EmailPage> {
 
   Future<void> sendEmail(String email) async {
     try {
-      final response = await Mainapi.sendEmail(email);
-      final data = json.decode(response!.body);
+      await Mainapi.sendEmail(email);
 
       RegExp regex = RegExp(r'\w+@(gmail\.com|naver\.com)');
 
@@ -54,14 +52,13 @@ class _EmailPageState extends State<EmailPage> {
             ),
           ),
         );
-        print("Signup successful : $data");
       } else {
         setState(() {
           helpText = "이메일을 다시 한 번 확인해 주세요.";
         });
       }
     } catch (e) {
-      print('Error login : $e');
+      return;
     }
   }
 
@@ -72,7 +69,6 @@ class _EmailPageState extends State<EmailPage> {
       body += rnd.toString();
     }
 
-    print(body);
     return body;
   }
 
@@ -97,12 +93,8 @@ class _EmailPageState extends State<EmailPage> {
 
     try {
       await send(message, smtpServer);
-      print('이메일 전송 성공');
     } catch (e) {
-      print('이메일 전송 실패: $e');
-      if (e is MailerException) {
-        print(e);
-      }
+      return null;
     }
   }
 

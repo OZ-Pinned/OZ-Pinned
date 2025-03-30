@@ -54,16 +54,15 @@ class _MyPageState extends State<MyPage> {
         },
       );
     } catch (e) {
-      print('Error loading data : $e');
+      return;
     }
   }
 
   Future<void> _changeCharacter(int value) async {
     try {
-      final response = await Mypageapi.changeCharacter(widget.email, value);
-      final data = json.decode(response!.body);
+      await Mypageapi.changeCharacter(widget.email, value);
     } catch (e) {
-      print('Error change character : $e');
+      return;
     }
   }
 
@@ -102,7 +101,6 @@ class _MyPageState extends State<MyPage> {
   void toggleSelect(int value) {
     setState(() {
       selectedChar = value;
-      print(value);
       _changeCharacter(value); // 선택된 캐릭터의 인덱스 업데이트
     });
   }

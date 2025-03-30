@@ -47,7 +47,7 @@ class _ChatBotPageState extends State<ChatBot> {
         curve: Curves.easeOut,
       );
     } catch (e) {
-      print('Error loading : $e');
+      return;
     }
   }
 
