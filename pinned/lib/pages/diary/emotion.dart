@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'writeGalleryPage.dart';
+import 'package:pinned/class/storageService.dart';
 
 void main() => runApp(MyApp());
 
@@ -29,6 +30,7 @@ class EmotionPage extends StatefulWidget {
 class _EmotionPageState extends State<EmotionPage> {
   double currentValue = 0.0;
   String lan = "";
+  final StorageService storage = StorageService();
 
   @override
   void didChangeDependencies() {
@@ -86,8 +88,7 @@ class _EmotionPageState extends State<EmotionPage> {
 
 // 이메일을 비동기적으로 가져오는 함수
   Future<String?> getEmail() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('email'); // 'email' 키에 저장된 값 반환
+    return await storage.getData('email'); // 'email' 키에 저장된 값 반환
   }
 
   @override

@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pinned/pages/home/home.dart';
 import 'characterPage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:pinned/class/storageService.dart';
 
 class CertificationPage extends StatefulWidget {
   final bool logined;
@@ -29,6 +31,8 @@ class _CertificationPageState extends State<CertificationPage> {
   String certifyCode = "";
   String helpText = "";
 
+  final StorageService storage = StorageService();
+
   final List<TextEditingController> _controllers =
       List.generate(6, (_) => TextEditingController());
 
@@ -49,8 +53,7 @@ class _CertificationPageState extends State<CertificationPage> {
   }
 
   Future<void> storeEmail(String email) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('email', email); // 'email' 키에 이메일 저장
+    await storage.saveData('email', email); // FlutterSecureStorage에 이메일 저장
   }
 
   Future<void> login(String email) async {
@@ -59,11 +62,8 @@ class _CertificationPageState extends State<CertificationPage> {
       final data = json.decode(response!.body);
 
       if (data['success']) {
-        // 로그인 된 사용자일때
-        print("Login successful : $data");
         userName = data['user']['name'];
         userCharacter = data['user']['character'];
-        print('$userName $userCharacter');
 
         if (certifyCode == widget.certificationCode) {
           Navigator.push(
