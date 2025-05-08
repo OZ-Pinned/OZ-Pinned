@@ -9,6 +9,7 @@ import '../mypage/mypage.dart';
 import '../meditation/meditation.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:pinned/apis/homeAPI.dart';
+import 'package:pinned/class/storageService.dart';
 
 class HomePage extends StatefulWidget {
   final String email;
@@ -26,6 +27,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final StorageService storage = StorageService();
+
   int selectedChar = 0;
 
   List pictureList = [
@@ -98,6 +101,9 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _getUser(); // 서버에서 데이터 가져오기
     selectedChar = widget.character;
+    storage.saveData('email', widget.email);
+    storage.saveData('character', widget.character.toString());
+    storage.saveData('name', widget.name);
   }
 
   Future<void> _getUser() async {

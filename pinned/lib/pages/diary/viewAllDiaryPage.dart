@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -75,6 +76,7 @@ class ViewAllDiaryPage extends StatefulWidget {
 
 class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
   final StorageService storage = StorageService();
+
   @override
   void initState() {
     super.initState();
@@ -99,6 +101,7 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
     String savedCharacter = await storage.getData('character') ?? '';
     String savedName = await storage.getData('name') ?? '';
 
+    print("$savedEmail$savedCharacter $savedName");
     setState(() {
       email = savedEmail;
       character = int.tryParse(savedCharacter);
@@ -107,6 +110,7 @@ class _ViewAllDiaryPageState extends State<ViewAllDiaryPage> {
   }
 
   void _navigateToHomePage() {
+    print("$email $character $name");
     if (email != null && character != null && name != null) {
       Navigator.push(
         context,
