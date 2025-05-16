@@ -2,7 +2,7 @@ name: pinned
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -37,7 +37,7 @@ dependencies:
   shelf: ^1.0.0
   flutter_svg: ^2.0.5
   fl_chart: ^0.70.1
-
+  flutter_phoenix: ^1.0.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -56,7 +56,7 @@ dependencies:
   path_provider: ^2.1.5
   flutter_secure_storage: ^9.2.4
   logger: ^2.5.0
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -68,13 +68,11 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
 
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -101,18 +99,17 @@ flutter:
       fonts:
         - asset: assets/fonts/LeeSeoYun.ttf
           weight: 700
-    - family:  CustomIcon
+    - family: CustomIcon
       fonts:
-      - asset: assets/fonts/CustomIcon.ttf
+        - asset: assets/fonts/CustomIcon.ttf
     - family: Pretendard
       fonts:
-      - asset: assets/fonts/Pretendard.ttf
+        - asset: assets/fonts/Pretendard.ttf
 
   assets:
     - assets/videos/
     - assets/images/
     - assets/translations/
-
 
   #
   # For details regarding fonts from package dependencies,

@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart'; // Get 패키지 추가
 import 'package:pinned/pages/main/selectPage.dart';
 import 'package:logger/logger.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 final supportedLocales = [Locale('ko', 'KR'), Locale('en', 'US')];
 Logger logger = Logger();
@@ -11,8 +12,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   logger.i('start check');
-  runApp(
-    EasyLocalization(
+  runApp(Phoenix(
+    child: EasyLocalization(
         supportedLocales: const [
           Locale('ko', 'KR'),
           Locale('en', 'US'),
@@ -21,7 +22,7 @@ Future<void> main() async {
         fallbackLocale: Locale('en', 'US'),
         startLocale: Locale('ko', 'KR'),
         child: MainApp()),
-  );
+  ));
 }
 
 class MainApp extends StatefulWidget {

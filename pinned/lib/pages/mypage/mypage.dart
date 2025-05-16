@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:pinned/apis/mypageAPI.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:pinned/pages/main/selectPage.dart';
 
 class MyPage extends StatefulWidget {
@@ -132,6 +133,19 @@ class _MyPageState extends State<MyPage> {
                     fontSize: 24,
                   ),
                 ),
+                DropdownButton<String?>(
+                    items: ['한국어', 'English']
+                        .map<DropdownMenuItem<String>>((String i) {
+                      return DropdownMenuItem<String>(value: i, child: Text(i));
+                    }).toList(),
+                    onChanged: (String? value) async {
+                      if (value == '한국어') {
+                        await context.setLocale(Locale('ko', 'KR'));
+                      } else if (value == 'English') {
+                        await context.setLocale(Locale('en', 'US'));
+                      }
+                      await EasyLocalization.ensureInitialized();
+                    }),
                 ElevatedButton(
                   onPressed: () {
                     showDialog(
