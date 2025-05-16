@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:pinned/apis/mainAPI.dart';
+import 'package:pinned/widgets/messageBox.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -186,36 +187,7 @@ class _CertificationPageState extends State<CertificationPage> {
                         left: 10,
                         child: Row(
                           children: [
-                            Container(
-                              padding: EdgeInsets.only(top: 2, bottom: 0),
-                              decoration: BoxDecoration(
-                                color: Color(0xffEDEDED),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(19.5),
-                                  topRight: Radius.circular(19.5),
-                                  bottomRight: Radius.circular(0),
-                                  bottomLeft: Radius.circular(19.5),
-                                ),
-                                border: Border.all(
-                                  color: Color(0xffDADADA),
-                                ),
-                              ),
-                              width: 250, // 너비 확장
-                              height: 70, // 높이를 늘려 두 줄이 표시되도록 설정
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  context.locale.languageCode == 'en'
-                                      ? "please enter the\nverification code"
-                                      : "enter_verification_code",
-                                  style: TextStyle(
-                                    fontFamily: 'LeeSeoYun',
-                                    fontSize: 24,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ).tr(), // 다국어 텍스트 번역
-                              ),
-                            ),
+                            messageBox(message: "enter_verification_code"),
                             SizedBox(
                               width: 15,
                             ),

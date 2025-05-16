@@ -4,7 +4,7 @@ import 'package:get/get.dart'; // Get 패키지 추가
 import 'package:pinned/pages/main/selectPage.dart';
 import 'package:logger/logger.dart';
 
-final supportedLocales = [Locale('en', 'US'), Locale('ko', 'KR')];
+final supportedLocales = [Locale('ko', 'KR'), Locale('en', 'US')];
 Logger logger = Logger();
 
 Future<void> main() async {
@@ -19,7 +19,7 @@ Future<void> main() async {
         ],
         path: 'assets/translations',
         fallbackLocale: Locale('en', 'US'),
-        startLocale: Locale('en', 'US'),
+        startLocale: Locale('ko', 'KR'),
         child: MainApp()),
   );
 }

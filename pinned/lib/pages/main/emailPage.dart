@@ -4,9 +4,9 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'dart:math';
 import 'package:pinned/apis/mainAPI.dart';
-import 'dart:convert';
 import 'certificationPage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pinned/widgets/messageBox.dart';
 
 class EmailPage extends StatefulWidget {
   final bool logined;
@@ -177,36 +177,7 @@ class _EmailPageState extends State<EmailPage> {
                           children: [
                             Column(
                               children: [
-                                Container(
-                                  child: Container(
-                                    padding: EdgeInsets.only(
-                                      top: 2,
-                                      bottom: 0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Color(0xffEDEDED),
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(19.5),
-                                        topRight: Radius.circular(19.5),
-                                        bottomRight: Radius.circular(0),
-                                        bottomLeft: Radius.circular(19.5),
-                                      ),
-                                      border: Border.all(
-                                        color: Color(0xffDADADA),
-                                      ),
-                                    ),
-                                    width: 204,
-                                    height: 43,
-                                    child: Text(
-                                      "enter_email",
-                                      style: TextStyle(
-                                        fontFamily: 'LeeSeoYun',
-                                        fontSize: 24,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ).tr(),
-                                  ),
-                                ),
+                                messageBox(message: "enter_email"),
                                 SizedBox(
                                   height: 50,
                                 ),
