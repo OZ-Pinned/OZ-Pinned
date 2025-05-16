@@ -6,7 +6,7 @@ class Mypageapi {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://localhost:3000/mypage/get/$email'), // Node.js 서버의 IP 주소 사용
+            'http://192.168.0.65:3000/mypage/get/$email'), // Node.js 서버의 IP 주소 사용
         headers: {
           'Content-Type': 'application/json',
         },
@@ -27,7 +27,7 @@ class Mypageapi {
     try {
       final response = await http.post(
         Uri.parse(
-            'http://localhost:3000/mypage/change/$email'), // Node.js 서버의 IP 주소 사용
+            'http://192.168.0.65:3000/mypage/change/$email'), // Node.js 서버의 IP 주소 사용
         headers: {
           'Content-Type': 'application/json',
         },
