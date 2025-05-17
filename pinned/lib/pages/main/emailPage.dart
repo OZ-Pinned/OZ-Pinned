@@ -120,7 +120,7 @@ class _EmailPageState extends State<EmailPage> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: 150,
+                    height: 28,
                   ),
                   Stack(
                     alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
@@ -162,7 +162,7 @@ class _EmailPageState extends State<EmailPage> {
                               },
                             ),
                             SizedBox(
-                              height: 10,
+                              height: 15,
                             ),
                             Text(
                               helpText,
@@ -175,7 +175,7 @@ class _EmailPageState extends State<EmailPage> {
                         ),
                       ),
                       Positioned(
-                        top: 28, // 텍스트 상자 위에 위치하도록 조정
+                        top: 30, // 텍스트 상자 위에 위치하도록 조정
                         left: 10,
                         child: Row(
                           children: [
