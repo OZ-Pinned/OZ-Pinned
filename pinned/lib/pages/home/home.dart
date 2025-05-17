@@ -317,6 +317,7 @@ class _HomePageState extends State<HomePage> {
                                           builder: (context) => TestPage(
                                             email: widget.email,
                                             name: widget.name,
+                                            character: widget.character,
                                           ),
                                         ),
                                       );

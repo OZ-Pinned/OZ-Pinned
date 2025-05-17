@@ -119,6 +119,9 @@ class _EmailPageState extends State<EmailPage> {
               ),
               child: Column(
                 children: [
+                  SizedBox(
+                    height: 150,
+                  ),
                   Stack(
                     alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
                     clipBehavior: Clip.none,

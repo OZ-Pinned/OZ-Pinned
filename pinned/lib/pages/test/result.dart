@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:pinned/pages/home/home.dart';
 import '../meditation/meditation.dart';
 import '../chatbot/chatbot.dart';
 import 'package:pinned/apis/testAPI.dart';
@@ -11,12 +12,14 @@ class ResultPage extends StatefulWidget {
   final List selectedAnswers;
   final String email;
   final String name;
+  final int character;
   const ResultPage({
     super.key,
     required this.totalScore,
     required this.selectedAnswers,
     required this.email,
     required this.name,
+    required this.character,
   });
 
   @override
@@ -141,7 +144,16 @@ class _ResultPageState extends State<ResultPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).popUntil((route) => route.isFirst);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(
+                  email: widget.email,
+                  character: widget.character,
+                  name: widget.name,
+                ),
+              ),
+            );
           },
         ),
       ),

@@ -9,7 +9,12 @@ import 'package:pinned/pages/test/result.dart';
 class TestPage extends StatefulWidget {
   final String email;
   final String name;
-  const TestPage({super.key, required this.email, required this.name});
+  final int character;
+  const TestPage(
+      {super.key,
+      required this.email,
+      required this.name,
+      required this.character});
 
   @override
   State<TestPage> createState() => _TestPageState();
@@ -167,6 +172,7 @@ class _TestPageState extends State<TestPage> with WidgetsBindingObserver {
                 selectedAnswers: selectedAnswers,
                 email: widget.email,
                 name: widget.name,
+                character: widget.character,
               ),
             ),
           );
