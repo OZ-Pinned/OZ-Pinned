@@ -111,12 +111,13 @@ class _EmailPageState extends State<EmailPage> {
             left: 20.0,
             right: 20.0,
           ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 57,
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
               ),
-              Column(
+              child: Column(
                 children: [
                   Stack(
                     alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
@@ -197,36 +198,36 @@ class _EmailPageState extends State<EmailPage> {
                       ),
                     ],
                   ),
-                ],
-              ),
-              Spacer(),
-              Padding(
-                padding: EdgeInsets.only(bottom: 50),
-                child: SizedBox(
-                  width: 350,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      sendEmail(inputedEmail);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xffFF516A),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(7)),
+                  Spacer(),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 50),
+                    child: SizedBox(
+                      width: 350,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          sendEmail(inputedEmail);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xffFF516A),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(7)),
+                          ),
+                        ),
+                        child: Text(
+                          "verification_code",
+                          style: TextStyle(
+                            color: Color(0xffFFFFFF),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ).tr(),
                       ),
                     ),
-                    child: Text(
-                      "verification_code",
-                      style: TextStyle(
-                        color: Color(0xffFFFFFF),
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ).tr(),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

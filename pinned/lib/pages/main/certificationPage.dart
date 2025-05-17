@@ -113,7 +113,10 @@ class _CertificationPageState extends State<CertificationPage> {
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20),
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+          ),
           child: Column(
             children: [
               SizedBox(

@@ -138,6 +138,12 @@ class _ResultPageState extends State<ResultPage> {
         iconTheme: IconThemeData(
           color: Color(0xffFFFFFF), //색변경
         ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          },
+        ),
       ),
       body: Container(
         padding: EdgeInsets.only(top: 60),
