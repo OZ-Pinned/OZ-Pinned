@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:pinned/apis/mypageAPI.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:pinned/pages/main/selectPage.dart';
+import 'package:restart_app/restart_app.dart';
 
 class MyPage extends StatefulWidget {
   final String email;
@@ -145,6 +146,7 @@ class _MyPageState extends State<MyPage> {
                         await context.setLocale(Locale('en', 'US'));
                       }
                       await EasyLocalization.ensureInitialized();
+                      Restart.restartApp();
                     }),
                 ElevatedButton(
                   onPressed: () {
