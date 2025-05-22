@@ -75,7 +75,7 @@ class _EmailPageState extends State<EmailPage> {
   void _sendEmail(String recipientEmail) async {
     emailBody = await _getEmailBody();
     String username = 'jieyn7@naver.com'; // 본인의 네이버 이메일
-    String password = 'NRRZDBB9MXPZ'; // 앱 비밀번호
+    String password = 'DFZT22UMQ2QH'; // 앱 비밀번호
 
     final smtpServer = SmtpServer(
       'smtp.naver.com',
@@ -90,6 +90,8 @@ class _EmailPageState extends State<EmailPage> {
       ..recipients.add(inputedEmail) // 사용자 이메일
       ..subject = '핀드 인증번호'
       ..text = '인증번호: $emailBody';
+
+    print("$username $inputedEmail $emailBody");
 
     try {
       await send(message, smtpServer);
