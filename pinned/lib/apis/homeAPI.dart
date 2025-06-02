@@ -4,7 +4,7 @@ class Homeapi {
   static Future<http.Response?> getUser(String email) async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.0.65:3000/home/get/$email'),
+        Uri.parse('http://13.209.69.93:3000/home/get/$email'),
         headers: {
           'Content-Type': 'application/json',
         },

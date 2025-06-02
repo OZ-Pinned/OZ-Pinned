@@ -91,8 +91,6 @@ class _EmailPageState extends State<EmailPage> {
       ..subject = '핀드 인증번호'
       ..text = '인증번호: $emailBody';
 
-    print("$username $inputedEmail $emailBody");
-
     try {
       await send(message, smtpServer);
     } catch (e) {
