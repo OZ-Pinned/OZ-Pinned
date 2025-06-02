@@ -4,7 +4,7 @@ const router = express.Router();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const UserDB = require("../models/user_model"); // UserDB 모델 가져오기
-const { sign } = require("../../auth/jwt-util");
+const { sign } = require("../auth/jwt-util");
 const authJWT = require("../middleware/authJWT");
 
 router.use(cors());

@@ -5,9 +5,14 @@ services:
     container_name: mongo
     ports:
       - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: pinned
+      MONGO_INITDB_ROOT_PASSWORD: pinned
+    volumes:
+      - mongo-data:/data/db
 
   pinned-backend:
-    build: ./pinned/backend
+    build: ./backend
     image: jieuniaeyo/pinned-backend:latest
     container_name: pinned-backend
     env_file:
@@ -18,3 +23,6 @@ services:
       - "3000:3000"
     environment:
       - MONGO_URI=mongodb://mongo:27017/pinned
+
+volumes:
+  mongo-data:
