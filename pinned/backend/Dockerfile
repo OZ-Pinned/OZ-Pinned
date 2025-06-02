@@ -18,4 +18,4 @@ COPY . .
 RUN npm run build
 
 # 7. 앱 실행 (빌드된 dist/main.js 실행)
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start"]

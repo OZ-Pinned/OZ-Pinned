@@ -1,5 +1,5 @@
 // middleware/authJWT.js
-const { verify } = require("../auth/jwt-util");
+const { verify } = require("../../auth/jwt-util");
 
 const authJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;

@@ -6,7 +6,8 @@ services:
     ports:
       - "27017:27017"
 
-  nuto-backend:
+  pinned-backend:
+    build: ./pinned/backend
     image: jieuniaeyo/pinned-backend:latest
     container_name: pinned-backend
     env_file:

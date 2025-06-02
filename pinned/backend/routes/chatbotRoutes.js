@@ -6,7 +6,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 
-const chatbotDBModel = require("../lib/models/chatbot_model"); // 모델 경로에 맞게 수정
+const chatbotDBModel = require("../models/chatbot_model"); // 모델 경로에 맞게 수정
 
 router.use(cors());
 router.use(bodyParser.json());

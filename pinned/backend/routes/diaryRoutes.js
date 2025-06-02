@@ -11,7 +11,7 @@ const mongoose = require("mongoose");
 const router = express.Router();
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const DiaryDB = require("../lib/models/diary_model");
+const DiaryDB = require("../models/diary_model");
 
 dotenv.config();
 
