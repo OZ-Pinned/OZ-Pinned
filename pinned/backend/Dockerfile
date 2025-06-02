@@ -14,8 +14,5 @@ RUN npm install --verbose
 # 5. 소스 전체 복사
 COPY . .
 
-# 6. NestJS 빌드 (제일 중요!!)
-RUN npm run build
-
-# 7. 앱 실행 (빌드된 dist/main.js 실행)
+# 6. 앱 실행 (빌드된 dist/main.js 실행)
 CMD ["npm", "run", "start"]
