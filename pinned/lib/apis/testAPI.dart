@@ -5,7 +5,7 @@ class Testapi {
   static Future<http.Response?> saveTestScore(String email, int score) async {
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:3000/test/save'),
+        Uri.parse('http://13.209.69.93:3000/test/save'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',

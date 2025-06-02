@@ -1,9 +1,8 @@
 [
-    {
-      "origin": ["http://localhost:3000"],
-      "method": ["GET", "POST", "PUT"],
-      "maxAgeSeconds": 3600,
-      "responseHeader": ["Content-Type", "Authorization"]
-    }
-  ]
-  
+  {
+    "origin": ["http://13.209.69.93:3000"],
+    "method": ["GET", "POST", "PUT"],
+    "maxAgeSeconds": 3600,
+    "responseHeader": ["Content-Type", "Authorization"]
+  }
+]

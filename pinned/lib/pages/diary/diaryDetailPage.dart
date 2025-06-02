@@ -50,7 +50,7 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
     String hexColor = '#${color.value.toRadixString(16).substring(2)}';
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:3000/diary/upload'),
+        Uri.parse('http://13.209.69.93:3000/diary/upload'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
