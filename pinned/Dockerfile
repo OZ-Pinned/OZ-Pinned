@@ -8,7 +8,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # 4. 의존성 설치
-RUN npm install
+RUN npm install --verbose
+
 
 # 5. 소스 전체 복사
 COPY . .
