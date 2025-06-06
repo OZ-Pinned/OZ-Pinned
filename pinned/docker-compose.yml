@@ -22,7 +22,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - MONGO_URI=mongodb://mongo:27017/pinned
+      - MONGODB_URI=mongodb://admin:591006@mongodb:27017/nuto?authSource=admin
 
 volumes:
   mongo-data:
