@@ -8,6 +8,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: pinned
       MONGO_INITDB_ROOT_PASSWORD: pinned
+    networks:
+      - pinned-network
     volumes:
       - mongo-data:/data/db
 
@@ -21,6 +23,8 @@ services:
       - mongo
     ports:
       - "3000:3000"
+    networks:
+      - pinned-network
     environment:
       - MONGODB_URI=mongodb://pinned:pinned@mongo:27017/pinned?authSource=admin
 
