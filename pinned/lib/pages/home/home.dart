@@ -150,200 +150,219 @@ class _HomePageState extends State<HomePage> {
           // 위에 올려 놓을 다른 UI 요소들
           Padding(
             padding: EdgeInsets.only(
-              top: 13,
+              top: 20,
               left: 20,
               right: 20,
+              bottom: 20,
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset('assets/images/smallLogo.svg'),
-                    Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        color: Color(0xffFFFFFF), // 원하는 배경색
-                        shape: BoxShape.circle, // 원형 배경
-                      ),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: Center(
-                          child: IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MyPage(
-                                    email: widget.email,
-                                    character: selectedChar,
-                                  ),
-                                ),
-                              ).then(
-                                (_) {
-                                  _getUser();
-                                },
-                              );
-                            },
-                            icon: Icon(
-                              CustomIcon.MyPage,
+                Positioned(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset('assets/images/smallLogo.svg'),
+                          Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: Color(0xffFFFFFF), // 원하는 배경색
+                              shape: BoxShape.circle, // 원형 배경
                             ),
-                            padding: EdgeInsets.only(right: 0),
-                            iconSize: 26, // 아이콘 크기
-                            color: Color(0xffFF516A), // 아이콘 색상
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: double.infinity,
+                              child: Center(
+                                child: IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => MyPage(
+                                          email: widget.email,
+                                          character: selectedChar,
+                                        ),
+                                      ),
+                                    ).then(
+                                      (_) {
+                                        _getUser();
+                                      },
+                                    );
+                                  },
+                                  icon: Icon(
+                                    CustomIcon.MyPage,
+                                  ),
+                                  padding: EdgeInsets.only(right: 0),
+                                  iconSize: 26, // 아이콘 크기
+                                  color: Color(0xffFF516A), // 아이콘 색상
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Text(
+                        '${widget.name}${'cheer_ment'.tr()}',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontFamily: 'LeeSeoYun',
+                          fontSize: 26,
+                          color: Color(0xffFFFFFF),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // 감정 기록 부분 수정
+                Column(
+                  children: [
+                    SizedBox(height: 20),
+                    SafeArea(
+                      child: Container(
+                        width: 320,
+                        height: 255,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                                AssetImage('assets/images/smallBackground.png'),
+                            fit: BoxFit.cover,
                           ),
                         ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment
+                                  .spaceBetween, // 버튼과 중앙 콘텐츠의 배치
+                              children: [
+                                SizedBox(), // 왼쪽 빈 공간
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => EmotionPage(
+                                          email: widget.email,
+                                          // character: widget.character,
+                                          // name: widget.name,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  icon: Icon(Icons.add),
+                                  color: Color(0xffFF516A),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              "today_emotion".tr(),
+                              style: TextStyle(
+                                fontFamily: 'LeeSeoYun',
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 60,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                for (int i = 0; i < 4; i++) ...[
+                                  SvgPicture.asset(
+                                    'assets/images/${getImage(i)}',
+                                    fit: BoxFit.cover,
+                                    width: 62,
+                                    height: 65,
+                                  ),
+
+                                  if (i < 3)
+                                    const SizedBox(width: 7), // 버튼 간 간격
+                                ],
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SafeArea(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (int i = 0; i < 2; i++) ...[
+                            Stack(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/images/${getButtonImage(i)}',
+                                  width: 160,
+                                  height: 142,
+                                  fit: BoxFit.fill,
+                                ),
+                                Positioned.fill(
+                                  top: 40,
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(7),
+                                      onTap: () {
+                                        if (i == 0) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MeditationVideoList(),
+                                            ),
+                                          );
+                                        } else {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => TestPage(
+                                                email: widget.email,
+                                                name: widget.name,
+                                                character: widget.character,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: Center(
+                                        child: Text(
+                                          i == 0
+                                              ? 'Go Meditation'
+                                              : 'Self-diagnosis',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                            fontFamily: 'LeeSeoYun',
+                                          ),
+                                        ).tr(),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (i < 1) const SizedBox(width: 5),
+                          ],
+                        ],
                       ),
                     ),
                   ],
                 ),
                 SizedBox(
-                  height: 40,
-                ),
-                Text(
-                  '${widget.name}${'cheer_ment'.tr()}',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontFamily: 'LeeSeoYun',
-                    fontSize: 26,
-                    color: Color(0xffFFFFFF),
-                  ),
-                ),
-                // 감정 기록 부분 수정
-                SizedBox(height: 16),
-                SafeArea(
-                  child: Container(
-                    width: 320,
-                    height: 255,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/smallBackground.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween, // 버튼과 중앙 콘텐츠의 배치
-                          children: [
-                            SizedBox(), // 왼쪽 빈 공간
-                            IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EmotionPage(
-                                      email: widget.email,
-                                      // character: widget.character,
-                                      // name: widget.name,
-                                    ),
-                                  ),
-                                );
-                              },
-                              icon: Icon(Icons.add),
-                              color: Color(0xffFF516A),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          "today_emotion".tr(),
-                          style: TextStyle(
-                            fontFamily: 'LeeSeoYun',
-                            fontSize: 20,
-                            color: Colors.black,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 60,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            for (int i = 0; i < 4; i++) ...[
-                              SvgPicture.asset(
-                                'assets/images/${getImage(i)}',
-                                fit: BoxFit.cover,
-                                width: 62,
-                                height: 65,
-                              ),
-
-                              if (i < 3) const SizedBox(width: 7), // 버튼 간 간격
-                            ],
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SafeArea(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      for (int i = 0; i < 2; i++) ...[
-                        Stack(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/images/${getButtonImage(i)}',
-                              width: 160,
-                              height: 142,
-                              fit: BoxFit.fill,
-                            ),
-                            Positioned.fill(
-                              top: 40,
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(7),
-                                  onTap: () {
-                                    if (i == 0) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              MeditationVideoList(),
-                                        ),
-                                      );
-                                    } else {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => TestPage(
-                                            email: widget.email,
-                                            name: widget.name,
-                                            character: widget.character,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      i == 0
-                                          ? 'Go Meditation'
-                                          : 'Self-diagnosis',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                        fontFamily: 'LeeSeoYun',
-                                      ),
-                                    ).tr(),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        if (i < 1) const SizedBox(width: 5),
-                      ],
-                    ],
-                  ),
+                  height: 20,
                 ),
                 SafeArea(
                   child: Container(

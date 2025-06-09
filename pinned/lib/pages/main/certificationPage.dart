@@ -66,7 +66,7 @@ class _CertificationPageState extends State<CertificationPage> {
       final response = await Mainapi.login(widget.email);
       final data = json.decode(response!.body);
 
-      log(data);
+      print(data);
 
       if (data['success']) {
         userName = data['user']['name'];
@@ -194,7 +194,7 @@ class _CertificationPageState extends State<CertificationPage> {
                       ),
                       Positioned(
                         top: -115, // 텍스트 상자 위에 위치하도록 조정
-                        left: 10,
+                        right: 0,
                         child: Row(
                           children: [
                             messageBox(message: "enter_verification_code"),

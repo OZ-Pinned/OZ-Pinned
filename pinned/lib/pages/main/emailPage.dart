@@ -113,126 +113,118 @@ class _EmailPageState extends State<EmailPage> {
             left: 20.0,
             right: 20.0,
           ),
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 55,
               ),
-              child: Column(
+              Stack(
+                alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
+                clipBehavior: Clip.none,
                 children: [
                   SizedBox(
-                    height: 28,
+                    height: 280,
                   ),
-                  Stack(
-                    alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
-                    clipBehavior: Clip.none,
-                    children: [
-                      SizedBox(
-                        height: 280,
-                      ),
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextField(
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white, // 내부 배경색 설정
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(7),
-                                  borderSide: BorderSide(
-                                    color: Color(0xffDADADA), // 외부 테두리 색상
-                                    width: 1.0, // 외부 테두리 두께
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
-                                    width: 1.0, // 외부 테두리 두께
-                                  ),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xffDADADA), // 기본 테두리 투명
-                                    width: 0, // 두께 0
-                                  ),
-                                ),
-                              ),
-                              onChanged: (value) {
-                                inputEmail(value);
-                              },
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Text(
-                              helpText,
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                color: Colors.red,
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextField(
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white, // 내부 배경색 설정
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(7),
+                              borderSide: BorderSide(
+                                color: Color(0xffDADADA), // 외부 테두리 색상
+                                width: 1.0, // 외부 테두리 두께
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      Positioned(
-                        top: 30, // 텍스트 상자 위에 위치하도록 조정
-                        left: 10,
-                        child: Row(
-                          children: [
-                            Column(
-                              children: [
-                                messageBox(message: "enter_email"),
-                                SizedBox(
-                                  height: 50,
-                                ),
-                              ],
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
+                                width: 1.0, // 외부 테두리 두께
+                              ),
                             ),
-                            SizedBox(
-                              width: 20,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0xffDADADA), // 기본 테두리 투명
+                                width: 0, // 두께 0
+                              ),
                             ),
-                            SvgPicture.asset(
-                              'assets/images/KoKoChar.svg',
-                              width: 98,
-                              height: 92.5,
-                              fit: BoxFit.contain,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 50),
-                    child: SizedBox(
-                      width: 350,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          sendEmail(inputedEmail);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xffFF516A),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(7)),
                           ),
+                          onChanged: (value) {
+                            inputEmail(value);
+                          },
                         ),
-                        child: Text(
-                          "verification_code",
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text(
+                          helpText,
+                          textAlign: TextAlign.start,
                           style: TextStyle(
-                            color: Color(0xffFFFFFF),
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
                           ),
-                        ).tr(),
-                      ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    top: 30, // 텍스트 상자 위에 위치하도록 조정
+                    right: 0,
+                    child: Row(
+                      children: [
+                        Column(
+                          children: [
+                            messageBox(message: "enter_email"),
+                            SizedBox(
+                              height: 50,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        SvgPicture.asset(
+                          'assets/images/KoKoChar.svg',
+                          width: 98,
+                          height: 92.5,
+                          fit: BoxFit.contain,
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
+              Spacer(),
+              Padding(
+                padding: EdgeInsets.only(bottom: 50),
+                child: SizedBox(
+                  width: 350,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      sendEmail(inputedEmail);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xffFF516A),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
+                      ),
+                    ),
+                    child: Text(
+                      "verification_code",
+                      style: TextStyle(
+                        color: Color(0xffFFFFFF),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ).tr(),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
