@@ -28,7 +28,8 @@ class messageBox extends StatelessWidget {
         ),
       ),
       constraints: BoxConstraints(
-        maxWidth: 250,
+        minWidth: MediaQuery.of(context).size.width * 0.4,
+        maxWidth: MediaQuery.of(context).size.width * 0.6,
       ),
       child: Text(
         message,
