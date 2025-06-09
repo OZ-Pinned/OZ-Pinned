@@ -3,11 +3,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:pinned/apis/mainAPI.dart';
 import 'package:pinned/widgets/messageBox.dart';
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pinned/pages/home/home.dart';
 import 'characterPage.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pinned/class/storageService.dart';
 
 class CertificationPage extends StatefulWidget {
@@ -57,6 +55,10 @@ class _CertificationPageState extends State<CertificationPage> {
     await storage.saveData('email', email); // FlutterSecureStorage에 이메일 저장
   }
 
+  Future<void> saveToken(String token) async {
+    await storage.saveData('jwt_token', token);
+  }
+
   Future<void> login(String email) async {
     try {
       final response = await Mainapi.login(widget.email);
@@ -67,6 +69,9 @@ class _CertificationPageState extends State<CertificationPage> {
         userCharacter = data['user']['character'];
 
         if (certifyCode == widget.certificationCode) {
+          final token = json.decode(response.body)['token'];
+          await saveToken(token);
+
           Navigator.push(
             context,
             MaterialPageRoute(

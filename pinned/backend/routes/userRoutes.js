@@ -30,10 +30,15 @@ router.post("/signup", async (req, res) => {
       character,
     });
 
+    const token = sign({ id: user._id, email: user.email });
+
     // 응답: 생성된 사용자 정보 (id 포함)
-    return res
-      .status(201)
-      .json({ success: true, message: "Signup successful", user: createdUser });
+    return res.status(201).json({
+      success: true,
+      message: "Signup successful",
+      user: createdUser,
+      token: token,
+    });
   } catch (error) {
     console.error("Signup error:", error);
     return res.status(500).json({
@@ -55,7 +60,7 @@ router.post("/login", async (req, res) => {
 
     if (user) {
       const token = sign({ id: user._id, email: user.email });
-      console.log(token);
+
       // 로그인 성공
       return res.status(200).json({
         success: true,

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pinned/pages/home/home.dart';
 import 'package:pinned/apis/mainAPI.dart';
+import 'package:pinned/class/storageService.dart';
 
 class NamePage extends StatefulWidget {
   final String email;
@@ -15,12 +16,34 @@ class NamePage extends StatefulWidget {
 }
 
 class _NamePageState extends State<NamePage> {
+  final StorageService storage = StorageService();
+
+  Future<void> saveToken(String token) async {
+    await storage.saveData('jwt_token', token);
+  }
+
 // 회원가입 함수
   Future<void> signup(String email, int character, String inputedName) async {
     try {
-      await Mainapi.signup(email, character, inputedName);
+      final response = await Mainapi.signup(email, character, inputedName);
+
+      if (response == null) {
+        debugPrint('Signup failed: response is null');
+        return;
+      }
+
+      if (response.body.isEmpty) {
+        debugPrint('Signup failed: response body is empty');
+        return;
+      }
+
+      final responseBody = json.decode(response.body ?? '{}');
+      final token = responseBody['token'] ?? '';
+      if (token.isNotEmpty) {
+        await saveToken(token);
+      }
     } catch (e) {
-      return;
+      debugPrint('Signup failed: $e');
     }
   }
 
