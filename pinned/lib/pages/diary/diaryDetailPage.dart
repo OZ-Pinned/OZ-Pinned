@@ -50,7 +50,7 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
     String hexColor = '#${color.value.toRadixString(16).substring(2)}';
     try {
       final response = await http.post(
-        Uri.parse('13.209.69.93:3000/diary/upload'),
+        Uri.parse('http://13.209.69.93:3000/diary/upload'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -74,7 +74,7 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
   }
 
   Future<void> updateDiary(String email, String id, Color color) async {
-    final apiUrl = '192.168.0.65:3000/diary/edit'; // 수정 URL
+    final apiUrl = 'http://13.209.69.93:3000/diary/edit'; // 수정 URL
     // 요청 데이터 생성
     String hexColor = '#${color.value.toRadixString(16).substring(2)}';
     Map<String, dynamic> body = {

@@ -46,7 +46,7 @@ class DiaryEntry {
 Future<List<DiaryEntry>> ViewDiary(String email) async {
   try {
     final response = await http.get(
-      Uri.parse('192.168.0.65:3000/diary/get/$email'),
+      Uri.parse('http://13.209.69.93:3000/diary/get/$email'),
       headers: {
         'Content-Type': 'application/json',
       },
