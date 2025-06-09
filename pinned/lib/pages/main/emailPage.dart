@@ -77,6 +77,8 @@ class _EmailPageState extends State<EmailPage> {
     String username = 'jieyn7@naver.com'; // 본인의 네이버 이메일
     String password = 'DFZT22UMQ2QH'; // 앱 비밀번호
 
+    print(emailBody);
+
     final smtpServer = SmtpServer(
       'smtp.naver.com',
       port: 587,

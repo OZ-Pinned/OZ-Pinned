@@ -37,8 +37,7 @@ class _WriteGalleryPageState extends State<WriteGalleryPage> {
 
   // 📌 이미지 S3 업로드
   Future<String?> uploadImageToS3(File imageFile) async {
-    final apiUrl =
-        'http://192.168.0.65:3000/diary/upload-image'; // S3 업로드 API 엔드포인트
+    final apiUrl = '192.168.0.65:3000/diary/upload-image'; // S3 업로드 API 엔드포인트
     var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
     request.headers['Content-Type'] = 'multipart/form-data'; // 이 헤더 추가
 

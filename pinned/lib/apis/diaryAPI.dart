@@ -40,7 +40,7 @@ class DiaryEntry {
 
 class Diaryapi {
   static Future<http.Response?> ViewDiary(String email) async {
-    String apiUrl = 'http://:3000/diary/get/$email';
+    String apiUrl = '3000/diary/get/$email';
     try {
       final response = await http.get(headers: {
         'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ class Diaryapi {
       String nowDate,
       Color color,
       int emotion) async {
-    final apiUrl = 'http://13.209.69.93:3000/diary/upload'; // 업로드 URL
+    final apiUrl = '13.209.69.93:3000/diary/upload'; // 업로드 URL
 
     // 요청 데이터 생성
     String base64Image = base64Encode(imageBytes);
@@ -98,7 +98,7 @@ class Diaryapi {
 
   static Future<http.Response?> updateDiary(
       String email, String id, Color color) async {
-    final apiUrl = 'http://13.209.69.93:3000/diary/edit'; // 수정 URL
+    final apiUrl = '13.209.69.93:3000/diary/edit'; // 수정 URL
 
     // 요청 데이터 생성
     String hexColor = '#${color.value.toRadixString(16).substring(2)}';

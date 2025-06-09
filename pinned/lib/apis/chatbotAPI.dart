@@ -6,7 +6,7 @@ class Chatbotapi {
       String email, String inputedMessage, String name) async {
     try {
       var response = await http.post(
-        Uri.parse("http://13.209.69.93:3000/chatbot/get"),
+        Uri.parse("13.209.69.93:3000/chatbot/get"),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',

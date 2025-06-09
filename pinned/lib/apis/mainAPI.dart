@@ -6,8 +6,7 @@ class Mainapi {
       String email, int character, String name) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            'http://13.209.69.93:3000/user/signup'), // Node.js 서버의 IP 주소 사용
+        Uri.parse('13.209.69.93:3000/user/signup'), // Node.js 서버의 IP 주소 사용
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -33,8 +32,7 @@ class Mainapi {
     print(email);
     try {
       final response = await http.post(
-        Uri.parse(
-            'http://13.209.69.93:3000/user/login'), // Node.js 서버의 IP 주소 사용
+        Uri.parse('13.209.69.93:3000/user/login'), // Node.js 서버의 IP 주소 사용
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -57,8 +55,7 @@ class Mainapi {
   static Future<http.Response?> login(String email) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            'http://13.209.69.93:3000/user/login'), // Node.js 서버의 IP 주소 사용
+        Uri.parse('13.209.69.93:3000/user/login'), // Node.js 서버의 IP 주소 사용
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
