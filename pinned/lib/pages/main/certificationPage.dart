@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:pinned/apis/mainAPI.dart';
@@ -64,6 +66,8 @@ class _CertificationPageState extends State<CertificationPage> {
       final response = await Mainapi.login(widget.email);
       final data = json.decode(response!.body);
 
+      log(data);
+
       if (data['success']) {
         userName = data['user']['name'];
         userCharacter = data['user']['character'];
@@ -87,25 +91,23 @@ class _CertificationPageState extends State<CertificationPage> {
             helpText = "인증번호를 확인해 주세요.";
           });
         }
-      } else {
-        if ((certifyCode == widget.certificationCode)) {
-          helpText = "";
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CharacterPage(
-                email: widget.email,
-              ),
-            ),
-          );
-        } else {
-          setState(() {
-            helpText = "인증 코드를 다시 한 번 확인해 주세요.";
-          });
-        }
       }
     } catch (e) {
-      return;
+      if ((certifyCode == widget.certificationCode)) {
+        helpText = "";
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CharacterPage(
+              email: widget.email,
+            ),
+          ),
+        );
+      } else {
+        setState(() {
+          helpText = "인증 코드를 다시 한 번 확인해 주세요.";
+        });
+      }
     }
   }
 
