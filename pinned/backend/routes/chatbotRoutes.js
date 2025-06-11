@@ -4,7 +4,6 @@ const router = express.Router();
 const path = require("path");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-require("dotenv").config();
 
 const chatbotDBModel = require("../models/chatbot_model"); // 모델 경로에 맞게 수정
 

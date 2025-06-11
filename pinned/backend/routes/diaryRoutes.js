@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
@@ -12,8 +10,6 @@ const router = express.Router();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const DiaryDB = require("../models/diary_model");
-
-dotenv.config();
 
 // S3 클라이언트 설정
 const s3Client = new S3Client({
