@@ -4,7 +4,6 @@ const fs = require("fs");
 const path = require("path");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const { Upload } = require("@aws-sdk/lib-storage");
-const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const router = express.Router();
 const cors = require("cors");
