@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'namePage.dart';
-import 'package:jwt_decode/jwt_decode.dart';
-import 'package:pinned/class/storageService.dart';
 
 class HelloPage extends StatefulWidget {
   final String email;
@@ -16,32 +14,6 @@ class HelloPage extends StatefulWidget {
 }
 
 class _HelloPageState extends State<HelloPage> {
-  final StorageService storage = StorageService();
-
-  Future<Map<String, dynamic>?> checkToken() async {
-    final token = await storage.getData('jwt_token');
-
-    try {
-      // 토큰에서 payload(정보) 추출
-      if (token == null) {
-        return null;
-      }
-
-      Map<String, dynamic> payload = Jwt.parseJwt(token);
-
-      // 예: 토큰 유효기간 체크(선택)
-      bool isExpired = Jwt.isExpired(token);
-      if (isExpired) {
-        return null;
-      }
-
-      print(payload);
-      return payload;
-    } catch (e) {
-      return null;
-    }
-  }
-
   String getName(int value) {
     if (value == 0) {
       return tr("coco");

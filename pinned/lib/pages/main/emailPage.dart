@@ -104,8 +104,9 @@ class _EmailPageState extends State<EmailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFFFFF),
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        backgroundColor: Color(0xfffffffff),
+        backgroundColor: Color(0x0fffffff),
       ),
       body: Center(
         child: Padding(
@@ -116,84 +117,85 @@ class _EmailPageState extends State<EmailPage> {
           child: Column(
             children: [
               SizedBox(
-                height: 55,
+                height: 150,
               ),
-              Stack(
-                alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
-                clipBehavior: Clip.none,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  SizedBox(
-                    height: 280,
-                  ),
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextField(
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white, // 내부 배경색 설정
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(7),
-                              borderSide: BorderSide(
-                                color: Color(0xffDADADA), // 외부 테두리 색상
-                                width: 1.0, // 외부 테두리 두께
+                  Stack(
+                    alignment: Alignment.center, // 위젯들이 중앙에 정렬되도록 설정
+                    clipBehavior: Clip.none,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextField(
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white, // 내부 배경색 설정
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(7),
+                                borderSide: BorderSide(
+                                  color: Color(0xffDADADA), // 외부 테두리 색상
+                                  width: 1.0, // 외부 테두리 두께
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
+                                  width: 1.0, // 외부 테두리 두께
+                                ),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xffDADADA), // 기본 테두리 투명
+                                  width: 0, // 두께 0
+                                ),
                               ),
                             ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0xffDADADA), // 포커스 시 동일한 색상 유지
-                                width: 1.0, // 외부 테두리 두께
-                              ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0xffDADADA), // 기본 테두리 투명
-                                width: 0, // 두께 0
-                              ),
+                            onChanged: (value) {
+                              inputEmail(value);
+                            },
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            helpText,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              color: Colors.red,
                             ),
                           ),
-                          onChanged: (value) {
-                            inputEmail(value);
-                          },
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          helpText,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top: 30, // 텍스트 상자 위에 위치하도록 조정
-                    right: 0,
-                    child: Row(
-                      children: [
-                        Column(
+                        ],
+                      ),
+                      Positioned(
+                        top: -68, // 텍스트 상자 위에 위치하도록 조정
+                        right: 0,
+                        child: Row(
                           children: [
-                            messageBox(message: "enter_email"),
+                            Column(
+                              children: [
+                                messageBox(message: "enter_email"),
+                                SizedBox(
+                                  height: 50,
+                                ),
+                              ],
+                            ),
                             SizedBox(
-                              height: 50,
+                              width: 20,
+                            ),
+                            SvgPicture.asset(
+                              'assets/images/KoKoChar.svg',
+                              width: 98,
+                              height: 92.5,
+                              fit: BoxFit.contain,
                             ),
                           ],
                         ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        SvgPicture.asset(
-                          'assets/images/KoKoChar.svg',
-                          width: 98,
-                          height: 92.5,
-                          fit: BoxFit.contain,
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),

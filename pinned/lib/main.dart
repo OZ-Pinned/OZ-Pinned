@@ -14,14 +14,15 @@ Future<void> main() async {
   logger.i('start check');
   runApp(Phoenix(
     child: EasyLocalization(
-        supportedLocales: const [
-          Locale('ko', 'KR'),
-          Locale('en', 'US'),
-        ],
-        path: 'assets/translations',
-        fallbackLocale: Locale('en', 'US'),
-        startLocale: Locale('ko', 'KR'),
-        child: MainApp()),
+      supportedLocales: const [
+        Locale('ko', 'KR'),
+        Locale('en', 'US'),
+      ],
+      path: 'assets/translations',
+      fallbackLocale: Locale('en', 'US'),
+      startLocale: Locale('ko', 'KR'),
+      child: MainApp(),
+    ),
   ));
 }
 

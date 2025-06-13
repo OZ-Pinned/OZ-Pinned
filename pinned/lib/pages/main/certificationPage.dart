@@ -115,8 +115,9 @@ class _CertificationPageState extends State<CertificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffffffff),
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        backgroundColor: Color(0xfffffffff),
+        backgroundColor: Color(0x0fffffff),
       ),
       body: Center(
         child: Padding(

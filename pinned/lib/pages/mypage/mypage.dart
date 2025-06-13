@@ -6,7 +6,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:pinned/apis/mypageAPI.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:pinned/pages/main/selectPage.dart';
+import 'package:pinned/class/storageService.dart';
 import 'package:restart_app/restart_app.dart';
+import 'package:pinned/apis/homeAPI.dart';
+import 'package:jwt_decode/jwt_decode.dart';
+import 'dart:convert'; // for jsonDecode
 
 class MyPage extends StatefulWidget {
   final String email;
@@ -18,6 +22,7 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  final StorageService storage = StorageService();
   List<double> scores = []; // 점수 데이터를 double로 저장
   List<String> dates = [];
   int selectedChar = 0;
@@ -28,6 +33,31 @@ class _MyPageState extends State<MyPage> {
     super.initState();
     // 위젯이 초기화될 때 getTest 호출
     _getUserData();
+    tokenCheck();
+  }
+
+  Future<void> deleteToken() async {
+    await storage.deleteData('jwt_token');
+  }
+
+  Future<Map<String, dynamic>?> checkToken() async {
+    final token = await storage.getData('jwt_token');
+
+    if (token == null || Jwt.isExpired(token)) {
+      return null;
+    }
+
+    try {
+      Map<String, dynamic> payload = Jwt.parseJwt(token);
+      return payload;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> tokenCheck() async {
+    final tokenInfo = await checkToken();
+    print(tokenInfo);
   }
 
   Future<void> _getUserData() async {
@@ -134,20 +164,25 @@ class _MyPageState extends State<MyPage> {
                     fontSize: 24,
                   ),
                 ),
-                DropdownButton<String?>(
-                    items: ['한국어', 'English']
-                        .map<DropdownMenuItem<String>>((String i) {
-                      return DropdownMenuItem<String>(value: i, child: Text(i));
-                    }).toList(),
-                    onChanged: (String? value) async {
-                      if (value == '한국어') {
-                        await context.setLocale(Locale('ko', 'KR'));
-                      } else if (value == 'English') {
-                        await context.setLocale(Locale('en', 'US'));
-                      }
-                      await EasyLocalization.ensureInitialized();
-                      Restart.restartApp();
-                    }),
+                DropdownButton<String>(
+                  value:
+                      context.locale.languageCode == 'ko' ? '한국어' : 'English',
+                  items: ['한국어', 'English']
+                      .map<DropdownMenuItem<String>>((String i) {
+                    return DropdownMenuItem<String>(
+                      value: i,
+                      child: Text(i),
+                    );
+                  }).toList(),
+                  onChanged: (String? value) async {
+                    if (value == '한국어') {
+                      await context.setLocale(Locale('ko', 'KR'));
+                    } else if (value == 'English') {
+                      await context.setLocale(Locale('en', 'US'));
+                    }
+                    setState(() {});
+                  },
+                ),
                 ElevatedButton(
                   onPressed: () {
                     showDialog(
@@ -192,6 +227,7 @@ class _MyPageState extends State<MyPage> {
                                         fixedSize: Size(250, 31),
                                       ),
                                       onPressed: () {
+                                        deleteToken();
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(

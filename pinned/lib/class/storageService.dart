@@ -15,7 +15,7 @@ class StorageService {
     return await _storage.read(key: key);
   }
 
-  Future<void> deleteUserId(String key) async {
+  Future<void> deleteData(String key) async {
     await _storage.delete(key: key);
   }
 }
