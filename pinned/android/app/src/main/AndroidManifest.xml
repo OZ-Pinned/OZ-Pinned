@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.ozprojects.pinned">
     <application
         android:requestLegacyExternalStorage="true"
         android:label="pinned"

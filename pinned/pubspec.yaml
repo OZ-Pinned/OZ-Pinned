@@ -45,7 +45,6 @@ dependencies:
   youtube_player_iframe: ^5.2.1
   flutter_inappwebview: ^6.0.0
   mailer: ^6.4.1
-  flutter_email_sender: ^5.1.0
   device_info_plus: ^11.2.0
   package_info_plus: ^8.1.2
   ios_utsname_ext: ^2.3.0
