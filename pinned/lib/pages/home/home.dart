@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage> {
               bottom: 20,
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Positioned(
                   child: Column(
