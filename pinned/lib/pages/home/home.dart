@@ -293,9 +293,6 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
                     SafeArea(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -361,9 +358,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+
                 SafeArea(
                   child: Container(
                     padding: EdgeInsets.only(
